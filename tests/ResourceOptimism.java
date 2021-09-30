@@ -8,7 +8,7 @@ public class ResourceOptimismTest {
     @Test
     public void ResourceOptimism()
     {
-        File f = new File('./test.txt');
+        File f = new File("./test.txt'");
         assertEquals(f.getName(), "test.txt");
     }
 }
