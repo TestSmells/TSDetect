@@ -2,6 +2,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * This test has Redunant Print Statements, which means the
+ * method has printing statements
+ *
+ * link: https://testsmells.org/pages/testsmellexamples.html#RedundantPrint
+ */
 public class PrintStatementTest {
 
 	@Test
