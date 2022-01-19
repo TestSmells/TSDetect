@@ -1,0 +1,17 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>org.scanl.plugins.tsdetect</id>
+    <name>TSDetect</name>
+    <vendor url="https://scanl.org" email="scanl.lab@gmail.com">SCANL</vendor>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!--    Place service/etc registrations here    -->
+    </extensions>
+
+    <applicationListeners>
+        <listener class="org.scanl.plugins.tsdetect.listeners.ProjectListener"
+                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
+    </applicationListeners>
+</idea-plugin>
