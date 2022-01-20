@@ -24,6 +24,11 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    implementation("jfreechart:jfreechart:1.0.0")
+
+}
+
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
     pluginName.set(properties("pluginName"))

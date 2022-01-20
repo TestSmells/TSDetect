@@ -27,21 +27,12 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.util.*;
-import java.util.List;
-
-import static java.util.stream.Collectors.groupingBy;
 
 public class TabbedPaneWindow {
-	private JPanel panel1;
-	private JTabbedPane tabbedPane1;
-	private JPanel tabbedAPane;
-	private JPanel tabbedBPane;
-	private JPanel listPane;
-	private JTree treeMethod;
-	private JButton treeMethodButton;
-	private JTree treeSmell;
-	private JButton treeSmellButton;
-	private JTable table1;
+	private JPanel inspectionPanel;
+	private JTabbedPane detailsPanels;
+	private JPanel listPanel;
+	private JTable smellTable;
 	private JButton listButton;
 	private IdentifierTableModel data;
 
@@ -62,46 +53,8 @@ public class TabbedPaneWindow {
 			}
 		});
 
-		treeMethodButton.addActionListener(e -> testMethodTree(project));
-		treeSmellButton.addActionListener(e -> testSmellTree(project));
 		listButton.addActionListener(e -> testList(project));
 	}
-
-	private void testMethodTree(Project project){
-
-		Collection<VirtualFile> vFiles = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME, JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project));
-
-		DefaultTreeModel model = (DefaultTreeModel)treeMethod.getModel();
-		DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
-		root.removeAllChildren();
-
-		for (VirtualFile vf: vFiles) {
-			parseMethodTree(root, vf, project);
-		}
-
-		model.reload(root);
-	}
-
-	private void testSmellTree(Project project){
-
-		Collection<VirtualFile> vFiles = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME, JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project));
-
-		DefaultTreeModel model = (DefaultTreeModel)treeSmell.getModel();
-		DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
-		root.removeAllChildren();
-		List<Method> methods = new ArrayList<>();
-		for (VirtualFile vf: vFiles) {
-			methods.addAll(getDetails(vf, project));
-		}
-
-		for(SmellType smellType:SmellType.values()){
-			parseTree(root, methods, smellType);
-		}
-
-		model.reload(root);
-
-	}
-
 
 	private List<Method> getDetails(VirtualFile vf, Project project){
 		PsiFile psiFile = PsiManager.getInstance(project).findFile(vf);
@@ -120,50 +73,6 @@ public class TabbedPaneWindow {
 		return methods;
 	}
 
-	private void parseTree(DefaultMutableTreeNode tn, List<Method> methods, SmellType smellType){
-		DefaultMutableTreeNode smellTypeNode = new DefaultMutableTreeNode(smellType);
-		for(Method method:methods){
-			if(method.getSmellTypeList().contains(smellType)){
-				System.out.println(method.getName());
-				DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode(method.getName());
-				smellTypeNode.add(methodNode);
-			}
-		}
-		tn.add(smellTypeNode);
-	}
-
-	private void parseMethodTree(DefaultMutableTreeNode tn, VirtualFile vf, Project project) {
-		DefaultMutableTreeNode vftn = new DefaultMutableTreeNode(vf.getName());
-
-		if (vf.isDirectory()) {
-			for (VirtualFile child : vf.getChildren()) {
-				parseMethodTree(vftn, child, project);
-			}
-		}
-		PsiFile psiFile = PsiManager.getInstance(project).findFile(vf);
-		if(psiFile instanceof PsiJavaFile)
-		{
-			PsiJavaFile psiJavaFile = (PsiJavaFile) psiFile;
-			PsiClass @NotNull [] classes = psiJavaFile.getClasses();
-			for(PsiClass psiClass: classes) {
-				SampleVisitor sv = new SampleVisitor();
-				psiFile.accept(sv);
-
-				List<Method> methods = sv.getPsiMethods();
-				for (Method m : methods) {
-					DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode(m.getName());
-					for(SmellType smellType:m.getSmellTypeList())
-					{
-						DefaultMutableTreeNode smellNode = new DefaultMutableTreeNode(smellType);
-						methodNode.add(smellNode);
-					}
-					vftn.add(methodNode);
-				}
-			}
-		}
-
-		tn.add(vftn);
-	}
 
 	private void testList(Project project){
 		Collection<VirtualFile> vFiles = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME, JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project));
@@ -189,7 +98,7 @@ public class TabbedPaneWindow {
 		HashMap<SmellType, List<Method>> smellyMethods = new HashMap<>();
 		HashMap<SmellType, List<ClassModel>> smellyClasses = new HashMap<>();
 
-		for(SmellType smellType:Arrays.asList(SmellType.values()))
+		for(SmellType smellType: Arrays.asList(SmellType.values()))
 		{
 			List<Method> methods = getMethodBySmell(smellType, allMethods);
 			List<ClassModel> classes = getClassesBySmell(smellType, allMethods);
@@ -198,8 +107,8 @@ public class TabbedPaneWindow {
 		}
 		data.constructSmellTable(smellyMethods, smellyClasses);
 
-		table1.setModel(data);
-		table1.setVisible(true);
+		smellTable.setModel(data);
+		smellTable.setVisible(true);
 	}
 
 	public List<Method> getMethodBySmell(SmellType smell, List<Method> methods){
@@ -225,14 +134,6 @@ public class TabbedPaneWindow {
 	}
 
 	public JPanel getContent() {
-		return panel1;
-	}
-
-	private void createUIComponents() {
-		DefaultMutableTreeNode smellNode = new DefaultMutableTreeNode("SmellTypes");
-		DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode("Method");
-		treeSmell = new JTree(smellNode);
-		treeMethod = new JTree(methodNode);
+		return inspectionPanel;
 	}
 }
-

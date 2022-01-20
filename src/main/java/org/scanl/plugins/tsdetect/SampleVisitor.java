@@ -3,7 +3,6 @@ package org.scanl.plugins.tsdetect;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.execution.junit.JUnitUtil;
 import com.intellij.psi.*;
-import org.graalvm.compiler.graph.Node;
 import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.inspections.SmellInspection;
 import org.scanl.plugins.tsdetect.inspections.TestSmellInspectionProvider;
@@ -12,9 +11,7 @@ import org.scanl.plugins.tsdetect.model.Method;
 import org.scanl.plugins.tsdetect.model.SmellType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class SampleVisitor extends JavaRecursiveElementVisitor {
 	private final List<Method> psiMethods = new ArrayList<>();

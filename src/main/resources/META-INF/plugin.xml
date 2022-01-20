@@ -9,9 +9,10 @@
 
 
     <extensions defaultExtensionNs="com.intellij">
-        <!--    Place service/etc registrations here    -->
+        <toolWindow id="SCANL Tabbed Plugin" secondary="true" icon="AllIcons.General.Modified" anchor="right"
+                    factoryClass="org.scanl.plugins.tsdetect.ui.TabbedPaneWindowFactory"/>
+        <inspectionToolProvider implementation="org.scanl.plugins.tsdetect.inspections.TestSmellInspectionProvider"/>
     </extensions>
-
     <applicationListeners>
         <listener class="org.scanl.plugins.tsdetect.listeners.ProjectListener"
                   topic="com.intellij.openapi.project.ProjectManagerListener"/>
