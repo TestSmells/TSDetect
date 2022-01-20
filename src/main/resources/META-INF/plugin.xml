@@ -5,6 +5,8 @@
     <vendor url="https://scanl.org" email="scanl.lab@gmail.com">SCANL</vendor>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+
 
     <extensions defaultExtensionNs="com.intellij">
         <!--    Place service/etc registrations here    -->
