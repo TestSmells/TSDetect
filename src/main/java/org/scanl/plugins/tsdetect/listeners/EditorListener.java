@@ -17,6 +17,7 @@ public class EditorListener implements FileEditorManagerListener {
 	private static final String TOOL_WINDOW_ID = "SCANL Sample Plugin";
 	private final Project project;
 
+	public EditorListener() { this.project = null; }
 	public EditorListener(Project project) {
 		this.project = project;
 	}
