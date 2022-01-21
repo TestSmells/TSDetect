@@ -1,6 +1,5 @@
 package org.scanl.plugins.tsdetect.model;
 
 public enum SmellType {
-	EMPTY_METHOD,
-	REDUNDANT_PRINT
+	EMPTY_METHOD
 }
