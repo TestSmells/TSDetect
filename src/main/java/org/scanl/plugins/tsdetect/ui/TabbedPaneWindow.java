@@ -88,7 +88,7 @@ public class TabbedPaneWindow {
 		HashMap<SmellType, List<InspectionMethodModel>> smellyMethods = new HashMap<>(); //hash to store smelly methods by smell
 		HashMap<SmellType, List<InspectionClassModel>> smellyClasses = new HashMap<>(); //hash to store smelly classes by smell
 
-		for(SmellType smellType: Arrays.asList(SmellType.values()))
+		for(SmellType smellType: SmellType.values())
 		{
 			smellyMethods.put(smellType, getMethodBySmell(smellType, allMethods));
 			smellyClasses.put(smellType, getClassesBySmell(smellType, allMethods));

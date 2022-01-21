@@ -12,6 +12,7 @@ import org.scanl.plugins.tsdetect.model.SmellType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Smell Visitor to visit all the files to determine smells
@@ -51,7 +52,7 @@ public class SmellVisitor extends JavaRecursiveElementVisitor {
 		//if there are any issues, get the containing class and add to the list of smelly methods
 		if(issues) {
 			PsiClass psiClass = method.getContainingClass();
-			InspectionClassModel inspectionClassModel = new InspectionClassModel(psiClass.getQualifiedName(), psiClass);
+			InspectionClassModel inspectionClassModel = new InspectionClassModel(Objects.requireNonNull(psiClass).getQualifiedName(), psiClass);
 			getSmellyMethods().add(new InspectionMethodModel(method.getName(), inspectionClassModel, method, smellTypes));
 		}
 
