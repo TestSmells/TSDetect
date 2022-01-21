@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 public class PluginResourceBundle {
+	//The locations of all the internationalization
 	private static final String BUNDLE_INSPECTION = "I18n.inspection.text";
 	private static final String BUNDLE_UI = "I18n.ui.text";
 
@@ -24,7 +25,11 @@ public class PluginResourceBundle {
 		return AbstractBundle.message(getBundleInspection(type), key, params);
 	}
 
-
+	/**
+	 * Gets the inspection
+	 * @param type Either Inspection or UI, which bundle is being searched for
+	 * @return the bundle that is needed
+	 */
 	private static ResourceBundle getBundleInspection(Type type) {
 		ResourceBundle bundle;
 

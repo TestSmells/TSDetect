@@ -16,5 +16,7 @@
     <applicationListeners>
         <listener class="org.scanl.plugins.tsdetect.listeners.ProjectListener"
                   topic="com.intellij.openapi.project.ProjectManagerListener"/>
+        <listener class="org.scanl.plugins.tsdetect.listeners.EditorListener"
+                  topic="com.intellij.openapi.fileEditor.FileEditorManagerListener"/>
     </applicationListeners>
 </idea-plugin>

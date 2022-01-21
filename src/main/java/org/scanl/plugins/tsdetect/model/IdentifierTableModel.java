@@ -1,6 +1,5 @@
 package org.scanl.plugins.tsdetect.model;
 import javax.swing.table.AbstractTableModel;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -39,19 +38,7 @@ public class IdentifierTableModel extends AbstractTableModel {
 		return getValueAt(0, columnIndex).getClass();
 	}
 
-	public void constructTable3(List<String> classNames, List<Method> methods){
-		data = new Object[classNames.size()][smellTypes.size()+2];
-		for(int i = 0; i<classNames.size(); i++){
-			data[i][0] = classNames.get(i);
-			data[i][1] = methods.get(i).getName();
-			List<SmellType> smellList = methods.get(i).getSmellTypeList();
-			for(int x = 0; x<smellTypes.size(); x++){
-				data[i][x+2] = smellList.contains(smellTypes.get(x));
-			}
-		}
-	}
-
-	public void constructSmellTable(HashMap<SmellType, List<Method>> smellTypeListHashMap, HashMap<SmellType, List<ClassModel>> classes){
+	public void constructSmellTable(HashMap<SmellType, List<InspectionMethodModel>> smellTypeListHashMap, HashMap<SmellType, List<InspectionClassModel>> classes){
 		data = new Object[smellTypeListHashMap.size()+1][3];
 		data[0][0] = "Smell Type";
 		data[0][1] = "Infected Files";

@@ -9,6 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The provider for the Test Smell Inspection, determines which inspection classes to run
+ */
 public class TestSmellInspectionProvider implements InspectionToolProvider {
 	/**
 	 * Query method for inspection tools provided by a plugin.
@@ -21,22 +24,4 @@ public class TestSmellInspectionProvider implements InspectionToolProvider {
 				EmptyMethodInspection.class
 		};
 	}
-
-	public static List<PsiMethodCallExpression> getMethodExpressions(PsiMethod method){
-		List<PsiMethodCallExpression> methodCallExpressionList = new ArrayList<>();
-		PsiStatement @NotNull [] statements = method.getBody().getStatements();
-		for(PsiStatement statement: statements) {
-			if(statement instanceof PsiExpressionStatement)
-			{
-				PsiExpressionStatement expressionStatement = (PsiExpressionStatement) statement;
-				PsiExpression expression = expressionStatement.getExpression();
-				if(expression instanceof PsiMethodCallExpression) {
-					PsiMethodCallExpression methodCallExpression = (PsiMethodCallExpression) expression;
-					methodCallExpressionList.add(methodCallExpression);
-				}
-			}
-		}
-		return methodCallExpressionList;
-	}
-
 }

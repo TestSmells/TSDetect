@@ -6,15 +6,18 @@ import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.inspections.SmellInspection;
 import org.scanl.plugins.tsdetect.inspections.TestSmellInspectionProvider;
-import org.scanl.plugins.tsdetect.model.ClassModel;
-import org.scanl.plugins.tsdetect.model.Method;
+import org.scanl.plugins.tsdetect.model.InspectionClassModel;
+import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
 import org.scanl.plugins.tsdetect.model.SmellType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SampleVisitor extends JavaRecursiveElementVisitor {
-	private final List<Method> psiMethods = new ArrayList<>();
+/**
+ * Smell Visitor to visit all the files to determine smells
+ */
+public class SmellVisitor extends JavaRecursiveElementVisitor {
+	private final List<InspectionMethodModel> psiMethods = new ArrayList<>();
 
 	private final TestSmellInspectionProvider provider = new TestSmellInspectionProvider();
 
@@ -23,9 +26,9 @@ public class SampleVisitor extends JavaRecursiveElementVisitor {
 	@Override
 	public void visitMethod(PsiMethod method) {
 		List<SmellType> smellTypes = new ArrayList<>();
-		Class<? extends LocalInspectionTool> @NotNull [] classes = provider.getInspectionClasses();
+		Class<? extends LocalInspectionTool> @NotNull [] classes = provider.getInspectionClasses(); //gets the list of smells to check for
 		List<SmellInspection> inspections = new ArrayList<>();
-		for(Class<? extends LocalInspectionTool> c : classes){
+		for(Class<? extends LocalInspectionTool> c : classes){ //converts from .class files into SmellInspection objects
 			try {
 				SmellInspection a = (SmellInspection) c.newInstance();
 				inspections.add(a);
@@ -33,25 +36,32 @@ public class SampleVisitor extends JavaRecursiveElementVisitor {
 				e.printStackTrace();
 			}
 		}
+
 		boolean issues = false;
-		for(SmellInspection inspection:inspections){
+
+		//goes through every SmellInspection present to see if the method has that smell
+		for(SmellInspection inspection:inspections) {
 			boolean helperIssue = inspection.hasSmell(method);
 			if(helperIssue){
 				issues = true;
 				smellTypes.add(inspection.getSmellType());
 			}
 		}
-		JUnitUtil.isTestAnnotated(method);
-		//JUnitUtil.isTestAnnotated(method) checks if it is an annotated test
+
+		//if there are any issues, get the containing class and add to the list of smelly methods
 		if(issues) {
 			PsiClass psiClass = method.getContainingClass();
-			ClassModel methodClass = new ClassModel(psiClass.getQualifiedName(), 0,0, ClassModel.ClassType.Class,psiClass);
-			getPsiMethods().add(new Method(method.getName(), methodClass, 1, 1, method, smellTypes));
+			InspectionClassModel inspectionClassModel = new InspectionClassModel(psiClass.getQualifiedName(), psiClass);
+			getSmellyMethods().add(new InspectionMethodModel(method.getName(), inspectionClassModel, method, smellTypes));
 		}
+
 		super.visitMethod(method);
 	}
 
-	public List<Method> getPsiMethods() {
+	/**
+	 * @return the list of smelly methods that have been determined after visiting all methods
+	 */
+	public List<InspectionMethodModel> getSmellyMethods() {
 		return psiMethods;
 	}
 }

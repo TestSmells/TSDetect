@@ -7,6 +7,9 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Creates the Tabbed Pane Window
+ */
 public class TabbedPaneWindowFactory implements ToolWindowFactory {
 	@Override
 	public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
