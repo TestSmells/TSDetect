@@ -8,7 +8,7 @@ import com.intellij.ui.content.ContentFactory;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Creates the Tabbed Pane Windowccd
+ * Creates the Tabbed Pane Window
  */
 public class TabbedPaneWindowFactory implements ToolWindowFactory {
 	@Override
