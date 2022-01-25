@@ -26,6 +26,7 @@ repositories {
 
 dependencies {
     implementation("jfreechart:jfreechart:1.0.0")
+    testImplementation("org.mockito:mockito-inline:3.12.4")
 
 }
 

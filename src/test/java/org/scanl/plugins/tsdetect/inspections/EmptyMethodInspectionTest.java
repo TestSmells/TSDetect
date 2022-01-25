@@ -1,16 +1,27 @@
 package org.scanl.plugins.tsdetect.inspections;
 
-import com.intellij.psi.PsiElementFactory;
-import com.intellij.psi.PsiType;
+import com.intellij.psi.PsiCodeBlock;
+import com.intellij.psi.PsiMethod;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.scanl.plugins.tsdetect.model.SmellType;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class EmptyMethodInspectionTest {
 
 	EmptyMethodInspection inspection;
+
+	@Mock
+	PsiMethod emptyMethodTest;
+
+	@Mock
+	PsiCodeBlock methodBody;
 
 	@Before
 	public void setup(){
@@ -43,5 +54,19 @@ public class EmptyMethodInspectionTest {
 		SmellType expectedSmellType = SmellType.EMPTY_METHOD;
 		SmellType smellType = inspection.getSmellType();
 		assertEquals(expectedSmellType, smellType);
+	}
+
+	@Test
+	public void testHasSmell(){
+		when(emptyMethodTest.getBody()).thenReturn(methodBody);
+		when(methodBody.isEmpty()).thenReturn(true);
+		assertTrue(inspection.hasSmell(emptyMethodTest));
+	}
+
+	@Test
+	public void testHasNoSmell(){
+		when(emptyMethodTest.getBody()).thenReturn(methodBody);
+		when(methodBody.isEmpty()).thenReturn(false);
+		assertFalse(inspection.hasSmell(emptyMethodTest));
 	}
 }
