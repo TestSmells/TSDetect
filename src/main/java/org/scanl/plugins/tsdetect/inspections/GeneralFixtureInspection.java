@@ -14,16 +14,16 @@ import org.scanl.plugins.tsdetect.model.SmellType;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
+import java.util.*;
+import java.util.List;
 
 /**
  * Empty Method Inspection
  * Looks for test methods that are empty
  */
-public class EmptyMethodInspection extends AbstractBaseJavaLocalInspectionTool implements SmellInspection{
-
+public class GeneralFixtureInspection extends AbstractBaseJavaLocalInspectionTool implements SmellInspection{
 	private static final String DESCRIPTION =
-			PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,"inspection.smell.emptytest.description");
+			PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,"inspection.smell.generalfixture.description");
 
 	/**
 	 * DO NOT OVERRIDE this method.
@@ -42,7 +42,7 @@ public class EmptyMethodInspection extends AbstractBaseJavaLocalInspectionTool i
 	 */
 	@Override
 	public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getDisplayName() {
-		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.emptytest.name.display");
+		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.generalfixture.name.display");
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class EmptyMethodInspection extends AbstractBaseJavaLocalInspectionTool i
 	 */
 	@Override
 	public @NonNls @NotNull String getShortName() {
-		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,"inspection.smell.emptytest.name.short");
+		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,"inspection.smell.generalfixture.name.short");
 	}
 
 	/**
@@ -69,16 +69,49 @@ public class EmptyMethodInspection extends AbstractBaseJavaLocalInspectionTool i
 	@NonNls
 	public String CHECKED_CLASSES = "java.io.PrintStream";
 
+
 	@Override
 	public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
 		return new JavaElementVisitor() {
+
 			@Override
-			public void visitMethod(PsiMethod method) {
-				if (method.getBody() == null)
-					return;
-				if (hasSmell(method))
-					holder.registerProblem(method, DESCRIPTION);
+			public void visitClass(PsiClass cls) {
+				PsiMethod @NotNull [] methods = cls.getMethods();
+				PsiField @NotNull [] fields = cls.getFields();
+				HashMap<String, PsiElement> unusedFields = new HashMap<>();
+				for (PsiField field : fields) {
+					unusedFields.put(field.getName(),field);
+				}
+				for (PsiMethod method : methods) {
+					if(!(method.getName().equals("setUp"))){
+						for (PsiStatement statement : Objects.requireNonNull(method.getBody()).getStatements()) {
+							for (String potMatch : statement.getText().split("\\W+")) {
+//								System.out.print("removing: ");
+//								System.out.println(potMatch);
+								unusedFields.remove(potMatch);
+
+							}
+						}
+					}
+				}
+				//any fields left must be unused
+				for (String unusedField : unusedFields.keySet()) {
+//					System.out.print("unusedfield: ");
+//					System.out.println(unusedField);
+					holder.registerProblem(unusedFields.get(unusedField), DESCRIPTION);
+
+				}
+
+
+
 			}
+//			return new JavaElementVisitor() {
+//				@Override
+//				public void visitClass(PsiClass psiClass) {
+//					if (hasSmell(psiClass))
+//						holder.registerProblem(psiClass, DESCRIPTION);
+//				}
+//			};
 		};
 	}
 
@@ -104,15 +137,15 @@ public class EmptyMethodInspection extends AbstractBaseJavaLocalInspectionTool i
 	}
 
 	/**
-	 * Determines if the PSI Method is empty or not
-	 * @param element the method being looked for to see if it has smells
+	 * Determines if the methods are using all fields declared in the test
+	 * @param element the method being looked for to see if it is using the fields
 	 * @return if the PSI Method is empty or not
 	 */
 	@Override
 	public boolean hasSmell(PsiElement element) {
-		 PsiMethod method = (PsiMethod) element;
-		return Objects.requireNonNull(method.getBody()).isEmpty();
+		return false;
 	}
+
 
 	/**
 	 * Gets the matching smell type enum
@@ -120,6 +153,6 @@ public class EmptyMethodInspection extends AbstractBaseJavaLocalInspectionTool i
 	 */
 	@Override
 	public SmellType getSmellType() {
-		return SmellType.EMPTY_METHOD;
+		return SmellType.GENERAL_FIXTURE;
 	}
 }

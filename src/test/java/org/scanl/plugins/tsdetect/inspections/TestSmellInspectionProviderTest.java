@@ -17,7 +17,8 @@ public class TestSmellInspectionProviderTest extends LightJavaCodeInsightFixture
 
 	public void testGetInspectionClasses(){
 		Class[] expectedClasses = new Class[]{
-				EmptyMethodInspection.class
+				EmptyMethodInspection.class,
+				GeneralFixtureInspection.class
 		};
 		Class<? extends LocalInspectionTool> @NotNull [] actualClasses = provider.getInspectionClasses();
 		assertArrayEquals(expectedClasses, actualClasses);

@@ -54,7 +54,6 @@ public class EmptyMethodInspectionTest extends BasePlatformTestCase {
 		assertTrue(inspection.hasSmell(method));
 	}
 
-
 	public void testHasNoSmell(){
 		PsiMethod method = elementFactory.createMethod("emptyTest", PsiType.VOID);
 		PsiCodeBlock codeBlock = method.getBody();
