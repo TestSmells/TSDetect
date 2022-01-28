@@ -23,7 +23,7 @@ import java.util.Objects;
 public class EmptyMethodInspection extends AbstractBaseJavaLocalInspectionTool implements SmellInspection{
 
 	private static final String DESCRIPTION =
-			PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,"inspection.smell.emptytest.description");
+			PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.emptyTest.description");
 
 	/**
 	 * DO NOT OVERRIDE this method.
@@ -42,7 +42,7 @@ public class EmptyMethodInspection extends AbstractBaseJavaLocalInspectionTool i
 	 */
 	@Override
 	public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getDisplayName() {
-		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.emptytest.name.display");
+		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.emptyTest.name.display");
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class EmptyMethodInspection extends AbstractBaseJavaLocalInspectionTool i
 	 */
 	@Override
 	public @NonNls @NotNull String getShortName() {
-		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,"inspection.smell.emptytest.name.short");
+		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.emptyTest.name.short");
 	}
 
 	/**

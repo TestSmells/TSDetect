@@ -15,7 +15,6 @@ import org.scanl.plugins.tsdetect.model.SmellType;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
-import java.util.List;
 
 /**
  * Empty Method Inspection
@@ -23,7 +22,7 @@ import java.util.List;
  */
 public class GeneralFixtureInspection extends AbstractBaseJavaLocalInspectionTool implements SmellInspection{
 	private static final String DESCRIPTION =
-			PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,"inspection.smell.generalfixture.description");
+			PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.generalFixture.description");
 
 	/**
 	 * DO NOT OVERRIDE this method.
@@ -42,7 +41,7 @@ public class GeneralFixtureInspection extends AbstractBaseJavaLocalInspectionToo
 	 */
 	@Override
 	public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getDisplayName() {
-		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.generalfixture.name.display");
+		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.generalFixture.name.display");
 	}
 
 	/**
@@ -52,7 +51,7 @@ public class GeneralFixtureInspection extends AbstractBaseJavaLocalInspectionToo
 	 */
 	@Override
 	public @NonNls @NotNull String getShortName() {
-		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,"inspection.smell.generalfixture.name.short");
+		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.generalFixture.name.short");
 	}
 
 	/**
@@ -99,6 +98,7 @@ public class GeneralFixtureInspection extends AbstractBaseJavaLocalInspectionToo
 //					System.out.print("unusedfield: ");
 //					System.out.println(unusedField);
 					holder.registerProblem(unusedFields.get(unusedField), DESCRIPTION);
+					//make more clear that it is a test smell problem//todo
 
 				}
 
