@@ -1,17 +1,21 @@
 package org.scanl.plugins.tsdetect.inspections;
 
-import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
-import com.intellij.codeInspection.InspectionEP;
-import com.intellij.codeInspection.LocalInspectionTool;
-import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.ui.InspectionOptionsPanel;
+import com.intellij.codeInspection.util.IntentionFamilyName;
+import com.intellij.codeInspection.util.IntentionName;
+import com.intellij.openapi.project.Project;
+import com.intellij.profile.codeInspection.ProjectInspectionProfileManager;
 import com.intellij.psi.*;
 import com.intellij.ui.DocumentAdapter;
+import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.model.SmellType;
+import org.scanl.plugins.tsdetect.quickfixes.QuickFixComment;
+import org.scanl.plugins.tsdetect.quickfixes.QuickFixRemove;
 
 import javax.swing.*;
 import java.awt.*;
@@ -78,7 +82,9 @@ public class EmptyMethodInspection extends AbstractBaseJavaLocalInspectionTool i
 				if (method.getBody() == null)
 					return;
 				if (hasSmell(method))
-					holder.registerProblem(method, DESCRIPTION);
+					holder.registerProblem(method, DESCRIPTION,
+							new QuickFixRemove("inspection.smell.emptytest.fix.remove"),
+							new QuickFixComment("inspection.smell.emptytest.fix.comment"));
 			}
 		};
 	}
