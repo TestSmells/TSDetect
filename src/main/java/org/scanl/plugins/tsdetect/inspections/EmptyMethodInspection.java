@@ -20,20 +20,10 @@ import java.util.Objects;
  * Empty Method Inspection
  * Looks for test methods that are empty
  */
-public class EmptyMethodInspection extends AbstractBaseJavaLocalInspectionTool implements SmellInspection{
+public class EmptyMethodInspection extends SmellInspection{
 
 	private static final String DESCRIPTION =
 			PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.emptyTest.description");
-
-	/**
-	 * DO NOT OVERRIDE this method.
-	 *
-	 * @see InspectionEP#enabledByDefault
-	 */
-	@Override
-	public boolean isEnabledByDefault() {
-		return true;
-	}
 
 	/**
 	 * @see InspectionEP#displayName
@@ -54,20 +44,6 @@ public class EmptyMethodInspection extends AbstractBaseJavaLocalInspectionTool i
 	public @NonNls @NotNull String getShortName() {
 		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.emptyTest.name.short");
 	}
-
-	/**
-	 * @see InspectionEP#groupDisplayName
-	 * @see InspectionEP#groupKey
-	 * @see InspectionEP#groupBundle
-	 */
-	@Override
-	public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getGroupDisplayName() {
-		return "JavaTestSmells";
-	}
-
-	@SuppressWarnings({"WeakerAccess"})
-	@NonNls
-	public String CHECKED_CLASSES = "java.io.PrintStream";
 
 	@Override
 	public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {

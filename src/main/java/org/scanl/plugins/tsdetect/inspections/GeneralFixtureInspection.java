@@ -1,38 +1,23 @@
 package org.scanl.plugins.tsdetect.inspections;
 
-import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
 import com.intellij.codeInspection.InspectionEP;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.codeInspection.ui.InspectionOptionsPanel;
 import com.intellij.psi.*;
-import com.intellij.ui.DocumentAdapter;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.model.SmellType;
-
-import javax.swing.*;
-import java.awt.*;
 import java.util.*;
 
 /**
  * Empty Method Inspection
  * Looks for test methods that are empty
  */
-public class GeneralFixtureInspection extends AbstractBaseJavaLocalInspectionTool implements SmellInspection{
+public class GeneralFixtureInspection extends SmellInspection{
+
 	private static final String DESCRIPTION =
 			PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.generalFixture.description");
-
-	/**
-	 * DO NOT OVERRIDE this method.
-	 *
-	 * @see InspectionEP#enabledByDefault
-	 */
-	@Override
-	public boolean isEnabledByDefault() {
-		return true;
-	}
 
 	/**
 	 * @see InspectionEP#displayName
@@ -54,25 +39,9 @@ public class GeneralFixtureInspection extends AbstractBaseJavaLocalInspectionToo
 		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.generalFixture.name.short");
 	}
 
-	/**
-	 * @see InspectionEP#groupDisplayName
-	 * @see InspectionEP#groupKey
-	 * @see InspectionEP#groupBundle
-	 */
-	@Override
-	public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getGroupDisplayName() {
-		return "JavaTestSmells";
-	}
-
-	@SuppressWarnings({"WeakerAccess"})
-	@NonNls
-	public String CHECKED_CLASSES = "java.io.PrintStream";
-
-
 	@Override
 	public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
 		return new JavaElementVisitor() {
-
 			@Override
 			public void visitClass(PsiClass cls) {
 				PsiMethod @NotNull [] methods = cls.getMethods();
@@ -85,55 +54,18 @@ public class GeneralFixtureInspection extends AbstractBaseJavaLocalInspectionToo
 					if(!(method.getName().equals("setUp"))){
 						for (PsiStatement statement : Objects.requireNonNull(method.getBody()).getStatements()) {
 							for (String potMatch : statement.getText().split("\\W+")) {
-//								System.out.print("removing: ");
-//								System.out.println(potMatch);
 								unusedFields.remove(potMatch);
-
 							}
 						}
 					}
 				}
 				//any fields left must be unused
 				for (String unusedField : unusedFields.keySet()) {
-//					System.out.print("unusedfield: ");
-//					System.out.println(unusedField);
 					holder.registerProblem(unusedFields.get(unusedField), DESCRIPTION);
 					//make more clear that it is a test smell problem//todo
-
 				}
-
-
-
 			}
-//			return new JavaElementVisitor() {
-//				@Override
-//				public void visitClass(PsiClass psiClass) {
-//					if (hasSmell(psiClass))
-//						holder.registerProblem(psiClass, DESCRIPTION);
-//				}
-//			};
 		};
-	}
-
-	/**
-	 * This method is called each time UI is shown.
-	 * To get correct spacing, return a JComponent with empty insets using Kotlin UI DSL
-	 * or {@link InspectionOptionsPanel}.
-	 *
-	 * @return {@code null} if no UI options required.
-	 */
-	@Override
-	public JComponent createOptionsPanel() {
-		JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		final JTextField checkedClasses = new JTextField(CHECKED_CLASSES);
-		checkedClasses.getDocument().addDocumentListener(new DocumentAdapter() {
-			@Override
-			protected void textChanged(javax.swing.event.@NotNull DocumentEvent e) {
-				CHECKED_CLASSES = checkedClasses.getText();
-			}
-		});
-		panel.add(checkedClasses);
-		return panel;
 	}
 
 	/**
@@ -145,7 +77,6 @@ public class GeneralFixtureInspection extends AbstractBaseJavaLocalInspectionToo
 	public boolean hasSmell(PsiElement element) {
 		return false;
 	}
-
 
 	/**
 	 * Gets the matching smell type enum

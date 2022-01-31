@@ -22,8 +22,6 @@ public class SmellVisitor extends JavaRecursiveElementVisitor {
 
 	private final TestSmellInspectionProvider provider = new TestSmellInspectionProvider();
 
-
-
 	@Override
 	public void visitMethod(PsiMethod method) {
 		List<SmellType> smellTypes = new ArrayList<>();
