@@ -62,8 +62,8 @@ public class EmptyMethodInspection extends SmellInspection{
 					return;
 				if (hasSmell(method))
 					holder.registerProblem(method, DESCRIPTION,
-							new QuickFixRemove("inspection.smell.emptytest.fix.remove"),
-							new QuickFixComment("inspection.smell.emptytest.fix.comment"));
+							new QuickFixRemove("inspection.smell.emptyTest.fix.remove"),
+							new QuickFixComment("inspection.smell.emptyTest.fix.comment"));
 			}
 		};
 	}

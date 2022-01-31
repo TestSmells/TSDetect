@@ -8,6 +8,9 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.model.SmellType;
+import org.scanl.plugins.tsdetect.quickfixes.QuickFixComment;
+import org.scanl.plugins.tsdetect.quickfixes.QuickFixRemove;
+
 import java.util.*;
 
 /**
@@ -61,7 +64,10 @@ public class GeneralFixtureInspection extends SmellInspection{
 				}
 				//any fields left must be unused
 				for (String unusedField : unusedFields.keySet()) {
-					holder.registerProblem(unusedFields.get(unusedField), DESCRIPTION);
+					holder.registerProblem(unusedFields.get(unusedField), DESCRIPTION,
+							new QuickFixRemove("inspection.smell.generalFixture.fix.remove"),
+							new QuickFixComment("inspection.smell.generalFixture.fix.comment")
+							);
 					//make more clear that it is a test smell problem//todo
 				}
 			}
