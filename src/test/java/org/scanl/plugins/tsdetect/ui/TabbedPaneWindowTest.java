@@ -20,8 +20,4 @@ public class TabbedPaneWindowTest extends BasePlatformTestCase {
     public void testCreation(){
         assertNotNull(testPane);
     }
-
-    public void testSetDistTable(){
-        
-    }
 }
