@@ -19,14 +19,17 @@ import java.util.Objects;
  */
 public class SmellVisitor extends JavaRecursiveElementVisitor {
 	private final List<InspectionMethodModel> psiMethods = new ArrayList<>();
+	private final List<InspectionClassModel> psiClasses = new ArrayList<>();
+	private List<String> smellyClasses = new ArrayList<>();
 
 	private final TestSmellInspectionProvider provider = new TestSmellInspectionProvider();
 
 	@Override
-	public void visitMethod(PsiMethod method) {
-		List<SmellType> smellTypes = new ArrayList<>();
+	public void visitClass(PsiClass cls){
+
 		Class<? extends LocalInspectionTool> @NotNull [] classes = provider.getInspectionClasses(); //gets the list of smells to check for
 		List<SmellInspection> inspections = new ArrayList<>();
+
 		for(Class<? extends LocalInspectionTool> c : classes){ //converts from .class files into SmellInspection objects
 			try {
 				SmellInspection a = (SmellInspection) c.newInstance();
@@ -35,26 +38,53 @@ public class SmellVisitor extends JavaRecursiveElementVisitor {
 				e.printStackTrace();
 			}
 		}
+		determineSmellsByClass(cls, inspections);
+		for(PsiMethod method:cls.getMethods())
+			determineSmellsByMethod(method, inspections);
 
+	}
+
+	public void determineSmellsByClass(PsiClass cls, List<SmellInspection> inspections){
+		List<SmellType> classSmellTypes = new ArrayList<>();
 		boolean issues = false;
 
-		//goes through every SmellInspection present to see if the method has that smell
+		//goes through every SmellInspection present to see if the class has that smell
 		for(SmellInspection inspection:inspections) {
+			if (inspection.hasSmell(cls)) {
+					issues = true;
+					classSmellTypes.add(inspection.getSmellType());
+			}
+		}
+
+		if(issues) {
+			InspectionClassModel inspectionClassModel = new InspectionClassModel(Objects.requireNonNull(cls).getQualifiedName(), cls, classSmellTypes);
+			getSmellyClasses().add(inspectionClassModel);
+			smellyClasses.add(cls.getQualifiedName());
+		}
+	}
+
+	public void determineSmellsByMethod(PsiMethod method, List<SmellInspection> inspections){
+		List<SmellType> smellTypes = new ArrayList<>();
+		boolean issues = false;
+		for(SmellInspection inspection:inspections){
 			boolean helperIssue = inspection.hasSmell(method);
 			if(helperIssue){
 				issues = true;
 				smellTypes.add(inspection.getSmellType());
 			}
 		}
-
-		//if there are any issues, get the containing class and add to the list of smelly methods
+		JUnitUtil.isTestAnnotated(method);
+		//JUnitUtil.isTestAnnotated(method) checks if it is an annotated test
 		if(issues) {
 			PsiClass psiClass = method.getContainingClass();
-			InspectionClassModel inspectionClassModel = new InspectionClassModel(Objects.requireNonNull(psiClass).getQualifiedName(), psiClass);
-			getSmellyMethods().add(new InspectionMethodModel(method.getName(), inspectionClassModel, method, smellTypes));
+			assert psiClass != null;
+			InspectionClassModel classModel = new InspectionClassModel(psiClass.getQualifiedName(), psiClass, smellTypes);
+			getSmellyMethods().add(new InspectionMethodModel(method.getName(), classModel, method, smellTypes));
+			if(!smellyClasses.contains(psiClass.getQualifiedName())){
+				getSmellyClasses().add(classModel);
+				smellyClasses.add(psiClass.getQualifiedName());
+			}
 		}
-
-		super.visitMethod(method);
 	}
 
 	/**
@@ -63,4 +93,6 @@ public class SmellVisitor extends JavaRecursiveElementVisitor {
 	public List<InspectionMethodModel> getSmellyMethods() {
 		return psiMethods;
 	}
+
+	public List<InspectionClassModel> getSmellyClasses(){return psiClasses;}
 }
