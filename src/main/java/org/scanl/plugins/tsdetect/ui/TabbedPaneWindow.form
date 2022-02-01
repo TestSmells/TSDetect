@@ -39,6 +39,7 @@
                 </constraints>
                 <properties>
                   <text value="Refresh"/>
+                  <toolTipText value="Refreshes the methods and smells in those methods (If they have any)"/>
                 </properties>
               </component>
             </children>
