@@ -1,6 +1,9 @@
 package org.scanl.plugins.tsdetect.inspections;
 
 import com.intellij.codeInspection.*;
+import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
+import com.intellij.codeInspection.InspectionEP;
+import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.ui.InspectionOptionsPanel;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
@@ -25,20 +28,10 @@ import java.util.Objects;
  * Empty Method Inspection
  * Looks for test methods that are empty
  */
-public class EmptyMethodInspection extends AbstractBaseJavaLocalInspectionTool implements SmellInspection{
+public class EmptyMethodInspection extends SmellInspection{
 
 	private static final String DESCRIPTION =
-			PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,"inspection.smell.emptytest.description");
-
-	/**
-	 * DO NOT OVERRIDE this method.
-	 *
-	 * @see InspectionEP#enabledByDefault
-	 */
-	@Override
-	public boolean isEnabledByDefault() {
-		return true;
-	}
+			PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.emptyTest.description");
 
 	/**
 	 * @see InspectionEP#displayName
@@ -47,7 +40,7 @@ public class EmptyMethodInspection extends AbstractBaseJavaLocalInspectionTool i
 	 */
 	@Override
 	public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getDisplayName() {
-		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.emptytest.name.display");
+		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.emptyTest.name.display");
 	}
 
 	/**
@@ -57,22 +50,8 @@ public class EmptyMethodInspection extends AbstractBaseJavaLocalInspectionTool i
 	 */
 	@Override
 	public @NonNls @NotNull String getShortName() {
-		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,"inspection.smell.emptytest.name.short");
+		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.emptyTest.name.short");
 	}
-
-	/**
-	 * @see InspectionEP#groupDisplayName
-	 * @see InspectionEP#groupKey
-	 * @see InspectionEP#groupBundle
-	 */
-	@Override
-	public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getGroupDisplayName() {
-		return "JavaTestSmells";
-	}
-
-	@SuppressWarnings({"WeakerAccess"})
-	@NonNls
-	public String CHECKED_CLASSES = "java.io.PrintStream";
 
 	@Override
 	public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
@@ -83,8 +62,8 @@ public class EmptyMethodInspection extends AbstractBaseJavaLocalInspectionTool i
 					return;
 				if (hasSmell(method))
 					holder.registerProblem(method, DESCRIPTION,
-							new QuickFixRemove("inspection.smell.emptytest.fix.remove"),
-							new QuickFixComment("inspection.smell.emptytest.fix.comment"));
+							new QuickFixRemove("inspection.smell.emptyTest.fix.remove"),
+							new QuickFixComment("inspection.smell.emptyTest.fix.comment"));
 			}
 		};
 	}
@@ -112,12 +91,16 @@ public class EmptyMethodInspection extends AbstractBaseJavaLocalInspectionTool i
 
 	/**
 	 * Determines if the PSI Method is empty or not
-	 * @param method the method being looked for to see if it has smells
+	 * @param element the method being looked for to see if it has smells
 	 * @return if the PSI Method is empty or not
 	 */
 	@Override
-	public boolean hasSmell(PsiMethod method) {
-		return Objects.requireNonNull(method.getBody()).isEmpty();
+	public boolean hasSmell(PsiElement element) {
+		if(element instanceof PsiMethod) {
+			PsiMethod method = (PsiMethod) element;
+			return Objects.requireNonNull(method.getBody()).isEmpty();
+		}
+		return false;
 	}
 
 	/**

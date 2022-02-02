@@ -67,7 +67,6 @@ public class EmptyMethodInspectionTest extends LightJavaCodeInsightFixtureTestCa
 		assertTrue(inspection.hasSmell(method));
 	}
 
-
 	public void testHasNoSmell(){
 		PsiMethod method = psiClass.findMethodsByName("NotEmptyTest", false)[0];
 		assertFalse(inspection.hasSmell(method));
