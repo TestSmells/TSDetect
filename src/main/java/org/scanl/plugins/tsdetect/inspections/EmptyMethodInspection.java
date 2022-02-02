@@ -69,27 +69,6 @@ public class EmptyMethodInspection extends SmellInspection{
 	}
 
 	/**
-	 * This method is called each time UI is shown.
-	 * To get correct spacing, return a JComponent with empty insets using Kotlin UI DSL
-	 * or {@link InspectionOptionsPanel}.
-	 *
-	 * @return {@code null} if no UI options required.
-	 */
-	@Override
-	public JComponent createOptionsPanel() {
-		JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		final JTextField checkedClasses = new JTextField(CHECKED_CLASSES);
-		checkedClasses.getDocument().addDocumentListener(new DocumentAdapter() {
-			@Override
-			protected void textChanged(javax.swing.event.@NotNull DocumentEvent e) {
-				CHECKED_CLASSES = checkedClasses.getText();
-			}
-		});
-		panel.add(checkedClasses);
-		return panel;
-	}
-
-	/**
 	 * Determines if the PSI Method is empty or not
 	 * @param element the method being looked for to see if it has smells
 	 * @return if the PSI Method is empty or not
