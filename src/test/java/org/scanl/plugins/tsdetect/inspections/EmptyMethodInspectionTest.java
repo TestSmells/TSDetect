@@ -1,18 +1,9 @@
 package org.scanl.plugins.tsdetect.inspections;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.psi.*;
 import com.intellij.testFramework.TestDataPath;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import org.scanl.plugins.tsdetect.InspectionTest;
 import org.scanl.plugins.tsdetect.model.SmellType;
-
-import java.io.File;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Scanner;
 
 
 @TestDataPath("$CONTENT_ROOT/src/test/testData")
@@ -26,17 +17,7 @@ public class EmptyMethodInspectionTest extends InspectionTest {
 	public void setUp() throws Exception {
 		super.setUp();
 		inspection = new EmptyMethodInspection();
-		Project project = Objects.requireNonNull(ProjectManager.getInstanceIfCreated()).getOpenProjects()[0];
-		PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(project);
-		File f = new File("src//test//testData//inspections//EmptyTestMethodData.java");
-		Scanner fileReader = new Scanner(f);
-		StringBuilder sb = new StringBuilder();
-		while(fileReader.hasNextLine()){
-			sb.append(fileReader.nextLine());
-			sb.append('\n');
-		}
-		PsiJavaFile psiFile = (PsiJavaFile) psiFileFactory.createFileFromText(f.getName(), sb.toString());
-		psiClass = psiFile.getClasses()[0];
+		psiClass = loadExample("EmptyTestMethodData.java");//psiFile.getClasses()[0];
 	}
 
 	public void testDisplayName(){

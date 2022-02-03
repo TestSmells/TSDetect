@@ -1,17 +1,12 @@
 package org.scanl.plugins.tsdetect.inspections;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.psi.*;
-import junit.framework.TestCase;
+import com.intellij.testFramework.TestDataPath;
 import org.scanl.plugins.tsdetect.InspectionTest;
 import org.scanl.plugins.tsdetect.model.SmellType;
-
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Objects;
-import java.util.Scanner;
 
+@TestDataPath("$CONTENT_ROOT/src/test/testData")
 public class GeneralFixtureInspectionTest extends InspectionTest {
     GeneralFixtureInspection inspection;
     private PsiClass psiClass;
