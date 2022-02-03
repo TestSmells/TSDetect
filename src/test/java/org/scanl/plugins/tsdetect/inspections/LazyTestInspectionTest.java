@@ -68,7 +68,7 @@ public class LazyTestInspectionTest extends InspectionTest {
 	public void testGetMethodArray(){
 		List<PsiMethod> methods = inspection.getAllMethodCalls();
 		assertNotNull("Asserts that the variable itself is not null",methods);
-		assertEquals("Asserts that the size is what is expected",methods.size(), 1);
+		assertEquals("Asserts that the size is what is expected",methods.size(), 2);
 		assertEquals("Asserts that the expected class contained" +
 				"expected method",methods.get(0).getName(),"getVal");
 	}
