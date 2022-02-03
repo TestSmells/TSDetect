@@ -62,57 +62,35 @@ public class LazyTestInspection  extends SmellInspection{
 	@Override
 	public boolean hasSmell(PsiElement element) {
 		issueStatements = new ArrayList<>();
-		HashMap<String, PsiMethod[]> methodCallsByClassName = getMethodCalls();
+		List<PsiMethod> psiMethods = getAllMethodCalls();
 		if(element instanceof PsiClass) {
 			PsiClass psiClass = (PsiClass) element;
-			for(PsiMethod method:psiClass.getMethods()){
-				for(PsiStatement statement: Objects.requireNonNull(method.getBody()).getStatements()){
-					if(statement instanceof PsiDeclarationStatement){
-						PsiDeclarationStatement declarationStatement = (PsiDeclarationStatement) statement;
-						if(determineIssueDeclarationStatement(declarationStatement, methodCallsByClassName)){
-							issueStatements.add(statement);
-						}
-					}
-					else {
-						if (statement instanceof PsiExpressionStatement) {
-							PsiExpressionStatement expressionStatement = (PsiExpressionStatement) statement;
-							if (determineIssueExpressionStatement(expressionStatement, methodCallsByClassName)) {
-								issueStatements.add(statement);
+			for(PsiMethod proMethod:psiMethods) {
+				List<PsiStatement> possibleIssues = new ArrayList<>();
+				for (PsiMethod method : psiClass.getMethods()) {
+					for (PsiStatement statement : Objects.requireNonNull(method.getBody()).getStatements()) {
+						if (statement instanceof PsiDeclarationStatement) {
+							PsiDeclarationStatement declarationStatement = (PsiDeclarationStatement) statement;
+							if(determineMatchingPsiDeclaration(declarationStatement, proMethod))
+								possibleIssues.add(statement);
+
+						} else {
+							if (statement instanceof PsiExpressionStatement) {
+								PsiExpressionStatement expressionStatement = (PsiExpressionStatement) statement;
+								if(determineMatchingPsiExpression(expressionStatement, proMethod))
+									possibleIssues.add(statement);
 							}
 						}
 					}
 				}
+				if(possibleIssues.size()>1)
+					issueStatements.addAll(possibleIssues);
 			}
 		}
 		return issueStatements.size()>0;
 	}
 
-	boolean determineIssueDeclarationStatement(PsiDeclarationStatement declarationStatement, HashMap<String, PsiMethod[]> methodList){
-		PsiElement psiElement = declarationStatement.getDeclaredElements()[0];
-		if(psiElement instanceof PsiLocalVariable) {
-			PsiLocalVariable e = (PsiLocalVariable) declarationStatement.getDeclaredElements()[0];
-			if(e.getInitializer() instanceof PsiMethodCallExpression) {
-				PsiMethodCallExpression expression = (PsiMethodCallExpression) e.getInitializer();
-				return determineIssue(expression, methodList);
-			}
-		}
-		return false;
-	}
-
-	private boolean determineIssue(PsiMethodCallExpression expression, HashMap<String, PsiMethod[]> methodList) {
-		PsiMethod psiMethod = Objects.requireNonNull(expression).resolveMethod();
-		PsiClass productionClass = Objects.requireNonNull(psiMethod).getContainingClass();
-		String className = Objects.requireNonNull(productionClass).getQualifiedName();
-		if(methodList.containsKey(className)) {
-			PsiMethod[] productionMethods = methodList.get(className);
-			for (PsiMethod m : productionMethods) {
-				return m.getName().equals(psiMethod.getName());
-			}
-		}
-		return false;
-	}
-
-	boolean determineIssueExpressionStatement(PsiExpressionStatement expressionStatement, HashMap<String, PsiMethod[]> methodList){
+	private boolean determineMatchingPsiExpression(PsiExpressionStatement expressionStatement, PsiMethod method){
 		PsiExpression expression = expressionStatement.getExpression();
 		if(expression instanceof PsiMethodCallExpression) {
 			PsiMethodCallExpression methodCallExpression = (PsiMethodCallExpression) expression;
@@ -120,33 +98,41 @@ public class LazyTestInspection  extends SmellInspection{
 			for (PsiExpression e : expressionList.getExpressions()) {
 				if (e instanceof PsiMethodCallExpression) {
 					PsiMethodCallExpression mCall = (PsiMethodCallExpression) e;
-					return determineIssue(mCall, methodList);
+					PsiMethod psiMethod = Objects.requireNonNull(mCall).resolveMethod();
+					return Objects.requireNonNull(psiMethod).getName().equals(method.getName());
 				}
 			}
 		}
 		return false;
 	}
 
-	/**
-	 * Gets all of the methods in all production classes
-	 * that are found in the project
-	 * @return a list of methods
-	 */
-	HashMap<String, PsiMethod[]> getMethodCalls(){
-		HashMap<String, PsiMethod[]> variables = new HashMap<>();
+	private boolean determineMatchingPsiDeclaration(PsiDeclarationStatement declarationStatement, PsiMethod method){
+		PsiElement psiElement = declarationStatement.getDeclaredElements()[0];
+		if(psiElement instanceof PsiLocalVariable) {
+			PsiLocalVariable e = (PsiLocalVariable) declarationStatement.getDeclaredElements()[0];
+			if(e.getInitializer() instanceof PsiMethodCallExpression) {
+				PsiMethodCallExpression expression = (PsiMethodCallExpression) e.getInitializer();
+				PsiMethod psiMethod = Objects.requireNonNull(expression).resolveMethod();
+				return method.getName().equals(Objects.requireNonNull(psiMethod).getName());
+			}
+		}
+		return false;
+	}
+
+
+	List<PsiMethod> getAllMethodCalls(){
+		ArrayList<PsiMethod> methods = new ArrayList<>();
 		Project project = ProjectManager.getInstance().getOpenProjects()[0];
 		Collection<VirtualFile> vFiles = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME,
 				JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project));
-		ArrayList<PsiMethod> methods = new ArrayList<>();
 		for(VirtualFile vf: vFiles){
 			PsiJavaFile psiFile = (PsiJavaFile) PsiManager.getInstance(project).findFile(Objects.requireNonNull(vf));
 			PsiClass productionClass = Objects.requireNonNull(psiFile).getClasses()[0];
 			if(!JUnitUtil.isTestClass(productionClass)) {
-				variables.put(productionClass.getQualifiedName(), productionClass.getMethods());
 				methods.addAll(Arrays.asList(productionClass.getMethods()));
 			}
 		}
-		return variables;
+		return methods;
 	}
 
 

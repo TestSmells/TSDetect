@@ -13,10 +13,7 @@ import org.scanl.plugins.tsdetect.model.SmellType;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 @TestDataPath("$CONTENT_ROOT/src/test/testData")
 public class LazyTestInspectionTest extends LightJavaCodeInsightFixtureTestCase {
@@ -72,12 +69,11 @@ public class LazyTestInspectionTest extends LightJavaCodeInsightFixtureTestCase 
 	}
 
 	public void testGetMethodArray(){
-		HashMap<String, PsiMethod[]> methods = inspection.getMethodCalls();
+		List<PsiMethod> methods = inspection.getAllMethodCalls();
 		assertNotNull("Asserts that the variable itself is not null",methods);
 		assertEquals("Asserts that the size is what is expected",methods.size(), 1);
-		assertTrue("Asserts that the expected class is contained", methods.containsKey("TestClass"));
 		assertEquals("Asserts that the expected class contained" +
-				"expected method",methods.get("TestClass")[0].getName(),"getVal");
+				"expected method",methods.get(0).getName(),"getVal");
 	}
 
 	public void testHasSmell(){
