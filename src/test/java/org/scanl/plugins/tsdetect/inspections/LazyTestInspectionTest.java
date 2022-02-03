@@ -9,6 +9,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.testFramework.TestDataPath;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import org.intellij.lang.annotations.Language;
+import org.scanl.plugins.tsdetect.InspectionTest;
 import org.scanl.plugins.tsdetect.model.SmellType;
 
 import java.io.File;
@@ -16,7 +17,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 @TestDataPath("$CONTENT_ROOT/src/test/testData")
-public class LazyTestInspectionTest extends LightJavaCodeInsightFixtureTestCase {
+public class LazyTestInspectionTest extends InspectionTest {
 
 	LazyTestInspection inspection;
 	PsiClass psiSmellClass;
@@ -32,16 +33,12 @@ public class LazyTestInspectionTest extends LightJavaCodeInsightFixtureTestCase 
 		project = Objects.requireNonNull(ProjectManager.getInstanceIfCreated()).getOpenProjects()[0];
 		psiFileFactory = PsiFileFactory.getInstance(project);
 
-		@Language("JAVA") String psiSmellCode = readFile("src//test//testData//inspections//LazyTest.java");
-		psiFile = (PsiJavaFile) psiFileFactory.createFileFromText("LazyTest.java", psiSmellCode);
-		psiSmellClass = psiFile.getClasses()[0];
+		psiSmellClass = loadExample("LazyTest.java");
 
-		psiSmellCode = readFile("src//test//testData//TestClass.java");
-		myFixture.addClass(psiSmellCode);
+		PsiClass psiSmellCode = loadExample("TestClass.java");
+		myFixture.addClass(psiSmellCode.getText());
 
-		psiSmellCode = readFile("src//test//testData//inspections//EmptyTestMethodData.java");
-		psiFile = (PsiJavaFile) psiFileFactory.createFileFromText("EmptyTestMethodData.java", psiSmellCode);
-		psiNoSmellClass = psiFile.getClasses()[0];
+		psiNoSmellClass = loadExample("EmptyTestMethodData.java");
 	}
 
 	public void testDisplayName(){
@@ -84,14 +81,4 @@ public class LazyTestInspectionTest extends LightJavaCodeInsightFixtureTestCase 
 		assertFalse(inspection.hasSmell(psiNoSmellClass));
 	}
 
-	private String readFile(String fileName) throws FileNotFoundException {
-		File f = new File(fileName);
-		Scanner fileReader = new Scanner(f);
-		StringBuilder sb = new StringBuilder();
-		while(fileReader.hasNextLine()){
-			sb.append(fileReader.nextLine());
-			sb.append('\n');
-		}
-		return sb.toString();
-	}
 }
