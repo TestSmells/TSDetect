@@ -2,6 +2,7 @@ package org.scanl.plugins.tsdetect.inspections;
 
 import com.intellij.codeInspection.InspectionEP;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.execution.junit.JUnitUtil;
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -50,7 +51,6 @@ public class LazyTestInspection  extends SmellInspection{
 		return new JavaElementVisitor() {
 			@Override
 			public void visitClass(PsiClass cls) {
-				issueStatements = new ArrayList<>();
 				if(hasSmell(cls)) {
 					for(PsiStatement statement:issueStatements)
 						holder.registerProblem(statement, DESCRIPTION);
@@ -61,58 +61,92 @@ public class LazyTestInspection  extends SmellInspection{
 
 	@Override
 	public boolean hasSmell(PsiElement element) {
+		issueStatements = new ArrayList<>();
+		HashMap<String, PsiMethod[]> methodCallsByClassName = getMethodCalls();
 		if(element instanceof PsiClass) {
 			PsiClass psiClass = (PsiClass) element;
-			if (hasMatchingClass(psiClass)) {
-				PsiMethod[] methods = getMethodCalls(psiClass);
-				for(PsiMethod productionMethod:methods){
-					int count = 0;
-					for(PsiMethod psiMethod:psiClass.getMethods()){
-						if(Objects.requireNonNull(psiMethod.getBody()).getText().contains(productionMethod.getName())){
-							count++;
+			for(PsiMethod method:psiClass.getMethods()){
+				for(PsiStatement statement: Objects.requireNonNull(method.getBody()).getStatements()){
+					if(statement instanceof PsiDeclarationStatement){
+						PsiDeclarationStatement declarationStatement = (PsiDeclarationStatement) statement;
+						if(determineIssueDeclarationStatement(declarationStatement, methodCallsByClassName)){
+							issueStatements.add(statement);
 						}
 					}
-					if(count>1) {
-						for(PsiMethod method:psiClass.getMethods()){
-							for(PsiStatement statement: Objects.requireNonNull(method.getBody()).getStatements()){
-								if(statement.getText().contains(productionMethod.getName()))
-									issueStatements.add(statement);
+					else {
+						if (statement instanceof PsiExpressionStatement) {
+							PsiExpressionStatement expressionStatement = (PsiExpressionStatement) statement;
+							if (determineIssueExpressionStatement(expressionStatement, methodCallsByClassName)) {
+								issueStatements.add(statement);
 							}
 						}
 					}
 				}
-				return true;
+			}
+		}
+		return issueStatements.size()>0;
+	}
+
+	boolean determineIssueDeclarationStatement(PsiDeclarationStatement declarationStatement, HashMap<String, PsiMethod[]> methodList){
+		PsiElement psiElement = declarationStatement.getDeclaredElements()[0];
+		if(psiElement instanceof PsiLocalVariable) {
+			PsiLocalVariable e = (PsiLocalVariable) declarationStatement.getDeclaredElements()[0];
+			if(e.getInitializer() instanceof PsiMethodCallExpression) {
+				PsiMethodCallExpression expression = (PsiMethodCallExpression) e.getInitializer();
+				return determineIssue(expression, methodList);
 			}
 		}
 		return false;
 	}
 
-	boolean hasMatchingClass(PsiClass psiClass){
-		HashMap<String, String> classes = getPairs();
-		return classes.containsKey(psiClass.getQualifiedName());
+	private boolean determineIssue(PsiMethodCallExpression expression, HashMap<String, PsiMethod[]> methodList) {
+		PsiMethod psiMethod = Objects.requireNonNull(expression).resolveMethod();
+		PsiClass productionClass = Objects.requireNonNull(psiMethod).getContainingClass();
+		String className = Objects.requireNonNull(productionClass).getQualifiedName();
+		if(methodList.containsKey(className)) {
+			PsiMethod[] productionMethods = methodList.get(className);
+			for (PsiMethod m : productionMethods) {
+				return m.getName().equals(psiMethod.getName());
+			}
+		}
+		return false;
 	}
 
-	private HashMap<String, String> getPairs(){
-		HashMap<String, String> classes = new HashMap<>();
-		classes.put("LazyTest", "TestClass");
-		return classes;
+	boolean determineIssueExpressionStatement(PsiExpressionStatement expressionStatement, HashMap<String, PsiMethod[]> methodList){
+		PsiExpression expression = expressionStatement.getExpression();
+		if(expression instanceof PsiMethodCallExpression) {
+			PsiMethodCallExpression methodCallExpression = (PsiMethodCallExpression) expression;
+			PsiExpressionList expressionList = methodCallExpression.getArgumentList();
+			for (PsiExpression e : expressionList.getExpressions()) {
+				if (e instanceof PsiMethodCallExpression) {
+					PsiMethodCallExpression mCall = (PsiMethodCallExpression) e;
+					return determineIssue(mCall, methodList);
+				}
+			}
+		}
+		return false;
 	}
 
-	PsiMethod[] getMethodCalls(PsiClass psiClass){
-		HashMap<String, String> classes = getPairs();
-
+	/**
+	 * Gets all of the methods in all production classes
+	 * that are found in the project
+	 * @return a list of methods
+	 */
+	HashMap<String, PsiMethod[]> getMethodCalls(){
+		HashMap<String, PsiMethod[]> variables = new HashMap<>();
 		Project project = ProjectManager.getInstance().getOpenProjects()[0];
-		String productionClassName = classes.get(psiClass.getQualifiedName());
-		VirtualFile virtualFile = null;
 		Collection<VirtualFile> vFiles = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME,
 				JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project));
+		ArrayList<PsiMethod> methods = new ArrayList<>();
 		for(VirtualFile vf: vFiles){
-			if(vf.getNameWithoutExtension().toLowerCase().equals(productionClassName.toLowerCase()))
-				virtualFile = vf;
+			PsiJavaFile psiFile = (PsiJavaFile) PsiManager.getInstance(project).findFile(Objects.requireNonNull(vf));
+			PsiClass productionClass = Objects.requireNonNull(psiFile).getClasses()[0];
+			if(!JUnitUtil.isTestClass(productionClass)) {
+				variables.put(productionClass.getQualifiedName(), productionClass.getMethods());
+				methods.addAll(Arrays.asList(productionClass.getMethods()));
+			}
 		}
-		PsiJavaFile psiFile = (PsiJavaFile) PsiManager.getInstance(project).findFile(Objects.requireNonNull(virtualFile));
-		PsiClass productionClass = Objects.requireNonNull(psiFile).getClasses()[0];
-		return productionClass.getMethods();
+		return variables;
 	}
 
 

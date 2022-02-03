@@ -8,9 +8,13 @@ import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.testFramework.TestDataPath;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
+import org.intellij.lang.annotations.Language;
 import org.scanl.plugins.tsdetect.model.SmellType;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -18,7 +22,8 @@ import java.util.Scanner;
 public class LazyTestInspectionTest extends LightJavaCodeInsightFixtureTestCase {
 
 	LazyTestInspection inspection;
-	PsiClass psiClass;
+	PsiClass psiSmellClass;
+	PsiClass psiNoSmellClass;
 	PsiFileFactory psiFileFactory;
 	PsiJavaFile psiFile;
 	Project project;
@@ -29,25 +34,17 @@ public class LazyTestInspectionTest extends LightJavaCodeInsightFixtureTestCase 
 		inspection = new LazyTestInspection();
 		project = Objects.requireNonNull(ProjectManager.getInstanceIfCreated()).getOpenProjects()[0];
 		psiFileFactory = PsiFileFactory.getInstance(project);
-		File f = new File("src//test//testData//inspections//LazyTest.java");
-		Scanner fileReader = new Scanner(f);
-		StringBuilder sb = new StringBuilder();
-		while(fileReader.hasNextLine()){
-			sb.append(fileReader.nextLine());
-			sb.append('\n');
-		}
-		psiFile = (PsiJavaFile) psiFileFactory.createFileFromText(f.getName(), sb.toString());
-		psiClass = psiFile.getClasses()[0];
 
-		f = new File("src//test//testData//TestClass.java");
-		fileReader = new Scanner(f);
-		sb = new StringBuilder();
-		while(fileReader.hasNextLine()){
-			sb.append(fileReader.nextLine());
-			sb.append('\n');
-		}
-		myFixture.addClass(sb.toString());
+		@Language("JAVA") String psiSmellCode = readFile("src//test//testData//inspections//LazyTest.java");
+		psiFile = (PsiJavaFile) psiFileFactory.createFileFromText("LazyTest.java", psiSmellCode);
+		psiSmellClass = psiFile.getClasses()[0];
 
+		psiSmellCode = readFile("src//test//testData//TestClass.java");
+		myFixture.addClass(psiSmellCode);
+
+		psiSmellCode = readFile("src//test//testData//inspections//EmptyTestMethodData.java");
+		psiFile = (PsiJavaFile) psiFileFactory.createFileFromText("EmptyTestMethodData.java", psiSmellCode);
+		psiNoSmellClass = psiFile.getClasses()[0];
 	}
 
 	public void testDisplayName(){
@@ -75,12 +72,30 @@ public class LazyTestInspectionTest extends LightJavaCodeInsightFixtureTestCase 
 	}
 
 	public void testGetMethodArray(){
-		PsiMethod[] methods = inspection.getMethodCalls(psiClass);
-		assertNotNull(methods);
-		assertEquals(methods.length, 1);
+		HashMap<String, PsiMethod[]> methods = inspection.getMethodCalls();
+		assertNotNull("Asserts that the variable itself is not null",methods);
+		assertEquals("Asserts that the size is what is expected",methods.size(), 1);
+		assertTrue("Asserts that the expected class is contained", methods.containsKey("TestClass"));
+		assertEquals("Asserts that the expected class contained" +
+				"expected method",methods.get("TestClass")[0].getName(),"getVal");
 	}
 
 	public void testHasSmell(){
-		assertTrue(inspection.hasSmell(psiClass));
+		assertTrue(inspection.hasSmell(psiSmellClass));
+	}
+
+	public void testHasNoSmell(){
+		assertFalse(inspection.hasSmell(psiNoSmellClass));
+	}
+
+	private String readFile(String fileName) throws FileNotFoundException {
+		File f = new File(fileName);
+		Scanner fileReader = new Scanner(f);
+		StringBuilder sb = new StringBuilder();
+		while(fileReader.hasNextLine()){
+			sb.append(fileReader.nextLine());
+			sb.append('\n');
+		}
+		return sb.toString();
 	}
 }
