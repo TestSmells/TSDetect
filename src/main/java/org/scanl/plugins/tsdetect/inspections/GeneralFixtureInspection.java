@@ -22,6 +22,8 @@ public class GeneralFixtureInspection extends SmellInspection{
 	private static final String DESCRIPTION =
 			PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.generalFixture.description");
 
+	private HashMap<String, PsiElement> unusedFields;
+
 	/**
 	 * @see InspectionEP#displayName
 	 * @see InspectionEP#key
@@ -47,28 +49,15 @@ public class GeneralFixtureInspection extends SmellInspection{
 		return new JavaElementVisitor() {
 			@Override
 			public void visitClass(PsiClass cls) {
-				PsiMethod @NotNull [] methods = cls.getMethods();
-				PsiField @NotNull [] fields = cls.getFields();
-				HashMap<String, PsiElement> unusedFields = new HashMap<>();
-				for (PsiField field : fields) {
-					unusedFields.put(field.getName(),field);
-				}
-				for (PsiMethod method : methods) {
-					if(!(method.getName().equals("setUp"))){
-						for (PsiStatement statement : Objects.requireNonNull(method.getBody()).getStatements()) {
-							for (String potMatch : statement.getText().split("\\W+")) {
-								unusedFields.remove(potMatch);
-							}
-						}
+				if(hasSmell(cls)) {
+					//any fields left must be unused
+					for (String unusedField : unusedFields.keySet()) {
+						holder.registerProblem(unusedFields.get(unusedField), DESCRIPTION,
+								new QuickFixRemove("inspection.smell.generalFixture.fix.remove"),
+								new QuickFixComment("inspection.smell.generalFixture.fix.comment")
+						);
+						//make more clear that it is a test smell problem//todo
 					}
-				}
-				//any fields left must be unused
-				for (String unusedField : unusedFields.keySet()) {
-					holder.registerProblem(unusedFields.get(unusedField), DESCRIPTION,
-							new QuickFixRemove("inspection.smell.generalFixture.fix.remove"),
-							new QuickFixComment("inspection.smell.generalFixture.fix.comment")
-							);
-					//make more clear that it is a test smell problem//todo
 				}
 			}
 		};
@@ -81,7 +70,23 @@ public class GeneralFixtureInspection extends SmellInspection{
 	 */
 	@Override
 	public boolean hasSmell(PsiElement element) {
-		return false;
+		PsiClass cls = (PsiClass) element;
+		PsiMethod @NotNull [] methods = cls.getMethods();
+		PsiField @NotNull [] fields = cls.getFields();
+		unusedFields = new HashMap<>();
+		for (PsiField field : fields) {
+			unusedFields.put(field.getName(),field);
+		}
+		for (PsiMethod method : methods) {
+			if(!(method.getName().equals("setUp"))){
+				for (PsiStatement statement : Objects.requireNonNull(method.getBody()).getStatements()) {
+					for (String potMatch : statement.getText().split("\\W+")) {
+						unusedFields.remove(potMatch);
+					}
+				}
+			}
+		}
+		return unusedFields.keySet().size() > 0;
 	}
 
 	/**
