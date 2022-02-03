@@ -6,6 +6,7 @@ import com.intellij.psi.*;
 import com.intellij.testFramework.TestDataPath;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
+import org.scanl.plugins.tsdetect.InspectionTest;
 import org.scanl.plugins.tsdetect.model.SmellType;
 
 import java.io.File;
@@ -15,7 +16,7 @@ import java.util.Scanner;
 
 
 @TestDataPath("$CONTENT_ROOT/src/test/testData")
-public class EmptyMethodInspectionTest extends LightJavaCodeInsightFixtureTestCase {
+public class EmptyMethodInspectionTest extends InspectionTest {
 
 
 	EmptyMethodInspection inspection;
