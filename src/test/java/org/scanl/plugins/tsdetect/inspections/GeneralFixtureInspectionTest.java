@@ -47,7 +47,7 @@ public class GeneralFixtureInspectionTest extends InspectionTest {
     //todo switch to a more complex example file
     public void testHasNoSmell() throws FileNotFoundException {
         PsiClass notGeneralFixtureExample = loadExample("EmptyTestMethodData.java");
-        assertTrue(inspection.hasSmell(notGeneralFixtureExample));
+        assertFalse(inspection.hasSmell(notGeneralFixtureExample));
     }
 
 

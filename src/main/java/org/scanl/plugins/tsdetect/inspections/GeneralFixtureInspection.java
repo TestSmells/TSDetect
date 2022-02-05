@@ -56,7 +56,6 @@ public class GeneralFixtureInspection extends SmellInspection{
 								new QuickFixRemove("inspection.smell.generalFixture.fix.remove"),
 								new QuickFixComment("inspection.smell.generalFixture.fix.comment")
 						);
-						//make more clear that it is a test smell problem//todo
 					}
 				}
 			}
