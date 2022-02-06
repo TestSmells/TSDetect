@@ -96,8 +96,11 @@ public class EmptyMethodInspection extends SmellInspection{
 	 */
 	@Override
 	public boolean hasSmell(PsiElement element) {
-		 PsiMethod method = (PsiMethod) element;
-		return Objects.requireNonNull(method.getBody()).isEmpty();
+		if(element instanceof PsiMethod) {
+			PsiMethod method = (PsiMethod) element;
+			return Objects.requireNonNull(method.getBody()).isEmpty();
+		}
+		return false;
 	}
 
 	/**
