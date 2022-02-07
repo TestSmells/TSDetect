@@ -21,7 +21,9 @@ public class TestSmellInspectionProvider implements InspectionToolProvider {
 	@Override
 	public Class<? extends LocalInspectionTool> @NotNull [] getInspectionClasses() {
 		return new Class[]{
-				EmptyMethodInspection.class
+				EmptyMethodInspection.class,
+				GeneralFixtureInspection.class,
+				RedundantPrintInspection.class
 		};
 	}
 }
