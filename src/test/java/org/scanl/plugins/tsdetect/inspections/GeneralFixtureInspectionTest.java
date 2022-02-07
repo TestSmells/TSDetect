@@ -50,7 +50,8 @@ public class GeneralFixtureInspectionTest extends InspectionTest {
         assertFalse(inspection.hasSmell(notGeneralFixtureExample));
     }
 
-
     public void testGetSmellType() {
+        SmellType expectedSmellType = SmellType.GENERAL_FIXTURE;
+        assertEquals(inspection.getSmellType(), expectedSmellType);
     }
 }
