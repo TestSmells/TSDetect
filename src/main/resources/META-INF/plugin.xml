@@ -12,6 +12,14 @@
         <toolWindow id="SCANL Tabbed Plugin" secondary="true" icon="AllIcons.General.Modified" anchor="right"
                     factoryClass="org.scanl.plugins.tsdetect.ui.TabbedPaneWindowFactory"/>
         <inspectionToolProvider implementation="org.scanl.plugins.tsdetect.inspections.TestSmellInspectionProvider"/>
+        <applicationService serviceImplementation="org.scanl.plugins.tsdetect.config.application.AppSettingsState"/>
+        <applicationConfigurable parentId="tools" instance="org.scanl.plugins.tsdetect.config.application.AppSettingsConfigurable"
+                                 id="org.scanl.plugins.tsdetect.config.application.AppSettingsConfigurable"/>
+        <projectService serviceImplementation="org.scanl.plugins.tsdetect.config.project.ProjectSettingsState"/>
+        <projectConfigurable parentId="tools" instance="org.scanl.plugins.tsdetect.config.project.ProjectSettingsConfigurable"
+                                 id="org.scanl.plugins.tsdetect.config.project.ProjectSettingsConfigurable"
+                                 nonDefaultProject="true"/>
+        <applicationService serviceImplementation="org.scanl.plugins.tsdetect.config.DefaultSettings"/>
     </extensions>
     <applicationListeners>
         <listener class="org.scanl.plugins.tsdetect.listeners.ProjectListener"

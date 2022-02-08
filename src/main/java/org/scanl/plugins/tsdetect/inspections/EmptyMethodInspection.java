@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
+import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.SmellType;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixComment;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixRemove;
@@ -96,6 +97,8 @@ public class EmptyMethodInspection extends SmellInspection{
 	 */
 	@Override
 	public boolean hasSmell(PsiElement element) {
+		if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
+
 		if(element instanceof PsiMethod) {
 			PsiMethod method = (PsiMethod) element;
 			return Objects.requireNonNull(method.getBody()).isEmpty();
