@@ -73,26 +73,6 @@ public class RedundantPrintInspection extends SmellInspection{
 		}
 		return methodCallExpressionList;
 	}
-	private boolean validStatement(PsiMethodCallExpression expression){
-		System.out.println(expression.getMethodExpression().getQualifierExpression());
-		if (expression.getMethodExpression().getQualifierExpression() == null)
-			return false;
-		PsiReferenceExpression referenceExpression = (PsiReferenceExpression) expression.getMethodExpression().getQualifierExpression();
-		System.out.println(referenceExpression.getQualifierExpression());
-		PsiType s = expression.getMethodExpression().getQualifierExpression().getType();
-		System.out.println(s);
-		return true;
-	}
-
-	private boolean hasRedundantIssue(PsiMethodCallExpression expression){
-		if (expression.getMethodExpression().getQualifierExpression() == null)
-			return false;
-		PsiType s = Objects.requireNonNull(expression.getMethodExpression().getQualifierExpression()).getType();
-		if(s!=null) {
-			return s.getCanonicalText().equals("java.io.PrintStream");
-		}
-		return Objects.requireNonNull(expression.getMethodExpression().getReferenceName()).contains("print");
-	}
 
 	@Override
 	public boolean hasSmell(PsiElement element) {
