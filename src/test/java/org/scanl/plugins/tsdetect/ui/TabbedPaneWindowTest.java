@@ -27,6 +27,7 @@ public class TabbedPaneWindowTest extends BasePlatformTestCase {
 
     //store temp data for testing of private helper functions
     ArrayList<InspectionMethodModel> allMethods = new ArrayList<>();
+    ArrayList<InspectionClassModel> allClasses = new ArrayList<>();
     @Override
     public void setUp() throws Exception{
         super.setUp();
@@ -38,7 +39,7 @@ public class TabbedPaneWindowTest extends BasePlatformTestCase {
         for(VirtualFile vf : vFiles)
         {
             PsiFile psiFile = PsiManager.getInstance(tempProj).findFile(vf); //converts into a PsiFile
-            if(psiFile instanceof PsiJavaFile) //determines if the PsiFile is a PsiJavaFile
+            if(psiFile instanceof  PsiJavaFile) //determines if the PsiFile is a PsiJavaFile
             {
                 PsiJavaFile psiJavaFile = (PsiJavaFile) psiFile;
                 PsiClass @NotNull [] classes = psiJavaFile.getClasses(); //gets the classes
@@ -47,7 +48,12 @@ public class TabbedPaneWindowTest extends BasePlatformTestCase {
                     psiFile.accept(sv); //visits the methods
 
                     List<InspectionMethodModel> methods = sv.getSmellyMethods(); //gets all the smelly methods
+                    for(InspectionMethodModel method:methods){
+                        System.out.println(method.getName());
+                    }
+                    List<InspectionClassModel> smellyClasses = sv.getSmellyClasses();
                     allMethods.addAll(methods);
+                    allClasses.addAll(smellyClasses);
                 }
             }
         }
@@ -64,7 +70,29 @@ public class TabbedPaneWindowTest extends BasePlatformTestCase {
     }
 
     public void testGetMethodBySmell(){
-        
+        List<InspectionMethodModel> tempListOfMethods = testPane.getMethodBySmell(SmellType.EMPTY_METHOD, allMethods);
+        assertNotEmpty(tempListOfMethods);
+        boolean tempContainsSmell = false;
+        for(InspectionMethodModel m:tempListOfMethods){
+            if (m.getSmellTypeList().contains(SmellType.EMPTY_METHOD)) {
+                tempContainsSmell = true;
+                break;
+            }
+        }
+        assertTrue(tempContainsSmell);
+    }
+
+    public void testGetClassBySmell(){
+        List<InspectionClassModel> tempListOfClasses = testPane.getClassesBySmell(SmellType.EMPTY_METHOD, allClasses);
+        assertNotEmpty(tempListOfClasses);
+        boolean tempContainsSmell = false;
+        for(InspectionClassModel m:tempListOfClasses){
+            if (m.getSmellTypeList().contains(SmellType.EMPTY_METHOD)) {
+                tempContainsSmell = true;
+                break;
+            }
+        }
+        assertTrue(tempContainsSmell);
     }
 
 

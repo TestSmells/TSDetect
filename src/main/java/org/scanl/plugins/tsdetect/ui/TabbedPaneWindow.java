@@ -18,7 +18,6 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.FileBasedIndex;
 import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.SmellVisitor;
-import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.model.InspectionClassModel;
 import org.scanl.plugins.tsdetect.model.IdentifierTableModel;
 import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
@@ -58,7 +57,6 @@ public class TabbedPaneWindow {
 		});
 
 		smellDistributionButton.addActionListener(e -> setSmellDistributionTable(project));
-		smellDistributionButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "ui.button.analysis.name"));
 	}
 
 	/**
@@ -71,6 +69,7 @@ public class TabbedPaneWindow {
 
 		data = new IdentifierTableModel();
 		ArrayList<InspectionMethodModel> allMethods = new ArrayList<>();
+		ArrayList<InspectionClassModel> allClasses = new ArrayList<>();
 		for(VirtualFile vf : vFiles)
 		{
 			PsiFile psiFile = PsiManager.getInstance(project).findFile(vf); //converts into a PsiFile
@@ -83,7 +82,12 @@ public class TabbedPaneWindow {
 					psiFile.accept(sv); //visits the methods
 
 					List<InspectionMethodModel> methods = sv.getSmellyMethods(); //gets all the smelly methods
+					for(InspectionMethodModel method:methods){
+						System.out.println(method.getName());
+					}
+					List<InspectionClassModel> smellyClasses = sv.getSmellyClasses();
 					allMethods.addAll(methods);
+					allClasses.addAll(smellyClasses);
 				}
 			}
 		}
@@ -93,7 +97,7 @@ public class TabbedPaneWindow {
 		for(SmellType smellType: SmellType.values())
 		{
 			smellyMethods.put(smellType, getMethodBySmell(smellType, allMethods));
-			smellyClasses.put(smellType, getClassesBySmell(smellType, allMethods));
+			smellyClasses.put(smellType, getClassesBySmell(smellType, allClasses));
 		}
 
 		data.constructSmellTable(smellyMethods, smellyClasses); //constructs the smell table
@@ -117,21 +121,12 @@ public class TabbedPaneWindow {
 		return smellyMethods;
 	}
 
-	/**
-	 * Gets the classes with a specific smell
-	 * @param smell a list of all smells
-	 * @param methods a list of all the methods with all smells
-	 * @return a list of smelly classes with a specific smell
-	 */
-	protected List<InspectionClassModel> getClassesBySmell(SmellType smell, List<InspectionMethodModel> methods){
-		List<InspectionMethodModel> smellyMethods = getMethodBySmell(smell, methods);
-		List<String> classList = new ArrayList<>();
+
+	protected List<InspectionClassModel> getClassesBySmell(SmellType smell, List<InspectionClassModel> smellyClasses){
 		List<InspectionClassModel> classes = new ArrayList<>();
-		for(InspectionMethodModel smellyMethod: smellyMethods){
-			if(!classList.contains(smellyMethod.getClassName().getName())) {
-				classes.add(smellyMethod.getClassName());
-				classList.add(smellyMethod.getClassName().getName());
-			}
+		for(InspectionClassModel smellyClass: smellyClasses){
+			if(smellyClass.getSmellTypeList().contains(smell))
+				classes.add(smellyClass);
 		}
 		return classes;
 	}
