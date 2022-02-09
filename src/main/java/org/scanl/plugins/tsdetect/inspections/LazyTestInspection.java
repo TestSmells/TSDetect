@@ -2,24 +2,16 @@ package org.scanl.plugins.tsdetect.inspections;
 
 import com.intellij.codeInspection.InspectionEP;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.execution.junit.JUnitUtil;
-import com.intellij.ide.highlighter.JavaFileType;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.HierarchicalMethodSignatureImpl;
-import com.intellij.psi.search.FileTypeIndex;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.util.MethodSignature;
-import com.intellij.util.indexing.FileBasedIndex;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.model.SmellType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class LazyTestInspection  extends SmellInspection{
 

@@ -4,17 +4,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiFileFactory;
-import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.testFramework.TestDataPath;
-import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
-import org.intellij.lang.annotations.Language;
 import org.scanl.plugins.tsdetect.InspectionTest;
 import org.scanl.plugins.tsdetect.model.SmellType;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 
 @TestDataPath("$CONTENT_ROOT/src/test/testData")
 public class LazyTestInspectionTest extends InspectionTest {
@@ -23,7 +19,6 @@ public class LazyTestInspectionTest extends InspectionTest {
 	PsiClass psiSmellClass;
 	PsiClass psiNoSmellClass;
 	PsiFileFactory psiFileFactory;
-	PsiJavaFile psiFile;
 	Project project;
 
 	@Override

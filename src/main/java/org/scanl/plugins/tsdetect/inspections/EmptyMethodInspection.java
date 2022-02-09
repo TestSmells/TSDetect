@@ -1,17 +1,11 @@
 package org.scanl.plugins.tsdetect.inspections;
 
-import com.intellij.codeInspection.*;
-import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
 import com.intellij.codeInspection.InspectionEP;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.codeInspection.ui.InspectionOptionsPanel;
-import com.intellij.codeInspection.util.IntentionFamilyName;
-import com.intellij.codeInspection.util.IntentionName;
-import com.intellij.openapi.project.Project;
-import com.intellij.profile.codeInspection.ProjectInspectionProfileManager;
-import com.intellij.psi.*;
-import com.intellij.ui.DocumentAdapter;
-import com.intellij.util.IncorrectOperationException;
+import com.intellij.psi.JavaElementVisitor;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -20,8 +14,6 @@ import org.scanl.plugins.tsdetect.model.SmellType;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixComment;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixRemove;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.Objects;
 
 /**

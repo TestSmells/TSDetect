@@ -69,18 +69,21 @@ public class GeneralFixtureInspection extends SmellInspection{
 	 */
 	@Override
 	public boolean hasSmell(PsiElement element) {
-		PsiClass cls = (PsiClass) element;
-		PsiMethod @NotNull [] methods = cls.getMethods();
-		PsiField @NotNull [] fields = cls.getFields();
 		unusedFields = new HashMap<>();
-		for (PsiField field : fields) {
-			unusedFields.put(field.getName(),field);
-		}
-		for (PsiMethod method : methods) {
-			if(!(method.getName().equals("setUp"))){
-				for (PsiStatement statement : Objects.requireNonNull(method.getBody()).getStatements()) {
-					for (String potMatch : statement.getText().split("\\W+")) {
-						unusedFields.remove(potMatch);
+		if(element instanceof PsiClass) {
+			PsiClass cls = (PsiClass) element;
+			PsiMethod @NotNull [] methods = cls.getMethods();
+			PsiField @NotNull [] fields = cls.getFields();
+			unusedFields = new HashMap<>();
+			for (PsiField field : fields) {
+				unusedFields.put(field.getName(), field);
+			}
+			for (PsiMethod method : methods) {
+				if (!(method.getName().equals("setUp"))) {
+					for (PsiStatement statement : Objects.requireNonNull(method.getBody()).getStatements()) {
+						for (String potMatch : statement.getText().split("\\W+")) {
+							unusedFields.remove(potMatch);
+						}
 					}
 				}
 			}
