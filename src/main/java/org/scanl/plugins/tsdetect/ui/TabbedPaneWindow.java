@@ -18,6 +18,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.FileBasedIndex;
 import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.SmellVisitor;
+import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.model.InspectionClassModel;
 import org.scanl.plugins.tsdetect.model.IdentifierTableModel;
 import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
@@ -57,13 +58,14 @@ public class TabbedPaneWindow {
 		});
 
 		smellDistributionButton.addActionListener(e -> setSmellDistributionTable(project));
+		smellDistributionButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "ui.button.analysis.name"));
 	}
 
 	/**
 	 * Creates the smell distribution table
 	 * @param project The Project that is currently opened
 	 */
-	private void setSmellDistributionTable(Project project){
+	protected void setSmellDistributionTable(Project project){
 		Collection<VirtualFile> vFiles = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME,
 				JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project)); //gets the files in the project
 
@@ -106,7 +108,7 @@ public class TabbedPaneWindow {
 	 * @param methods the list of all smelly methods
 	 * @return a list of methods with a specific smell
 	 */
-	private List<InspectionMethodModel> getMethodBySmell(SmellType smell, List<InspectionMethodModel> methods){
+	protected List<InspectionMethodModel> getMethodBySmell(SmellType smell, List<InspectionMethodModel> methods){
 		List<InspectionMethodModel> smellyMethods = new ArrayList<>();
 		for(InspectionMethodModel m:methods){
 			if(m.getSmellTypeList().contains(smell))
@@ -121,7 +123,7 @@ public class TabbedPaneWindow {
 	 * @param methods a list of all the methods with all smells
 	 * @return a list of smelly classes with a specific smell
 	 */
-	private List<InspectionClassModel> getClassesBySmell(SmellType smell, List<InspectionMethodModel> methods){
+	protected List<InspectionClassModel> getClassesBySmell(SmellType smell, List<InspectionMethodModel> methods){
 		List<InspectionMethodModel> smellyMethods = getMethodBySmell(smell, methods);
 		List<String> classList = new ArrayList<>();
 		List<InspectionClassModel> classes = new ArrayList<>();
