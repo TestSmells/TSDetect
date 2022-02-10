@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
+import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.SmellType;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class LazyTestInspection  extends SmellInspection{
 
 	@Override
 	public boolean hasSmell(PsiElement element) {
+		if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
 		issueStatements = new ArrayList<>();
 		List<PsiMethod> psiMethods = getAllMethodCalls();
 		if(element instanceof PsiClass) {
