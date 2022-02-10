@@ -39,8 +39,12 @@ public class TabbedPaneWindow {
 	private JPanel smellDistribution;
 	private JTable smellTable;
 	private JButton smellDistributionButton;
-	private IdentifierTableModel data;
 
+	/**
+	 * Constructor for the tabbed pane window that contains the tables and data for one view of our plugin.
+	 * Grabs the project and gets the PSI objects so we're able to search through the project,
+	 * and also initializes the table functions and names.
+	 */
 	public TabbedPaneWindow() {
 		Project project = ProjectManager.getInstance().getOpenProjects()[0];
 
@@ -58,9 +62,14 @@ public class TabbedPaneWindow {
 			}
 		});
 
+		//set up button name and actions
 		smellDistributionButton.addActionListener(e -> setSmellDistributionTable(project));
 		smellDistributionButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "button.analysis.name"));
+		smellDistributionButton.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "button.analysis.tooltip"));
+		//set the tab name and tooltip
 		detailsPanels.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "smell.table.tab.name"));
+		detailsPanels.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "smell.table.tab.tooltip"));
+		//sets tooltip for table
 		smellTable.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "smell.table.description"));
 	}
 
@@ -72,7 +81,7 @@ public class TabbedPaneWindow {
 		Collection<VirtualFile> vFiles = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME,
 				JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project)); //gets the files in the project
 
-		data = new IdentifierTableModel();
+		IdentifierTableModel data = new IdentifierTableModel();
 		ArrayList<InspectionMethodModel> allMethods = new ArrayList<>();
 		ArrayList<InspectionClassModel> allClasses = new ArrayList<>();
 		for(VirtualFile vf : vFiles)
@@ -127,6 +136,12 @@ public class TabbedPaneWindow {
 	}
 
 
+	/**
+	 * Gets class that contains a matching smell
+	 * @param smell The smell thats being searched for
+	 * @param smellyClasses	The list of all smelly classes
+	 * @return	a list of classes with the specific smell
+	 */
 	protected List<InspectionClassModel> getClassesBySmell(SmellType smell, List<InspectionClassModel> smellyClasses){
 		List<InspectionClassModel> classes = new ArrayList<>();
 		for(InspectionClassModel smellyClass: smellyClasses){
@@ -136,6 +151,10 @@ public class TabbedPaneWindow {
 		return classes;
 	}
 
+	/**
+	 * Simple getter for the content within the panel
+	 * @return returns the panel object
+	 */
 	public JPanel getContent() {
 		return inspectionPanel;
 	}
