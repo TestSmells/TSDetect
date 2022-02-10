@@ -7,13 +7,13 @@ public class PluginResourceBundleTest extends LightJavaCodeInsightFixtureTestCas
 
 	public void testInspectionMessage(){
 		String expectedMessage = "Every method should have a reasoning behind it, including code, none should be empty";
-		String message = PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.emptyTest.description");
+		String message = PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL.EMPTY_TEST.DESCRIPTION");
 		assertEquals(expectedMessage, message);
 	}
 
 	public void testUIMessage(){
 		String expectedMessage = "Run Analysis";
-		String message = PluginResourceBundle.message(PluginResourceBundle.Type.UI, "button.analysis.name");
+		String message = PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME");
 		assertEquals(expectedMessage, message);
 	}
 }

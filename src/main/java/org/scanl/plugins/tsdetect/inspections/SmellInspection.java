@@ -15,6 +15,7 @@ import com.intellij.util.indexing.FileBasedIndex;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.model.SmellType;
 import javax.swing.*;
 import java.awt.*;
@@ -28,6 +29,9 @@ import java.util.Objects;
 public abstract class SmellInspection extends AbstractBaseJavaLocalInspectionTool {
 	public abstract boolean hasSmell(PsiElement element);
 	public abstract SmellType getSmellType();
+
+	protected final String DESCRIPTION = PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,
+			"INSPECTION.SMELL." + getSmellType().toString() + ".DESCRIPTION");
 
 	/**
 	 * DO NOT OVERRIDE this method.
@@ -47,6 +51,26 @@ public abstract class SmellInspection extends AbstractBaseJavaLocalInspectionToo
 	@Override
 	public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getGroupDisplayName() {
 		return "JavaTestSmells";
+	}
+
+	/**
+	 * @see InspectionEP#displayName
+	 * @see InspectionEP#key
+	 * @see InspectionEP#bundle
+	 */
+	@Override
+	public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getDisplayName() {
+		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + getSmellType().toString() + ".NAME.DISPLAY");
+	}
+
+	/**
+	 * DO NOT OVERRIDE this method.
+	 *
+	 * @see InspectionEP#shortName
+	 */
+	@Override
+	public @NonNls @NotNull String getShortName() {
+		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + getSmellType().toString() + ".NAME.SHORT");
 	}
 
 	@SuppressWarnings({"WeakerAccess"})

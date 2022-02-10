@@ -39,7 +39,7 @@ public class EmptyMethodInspectionTest extends InspectionTest {
 	}
 
 	public void testSmellType(){
-		SmellType expectedSmellType = SmellType.EMPTY_METHOD;
+		SmellType expectedSmellType = SmellType.EMPTY_TEST;
 		SmellType smellType = inspection.getSmellType();
 		assertEquals(expectedSmellType, smellType);
 	}
