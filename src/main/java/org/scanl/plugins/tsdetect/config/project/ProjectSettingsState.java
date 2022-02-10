@@ -12,6 +12,7 @@ import com.sun.istack.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Represents the project-level plugin settings.
@@ -32,7 +33,7 @@ public class ProjectSettingsState implements PersistentStateComponent<ProjectSet
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return dataContext.getData(CommonDataKeys.PROJECT).getService(ProjectSettingsState.class);
+        return Objects.requireNonNull(Objects.requireNonNull(dataContext).getData(CommonDataKeys.PROJECT)).getService(ProjectSettingsState.class);
     }
 
     @Nullable

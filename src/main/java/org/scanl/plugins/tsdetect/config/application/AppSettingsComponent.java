@@ -38,7 +38,9 @@ public class AppSettingsComponent {
     }
 
     public JComponent getPreferredFocusedComponent() {
-        return checkBoxes.values().stream().findFirst().get();
+        if(checkBoxes.values().stream().findFirst().isPresent())
+            return checkBoxes.values().stream().findFirst().get();
+        return null;
     }
 
     public boolean getValue(String key) {

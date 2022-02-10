@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
+import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.SmellType;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixComment;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixRemove;
@@ -17,29 +18,8 @@ import java.util.Objects;
 
 public class RedundantPrintInspection extends SmellInspection{
 
-	private static final String DESCRIPTION =
-			PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.redundantPrint.description");
-
 	private List<PsiMethodCallExpression> issueStatements = new ArrayList<>();
-	/**
-	 * @see InspectionEP#displayName
-	 * @see InspectionEP#key
-	 * @see InspectionEP#bundle
-	 */
-	@Override
-	public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getDisplayName() {
-		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.redundantPrint.name.display");
-	}
 
-	/**
-	 * DO NOT OVERRIDE this method.
-	 *
-	 * @see InspectionEP#shortName
-	 */
-	@Override
-	public @NonNls @NotNull String getShortName() {
-		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.redundantPrint.name.short");
-	}
 
 	@Override
 	public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
@@ -76,6 +56,7 @@ public class RedundantPrintInspection extends SmellInspection{
 
 	@Override
 	public boolean hasSmell(PsiElement element) {
+		if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
 		issueStatements = new ArrayList<>();
 		if(element instanceof PsiMethod) {
 			PsiMethod method = (PsiMethod) element;
