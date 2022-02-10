@@ -8,6 +8,9 @@ import org.scanl.plugins.tsdetect.config.DefaultSettings;
 
 import javax.swing.*;
 
+/**
+ * Handles creating the settings UI, and managing its state.
+ */
 public class ProjectSettingsConfigurable implements Configurable {
 
     private ProjectSettingsComponent component;

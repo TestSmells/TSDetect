@@ -7,6 +7,9 @@ import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 
 import javax.swing.*;
 
+/**
+ * Handles creating the settings UI, and managing its state.
+ */
 public class AppSettingsConfigurable implements Configurable {
 
     private AppSettingsComponent component;

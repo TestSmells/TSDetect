@@ -9,6 +9,9 @@ import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents the UI for the plugin's application-level settings menu.
+ */
 public class AppSettingsComponent {
 
     private final JPanel panel;
@@ -17,6 +20,7 @@ public class AppSettingsComponent {
     public AppSettingsComponent() {
         FormBuilder formBuilder = FormBuilder.createFormBuilder();
 
+        // create a checkbox for each smell type, to enable/disable that inspection
         for (SmellType smell : SmellType.values()) {
             String label = PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,"INSPECTION.SMELL." + smell.toString() + ".NAME.DISPLAY");
             JBCheckBox checkBox = new JBCheckBox(label);

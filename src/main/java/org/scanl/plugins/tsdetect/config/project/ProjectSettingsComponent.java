@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Represents the UI for the plugin's project-level settings menu.
+ */
 public class ProjectSettingsComponent {
 
     private final JPanel panel;
@@ -18,6 +21,7 @@ public class ProjectSettingsComponent {
     public ProjectSettingsComponent() {
         FormBuilder formBuilder = FormBuilder.createFormBuilder();
 
+        // create a checkbox for each smell type, to enable/disable that inspection
         for (SmellType smell : SmellType.values()) {
             String label = PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,"INSPECTION.SMELL." + smell.toString() + ".NAME.DISPLAY");
             JBCheckBox checkBox = new JBCheckBox(label);

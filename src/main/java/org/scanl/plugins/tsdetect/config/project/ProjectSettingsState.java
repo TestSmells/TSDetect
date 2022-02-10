@@ -13,6 +13,10 @@ import com.sun.istack.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents the project-level plugin settings.
+ * By default, these settings get saved to an xml file in the .idea/ directory at the project root directory.
+ */
 @State(
         name = "org.scanl.plugins.tsdetect.config.project.projectSettingsState",
         storages = @Storage("TSDetectPlugin.xml")
