@@ -18,7 +18,7 @@ public class AppSettingsComponent {
         FormBuilder formBuilder = FormBuilder.createFormBuilder();
 
         for (SmellType smell : SmellType.values()) {
-            String label = PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,"inspection.smell." + smell.toString() + ".name.display");
+            String label = PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,"INSPECTION.SMELL." + smell.toString() + ".NAME.DISPLAY");
             JBCheckBox checkBox = new JBCheckBox(label);
             checkBoxes.put(smell.toString(), checkBox);
             formBuilder.addComponent(checkBox);

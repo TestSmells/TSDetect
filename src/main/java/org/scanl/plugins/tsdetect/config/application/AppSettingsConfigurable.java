@@ -14,7 +14,7 @@ public class AppSettingsConfigurable implements Configurable {
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
-        return PluginResourceBundle.message(PluginResourceBundle.Type.UI, "settings.application.name");
+        return PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SETTINGS.APPLICATION.NAME");
     }
 
     @Override

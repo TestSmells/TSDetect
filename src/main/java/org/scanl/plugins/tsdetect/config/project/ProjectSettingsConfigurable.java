@@ -15,7 +15,7 @@ public class ProjectSettingsConfigurable implements Configurable {
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
-        return PluginResourceBundle.message(PluginResourceBundle.Type.UI, "settings.project.name");
+        return PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SETTINGS.PROJECT.NAME");
     }
 
     @Override
