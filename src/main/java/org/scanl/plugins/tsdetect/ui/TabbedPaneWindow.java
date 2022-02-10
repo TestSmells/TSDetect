@@ -38,7 +38,6 @@ public class TabbedPaneWindow {
 	//Smell Distrubtion UI Elements
 	private JPanel smellDistribution;
 	private JTable smellTable;
-	private JTabbedPane smellTabPane;
 	private JButton smellDistributionButton;
 	private IdentifierTableModel data;
 
@@ -61,8 +60,8 @@ public class TabbedPaneWindow {
 
 		smellDistributionButton.addActionListener(e -> setSmellDistributionTable(project));
 		smellDistributionButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "button.analysis.name"));
-		//smellTabPane.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "smell.table.tab.name"));
-		//smellTable.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "smell.table.description"));
+		detailsPanels.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "smell.table.tab.name"));
+		smellTable.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "smell.table.description"));
 	}
 
 	/**
