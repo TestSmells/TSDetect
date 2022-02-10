@@ -28,11 +28,17 @@ public class TabbedPaneWindowTest extends BasePlatformTestCase {
     //store temp data for testing of private helper functions
     ArrayList<InspectionMethodModel> allMethods = new ArrayList<>();
     ArrayList<InspectionClassModel> allClasses = new ArrayList<>();
+
+    /**
+     * Need to artificially create all the table and everything so we're able to get the list of classes
+     * and methods
+     * @throws Exception
+     */
     @Override
     public void setUp() throws Exception{
         super.setUp();
-        tempProj = Objects.requireNonNull(ProjectManager.getInstanceIfCreated()).getOpenProjects()[0];
         testPane = new TabbedPaneWindow();
+        tempProj = Objects.requireNonNull(ProjectManager.getInstanceIfCreated()).getOpenProjects()[0];
         //all code below fills the "allMethods" with smelly methods so that I can test the helper functions
         Collection<VirtualFile> vFiles = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME,
                 JavaFileType.INSTANCE, GlobalSearchScope.projectScope(tempProj)); //gets the files in the project
@@ -63,11 +69,6 @@ public class TabbedPaneWindowTest extends BasePlatformTestCase {
         assertNotNull(testPane);
     }
 
-
-    public void testSetSmellDistTable(){
-        testPane.setSmellDistributionTable(tempProj);
-        
-    }
 
     public void testGetMethodBySmell(){
         List<InspectionMethodModel> tempListOfMethods = testPane.getMethodBySmell(SmellType.EMPTY_METHOD, allMethods);
