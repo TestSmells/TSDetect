@@ -1,21 +1,11 @@
 package org.scanl.plugins.tsdetect.inspections;
 
-import com.intellij.codeInspection.*;
-import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
-import com.intellij.codeInspection.InspectionEP;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.ui.InspectionOptionsPanel;
-import com.intellij.codeInspection.util.IntentionFamilyName;
-import com.intellij.codeInspection.util.IntentionName;
-import com.intellij.openapi.project.Project;
-import com.intellij.profile.codeInspection.ProjectInspectionProfileManager;
 import com.intellij.psi.*;
 import com.intellij.ui.DocumentAdapter;
-import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
+import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.SmellType;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixComment;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixRemove;
@@ -30,29 +20,6 @@ import java.util.Objects;
  */
 public class EmptyMethodInspection extends SmellInspection{
 
-	private static final String DESCRIPTION =
-			PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.emptyTest.description");
-
-	/**
-	 * @see InspectionEP#displayName
-	 * @see InspectionEP#key
-	 * @see InspectionEP#bundle
-	 */
-	@Override
-	public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getDisplayName() {
-		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.emptyTest.name.display");
-	}
-
-	/**
-	 * DO NOT OVERRIDE this method.
-	 *
-	 * @see InspectionEP#shortName
-	 */
-	@Override
-	public @NonNls @NotNull String getShortName() {
-		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.emptyTest.name.short");
-	}
-
 	@Override
 	public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
 		return new JavaElementVisitor() {
@@ -62,8 +29,8 @@ public class EmptyMethodInspection extends SmellInspection{
 					return;
 				if (hasSmell(method))
 					holder.registerProblem(method, DESCRIPTION,
-							new QuickFixRemove("inspection.smell.emptyTest.fix.remove"),
-							new QuickFixComment("inspection.smell.emptyTest.fix.comment"));
+							new QuickFixRemove("INSPECTION.SMELL.EMPTY_TEST.FIX.REMOVE"),
+							new QuickFixComment("INSPECTION.SMELL.EMPTY_TEST.FIX.COMMENT"));
 			}
 		};
 	}
@@ -75,6 +42,8 @@ public class EmptyMethodInspection extends SmellInspection{
 	 */
 	@Override
 	public boolean hasSmell(PsiElement element) {
+		if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
+
 		if(element instanceof PsiMethod) {
 			PsiMethod method = (PsiMethod) element;
 			return Objects.requireNonNull(method.getBody()).isEmpty();
@@ -88,6 +57,6 @@ public class EmptyMethodInspection extends SmellInspection{
 	 */
 	@Override
 	public SmellType getSmellType() {
-		return SmellType.EMPTY_METHOD;
+		return SmellType.EMPTY_TEST;
 	}
 }

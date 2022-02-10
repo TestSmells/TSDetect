@@ -82,9 +82,6 @@ public class TabbedPaneWindow {
 					psiFile.accept(sv); //visits the methods
 
 					List<InspectionMethodModel> methods = sv.getSmellyMethods(); //gets all the smelly methods
-					for(InspectionMethodModel method:methods){
-						System.out.println(method.getName());
-					}
 					List<InspectionClassModel> smellyClasses = sv.getSmellyClasses();
 					allMethods.addAll(methods);
 					allClasses.addAll(smellyClasses);
