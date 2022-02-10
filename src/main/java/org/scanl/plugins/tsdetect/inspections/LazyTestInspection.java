@@ -15,30 +15,7 @@ import java.util.Objects;
 
 public class LazyTestInspection  extends SmellInspection{
 
-	private static final String DESCRIPTION =
-			PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.lazyTest.description");
-
 	private List<PsiStatement> issueStatements = new ArrayList<>();
-
-	/**
-	 * @see InspectionEP#displayName
-	 * @see InspectionEP#key
-	 * @see InspectionEP#bundle
-	 */
-	@Override
-	public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getDisplayName() {
-		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.lazyTest.name.display");
-	}
-
-	/**
-	 * DO NOT OVERRIDE this method.
-	 *
-	 * @see InspectionEP#shortName
-	 */
-	@Override
-	public @NonNls @NotNull String getShortName() {
-		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.lazyTest.name.short");
-	}
 
 	@Override
 	public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
