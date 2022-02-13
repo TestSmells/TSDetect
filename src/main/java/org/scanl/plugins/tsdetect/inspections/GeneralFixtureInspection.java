@@ -1,12 +1,9 @@
 package org.scanl.plugins.tsdetect.inspections;
 
-import com.intellij.codeInspection.InspectionEP;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.*;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
+import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.SmellType;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixComment;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixRemove;
@@ -19,30 +16,7 @@ import java.util.*;
  */
 public class GeneralFixtureInspection extends SmellInspection{
 
-	private static final String DESCRIPTION =
-			PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.generalFixture.description");
-
 	private HashMap<String, PsiElement> unusedFields;
-
-	/**
-	 * @see InspectionEP#displayName
-	 * @see InspectionEP#key
-	 * @see InspectionEP#bundle
-	 */
-	@Override
-	public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getDisplayName() {
-		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.generalFixture.name.display");
-	}
-
-	/**
-	 * DO NOT OVERRIDE this method.
-	 *
-	 * @see InspectionEP#shortName
-	 */
-	@Override
-	public @NonNls @NotNull String getShortName() {
-		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "inspection.smell.generalFixture.name.short");
-	}
 
 	@Override
 	public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
@@ -53,8 +27,8 @@ public class GeneralFixtureInspection extends SmellInspection{
 					//any fields left must be unused
 					for (String unusedField : unusedFields.keySet()) {
 						holder.registerProblem(unusedFields.get(unusedField), DESCRIPTION,
-								new QuickFixRemove("inspection.smell.generalFixture.fix.remove"),
-								new QuickFixComment("inspection.smell.generalFixture.fix.comment")
+								new QuickFixRemove("INSPECTION.SMELL.GENERAL_FIXTURE.FIX.REMOVE"),
+								new QuickFixComment("INSPECTION.SMELL.GENERAL_FIXTURE.FIX.COMMENT")
 						);
 					}
 				}
@@ -69,18 +43,22 @@ public class GeneralFixtureInspection extends SmellInspection{
 	 */
 	@Override
 	public boolean hasSmell(PsiElement element) {
-		PsiClass cls = (PsiClass) element;
-		PsiMethod @NotNull [] methods = cls.getMethods();
-		PsiField @NotNull [] fields = cls.getFields();
+		if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
 		unusedFields = new HashMap<>();
-		for (PsiField field : fields) {
-			unusedFields.put(field.getName(),field);
-		}
-		for (PsiMethod method : methods) {
-			if(!(method.getName().equals("setUp"))){
-				for (PsiStatement statement : Objects.requireNonNull(method.getBody()).getStatements()) {
-					for (String potMatch : statement.getText().split("\\W+")) {
-						unusedFields.remove(potMatch);
+		if(element instanceof PsiClass) {
+			PsiClass cls = (PsiClass) element;
+			PsiMethod @NotNull [] methods = cls.getMethods();
+			PsiField @NotNull [] fields = cls.getFields();
+			unusedFields = new HashMap<>();
+			for (PsiField field : fields) {
+				unusedFields.put(field.getName(), field);
+			}
+			for (PsiMethod method : methods) {
+				if (!(method.getName().equals("setUp"))) {
+					for (PsiStatement statement : Objects.requireNonNull(method.getBody()).getStatements()) {
+						for (String potMatch : statement.getText().split("\\W+")) {
+							unusedFields.remove(potMatch);
+						}
 					}
 				}
 			}

@@ -80,11 +80,11 @@ public class TabbedPaneWindowTest extends BasePlatformTestCase {
 
 
     public void testGetMethodBySmell(){
-        List<InspectionMethodModel> tempListOfMethods = testPane.getMethodBySmell(SmellType.EMPTY_METHOD, allMethods);
+        List<InspectionMethodModel> tempListOfMethods = testPane.getMethodBySmell(SmellType.EMPTY_TEST, allMethods);
         assertNotEmpty(tempListOfMethods);
         boolean tempContainsSmell = false;
         for(InspectionMethodModel m:tempListOfMethods){
-            if (m.getSmellTypeList().contains(SmellType.EMPTY_METHOD)) {
+            if (m.getSmellTypeList().contains(SmellType.EMPTY_TEST)) {
                 tempContainsSmell = true;
                 break;
             }
@@ -93,11 +93,11 @@ public class TabbedPaneWindowTest extends BasePlatformTestCase {
     }
 
     public void testGetClassBySmell(){
-        List<InspectionClassModel> tempListOfClasses = testPane.getClassesBySmell(SmellType.EMPTY_METHOD, allClasses);
+        List<InspectionClassModel> tempListOfClasses = testPane.getClassesBySmell(SmellType.EMPTY_TEST, allClasses);
         assertNotEmpty(tempListOfClasses);
         boolean tempContainsSmell = false;
         for(InspectionClassModel m:tempListOfClasses){
-            if (m.getSmellTypeList().contains(SmellType.EMPTY_METHOD)) {
+            if (m.getSmellTypeList().contains(SmellType.EMPTY_TEST)) {
                 tempContainsSmell = true;
                 break;
             }
