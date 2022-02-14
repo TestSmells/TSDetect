@@ -17,9 +17,10 @@ public class TestSmellInspectionProvider implements InspectionToolProvider {
 	@Override
 	public Class<? extends LocalInspectionTool> @NotNull [] getInspectionClasses() {
 		return new Class[]{
+				DuplicateAssertInspection.class,
 				EmptyMethodInspection.class,
 				GeneralFixtureInspection.class,
-				LazyTestInspection.class
+				LazyTestInspection.class,
 		};
 	}
 }
