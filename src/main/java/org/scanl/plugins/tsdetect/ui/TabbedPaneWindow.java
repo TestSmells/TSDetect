@@ -26,6 +26,9 @@ import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
 import org.scanl.plugins.tsdetect.model.SmellType;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
 import java.util.*;
 
 /**
@@ -39,6 +42,10 @@ public class TabbedPaneWindow {
 	private JPanel smellDistribution;
 	private JTable smellTable;
 	private JButton smellDistributionButton;
+
+	private JPanel detectedSmells;
+	private JTree smellTree;
+	private JButton detectedSmellsButton;
 
 	/**
 	 * Constructor for the tabbed pane window that contains the tables and data for one view of our plugin.
@@ -71,6 +78,16 @@ public class TabbedPaneWindow {
 		detailsPanels.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "smell.table.tab.tooltip"));
 		//sets tooltip for table
 		smellTable.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "smell.table.description"));
+
+		detectedSmellsButton.addActionListener(e -> setSmellTree(project));
+		detectedSmellsButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "button.analysis.name"));
+		detectedSmellsButton.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "button.analysis.tooltip"));
+		//set the tab name and tooltip
+		detectedSmells.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "smell.detected.tree.tab.name"));
+		detectedSmells.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "smell.detected.tree.tab.tooltip"));
+		//sets tooltip for table
+		smellTable.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "smell.detected.tree.description"));
+
 	}
 
 	/**
@@ -148,11 +165,64 @@ public class TabbedPaneWindow {
 		return classes;
 	}
 
+	private void setSmellTree(Project project){
+
+		Collection<VirtualFile> vFiles = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME, JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project));
+
+		DefaultTreeModel model = (DefaultTreeModel)smellTree.getModel();
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
+		root.removeAllChildren();
+		List<InspectionClassModel> smellyClasses = new ArrayList<>();
+		for (VirtualFile vf: vFiles) {
+			smellyClasses.addAll(getDetails(vf, project));
+		}
+
+		for(SmellType smellType:SmellType.values()){
+			parseTree(root, smellyClasses, smellType);
+		}
+
+		model.reload(root);
+	}
+
+	private List<InspectionClassModel> getDetails(VirtualFile vf, Project project){
+		PsiFile psiFile = PsiManager.getInstance(project).findFile(vf);
+		List<InspectionClassModel> methods = new ArrayList<>();
+		if(psiFile instanceof PsiJavaFile)
+		{
+			PsiJavaFile psiJavaFile = (PsiJavaFile) psiFile;
+			PsiClass @NotNull [] classes = psiJavaFile.getClasses();
+			for(PsiClass psiClass: classes) {
+				System.out.println(psiClass.getQualifiedName());
+				SmellVisitor sv = new SmellVisitor();
+				psiFile.accept(sv);
+				methods = sv.getSmellyClasses();
+			}
+		}
+		return methods;
+	}
+
+	private void parseTree(DefaultMutableTreeNode tn, List<InspectionClassModel> smellyClasses, SmellType smellType){
+		DefaultMutableTreeNode smellTypeNode = new DefaultMutableTreeNode(smellType);
+		for(InspectionClassModel smellyClass:smellyClasses){
+			if(smellyClass.getSmellTypeList().contains(smellType)){
+				System.out.println(smellyClass.getName());
+				DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode(smellyClass.getName());
+				smellTypeNode.add(methodNode);
+			}
+		}
+		tn.add(smellTypeNode);
+	}
+
 	/**
 	 * Simple getter for the content within the panel
 	 * @return returns the panel object
 	 */
 	public JPanel getContent() {
 		return inspectionPanel;
+	}
+
+	private void createUIComponents() {
+		DefaultMutableTreeNode smellNode = new DefaultMutableTreeNode("SmellTypes");
+		smellTree = new JTree(smellNode);
 	}
 }
