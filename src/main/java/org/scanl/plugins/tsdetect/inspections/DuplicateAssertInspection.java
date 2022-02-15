@@ -52,6 +52,7 @@ public class DuplicateAssertInspection extends SmellInspection{
 	@Override
 	public boolean hasSmell(PsiElement element) {
 		if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
+		boolean output = false;
 		if(element instanceof PsiMethod) {
 			PsiMethod method = (PsiMethod) element;
 			System.out.println("############: "+method.getName());
@@ -61,6 +62,7 @@ public class DuplicateAssertInspection extends SmellInspection{
 				if(name.contains("assert")){
 					if(duplicateAsserts.containsKey(name)){
 						duplicateAsserts.get(name).add(statement);
+						output = true;
 //						System.out.println("adding "+ statement.getText());
 					}
 					else{
@@ -72,9 +74,9 @@ public class DuplicateAssertInspection extends SmellInspection{
 				}
 			}
 
-			return Objects.requireNonNull(method.getBody()).isEmpty();
+
 		}
-		return false;
+		return output;
 	}
 
 	/**
