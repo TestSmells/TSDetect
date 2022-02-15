@@ -19,7 +19,8 @@ public class TestSmellInspectionProvider implements InspectionToolProvider {
 		return new Class[]{
 				EmptyMethodInspection.class,
 				GeneralFixtureInspection.class,
-				LazyTestInspection.class
+				LazyTestInspection.class,
+				RedundantPrintInspection.class
 		};
 	}
 }
