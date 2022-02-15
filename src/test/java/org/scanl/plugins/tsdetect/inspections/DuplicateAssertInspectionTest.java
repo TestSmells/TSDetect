@@ -46,7 +46,7 @@ public class DuplicateAssertInspectionTest extends InspectionTest {
 	}
 
 	public void testHasSmell(){
-		PsiMethod method = psiClass.findMethodsByName("DuplicateAssertTest", true)[0];
+		PsiMethod method = psiClass.findMethodsByName("DuplicateAssertTest", false)[0];
 		assertTrue(inspection.hasSmell(method));
 	}
 
