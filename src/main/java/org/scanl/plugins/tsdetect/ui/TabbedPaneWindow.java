@@ -47,6 +47,10 @@ public class TabbedPaneWindow {
 	private JTree smellTree;
 	private JButton detectedSmellsButton;
 
+	private final List<InspectionMethodModel> allMethods = new ArrayList<>();
+	private final List<InspectionClassModel> allClasses = new ArrayList<>();
+
+
 	/**
 	 * Constructor for the tabbed pane window that contains the tables and data for one view of our plugin.
 	 * Grabs the project and gets the PSI objects so we're able to search through the project,
@@ -63,8 +67,10 @@ public class TabbedPaneWindow {
 				VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);
 				if (virtualFile != null) {
 					PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
-					if (psiFile instanceof PsiJavaFile)
+					if (psiFile instanceof PsiJavaFile) {
 						setSmellDistributionTable(project);
+						setSmellTree(project);
+					}
 				}
 			}
 		});
@@ -95,40 +101,16 @@ public class TabbedPaneWindow {
 	 * @param project The Project that is currently opened
 	 */
 	protected void setSmellDistributionTable(Project project){
-		Collection<VirtualFile> vFiles = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME,
-				JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project)); //gets the files in the project
-
+		visitSmellDetection(project);
 		IdentifierTableModel data = new IdentifierTableModel();
-		ArrayList<InspectionMethodModel> allMethods = new ArrayList<>();
-		ArrayList<InspectionClassModel> allClasses = new ArrayList<>();
-		for(VirtualFile vf : vFiles)
-		{
-			PsiFile psiFile = PsiManager.getInstance(project).findFile(vf); //converts into a PsiFile
-			if(psiFile instanceof  PsiJavaFile) //determines if the PsiFile is a PsiJavaFile
-			{
-				PsiJavaFile psiJavaFile = (PsiJavaFile) psiFile;
-				PsiClass @NotNull [] classes = psiJavaFile.getClasses(); //gets the classes
-				for(PsiClass psiClass: classes) {
-					SmellVisitor sv = new SmellVisitor(); //creates the smell visitor
-					psiFile.accept(sv); //visits the methods
 
-					List<InspectionMethodModel> methods = sv.getSmellyMethods(); //gets all the smelly methods
-					for(InspectionMethodModel method:methods){
-						System.out.println(method.getName());
-					}
-					List<InspectionClassModel> smellyClasses = sv.getSmellyClasses();
-					allMethods.addAll(methods);
-					allClasses.addAll(smellyClasses);
-				}
-			}
-		}
 		HashMap<SmellType, List<InspectionMethodModel>> smellyMethods = new HashMap<>(); //hash to store smelly methods by smell
 		HashMap<SmellType, List<InspectionClassModel>> smellyClasses = new HashMap<>(); //hash to store smelly classes by smell
 
 		for(SmellType smellType: SmellType.values())
 		{
-			smellyMethods.put(smellType, getMethodBySmell(smellType, allMethods));
-			smellyClasses.put(smellType, getClassesBySmell(smellType, allClasses));
+			smellyMethods.put(smellType, getMethodBySmell(smellType));
+			smellyClasses.put(smellType, getClassesBySmell(smellType));
 		}
 
 		data.constructSmellTable(smellyMethods, smellyClasses); //constructs the smell table
@@ -138,14 +120,51 @@ public class TabbedPaneWindow {
 	}
 
 	/**
+	 * Creates the smell distribution tree by smell then tree then method
+	 * @param project The Project that is currently opened
+	 */
+	protected void setSmellTree(Project project){
+		visitSmellDetection(project);
+		DefaultTreeModel model = (DefaultTreeModel)smellTree.getModel();
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
+		root.removeAllChildren();
+
+		for(SmellType smellType:SmellType.values()){
+			parseTree(root, smellType);
+		}
+
+		model.reload(root);
+	}
+
+	protected void visitSmellDetection(Project project){
+		Collection<VirtualFile> vFiles = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME,
+				JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project)); //gets the files in the project
+
+		allMethods.clear();
+		allClasses.clear();
+		for(VirtualFile vf : vFiles)
+		{
+			PsiFile psiFile = PsiManager.getInstance(project).findFile(vf); //converts into a PsiFile
+			if(psiFile instanceof  PsiJavaFile) //determines if the PsiFile is a PsiJavaFile
+			{
+				SmellVisitor sv = new SmellVisitor(); //creates the smell visitor
+				psiFile.accept(sv); //visits the methods
+
+				allMethods.addAll(sv.getSmellyMethods());
+				allClasses.addAll(sv.getSmellyClasses());
+
+			}
+		}
+	}
+
+	/**
 	 * Gets the methods for a matching smell
 	 * @param smell The smell that is being searched for
-	 * @param methods the list of all smelly methods
 	 * @return a list of methods with a specific smell
 	 */
-	protected List<InspectionMethodModel> getMethodBySmell(SmellType smell, List<InspectionMethodModel> methods){
+	protected List<InspectionMethodModel> getMethodBySmell(SmellType smell){
 		List<InspectionMethodModel> smellyMethods = new ArrayList<>();
-		for(InspectionMethodModel m:methods){
+		for(InspectionMethodModel m:allMethods){
 			if(m.getSmellTypeList().contains(smell))
 				smellyMethods.add(m);
 		}
@@ -156,62 +175,30 @@ public class TabbedPaneWindow {
 	/**
 	 * Gets class that contains a matching smell
 	 * @param smell The smell thats being searched for
-	 * @param smellyClasses	The list of all smelly classes
 	 * @return	a list of classes with the specific smell
 	 */
-	protected List<InspectionClassModel> getClassesBySmell(SmellType smell, List<InspectionClassModel> smellyClasses){
+	protected List<InspectionClassModel> getClassesBySmell(SmellType smell){
 		List<InspectionClassModel> classes = new ArrayList<>();
-		for(InspectionClassModel smellyClass: smellyClasses){
+		for(InspectionClassModel smellyClass: allClasses){
 			if(smellyClass.getSmellTypeList().contains(smell))
 				classes.add(smellyClass);
 		}
 		return classes;
 	}
 
-	private void setSmellTree(Project project){
 
-		Collection<VirtualFile> vFiles = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME, JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project));
 
-		DefaultTreeModel model = (DefaultTreeModel)smellTree.getModel();
-		DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
-		root.removeAllChildren();
-		List<InspectionClassModel> smellyClasses = new ArrayList<>();
-		for (VirtualFile vf: vFiles) {
-			smellyClasses.addAll(getDetails(vf, project));
-		}
-
-		for(SmellType smellType:SmellType.values()){
-			parseTree(root, smellyClasses, smellType);
-		}
-
-		model.reload(root);
-	}
-
-	private List<InspectionClassModel> getDetails(VirtualFile vf, Project project){
-		PsiFile psiFile = PsiManager.getInstance(project).findFile(vf);
-		List<InspectionClassModel> methods = new ArrayList<>();
-		if(psiFile instanceof PsiJavaFile)
-		{
-			PsiJavaFile psiJavaFile = (PsiJavaFile) psiFile;
-			PsiClass @NotNull [] classes = psiJavaFile.getClasses();
-			for(PsiClass psiClass: classes) {
-				System.out.println(psiClass.getQualifiedName());
-				SmellVisitor sv = new SmellVisitor();
-				psiFile.accept(sv);
-				methods = sv.getSmellyClasses();
-			}
-		}
-		return methods;
-	}
-
-	private void parseTree(DefaultMutableTreeNode tn, List<InspectionClassModel> smellyClasses, SmellType smellType){
+	private void parseTree(DefaultMutableTreeNode tn, SmellType smellType){
 		DefaultMutableTreeNode smellTypeNode = new DefaultMutableTreeNode(smellType);
-		for(InspectionClassModel smellyClass:smellyClasses){
-			if(smellyClass.getSmellTypeList().contains(smellType)){
-				System.out.println(smellyClass.getName());
-				DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode(smellyClass.getName());
-				smellTypeNode.add(methodNode);
+		for(InspectionClassModel smellyClass:getClassesBySmell(smellType)){
+			DefaultMutableTreeNode classNode = new DefaultMutableTreeNode(smellyClass.getName());
+			for(InspectionMethodModel method:getMethodBySmell(smellType)){
+				if(method.getClassName().getName().equals(smellyClass.getName())){
+					DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode(method.getName());
+					classNode.add(methodNode);
+				}
 			}
+			smellTypeNode.add(classNode);
 		}
 		tn.add(smellTypeNode);
 	}
