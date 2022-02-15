@@ -8,5 +8,6 @@ public enum SmellType {
     EMPTY_TEST,
     DUPLICATE_ASSERT,
     GENERAL_FIXTURE,
-    LAZY_TEST
+    LAZY_TEST,
+    REDUNDANT_PRINT
 }
