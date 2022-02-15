@@ -55,20 +55,16 @@ public class DuplicateAssertInspection extends SmellInspection{
 		boolean output = false;
 		if(element instanceof PsiMethod) {
 			PsiMethod method = (PsiMethod) element;
-			System.out.println("############: "+method.getName());
 			for (PsiStatement statement : Objects.requireNonNull(method.getBody()).getStatements()) {
-//				System.out.println("checking if assert "+statement.getText());
 				String name = statement.getText().replaceAll("\\s", "");
 				if(name.contains("assert")){
 					if(duplicateAsserts.containsKey(name)){
 						duplicateAsserts.get(name).add(statement);
 						output = true;
-//						System.out.println("adding "+ statement.getText());
 					}
 					else{
 						duplicateAsserts.put(name, new ArrayList<>());
 						duplicateAsserts.get(name).add(statement);
-//						System.out.println("found duplicate "+ statement.getText());
 
 					}
 				}
