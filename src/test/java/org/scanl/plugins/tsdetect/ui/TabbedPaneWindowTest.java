@@ -11,6 +11,7 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.indexing.FileBasedIndex;
 import org.jetbrains.annotations.NotNull;
+import org.scanl.plugins.tsdetect.InspectionTest;
 import org.scanl.plugins.tsdetect.SmellVisitor;
 import org.scanl.plugins.tsdetect.model.IdentifierTableModel;
 import org.scanl.plugins.tsdetect.model.InspectionClassModel;
@@ -21,27 +22,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-@TestDataPath("$CONTENT_ROOT/tests")
-public class TabbedPaneWindowTest extends BasePlatformTestCase {
+@TestDataPath("$CONTENT_ROOT/src/test/testData")
+public class TabbedPaneWindowTest extends InspectionTest {
     TabbedPaneWindow testPane;
     Project tempProj;
 
     //store temp data for testing of private helper functions
     ArrayList<InspectionMethodModel> allMethods = new ArrayList<>();
     ArrayList<InspectionClassModel> allClasses = new ArrayList<>();
-
-    public PsiFile loadExample(String name) throws FileNotFoundException {
-        Project project = Objects.requireNonNull(ProjectManager.getInstanceIfCreated()).getOpenProjects()[0];
-        PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(project);
-        File f = new File("tests//"+name);
-        Scanner fileReader = new Scanner(f);
-        StringBuilder sb = new StringBuilder();
-        while(fileReader.hasNextLine()){
-            sb.append(fileReader.nextLine());
-            sb.append('\n');
-        }
-        return psiFileFactory.createFileFromText(f.getName(), sb.toString());
-    }
 
     /**
      * Need to artificially create all the table and everything so we're able to get the list of classes
@@ -52,7 +40,7 @@ public class TabbedPaneWindowTest extends BasePlatformTestCase {
     public void setUp() throws Exception{
         super.setUp();
         testPane = new TabbedPaneWindow();
-        PsiFile psiFile = loadExample("EmptyTestTest.java"); //converts into a PsiFile
+        PsiFile psiFile = loadExample("EmptyTestMethodData.java").getContainingFile(); //converts into a PsiFile
         if(psiFile instanceof  PsiJavaFile) //determines if the PsiFile is a PsiJavaFile
         {
             PsiJavaFile psiJavaFile = (PsiJavaFile) psiFile;
