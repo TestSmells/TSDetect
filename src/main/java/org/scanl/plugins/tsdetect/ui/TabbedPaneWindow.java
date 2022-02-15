@@ -64,13 +64,13 @@ public class TabbedPaneWindow {
 
 		//set up button name and actions
 		smellDistributionButton.addActionListener(e -> setSmellDistributionTable(project));
-		smellDistributionButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "button.analysis.name"));
-		smellDistributionButton.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "button.analysis.tooltip"));
+		smellDistributionButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME"));
+		smellDistributionButton.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.TOOLTIP"));
 		//set the tab name and tooltip
-		detailsPanels.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "smell.table.tab.name"));
-		detailsPanels.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "smell.table.tab.tooltip"));
+		detailsPanels.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.TABLE.TAB.NAME"));
+		detailsPanels.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.TABLE.TAB.TOOLTIP"));
 		//sets tooltip for table
-		smellTable.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "smell.table.description"));
+		smellTable.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.TABLE.DESCRIPTION"));
 	}
 
 	/**
