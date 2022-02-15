@@ -11,13 +11,13 @@ import org.scanl.plugins.tsdetect.model.SmellType;
 public class DuplicateAssertInspectionTest extends InspectionTest {
 
 
-	EmptyMethodInspection inspection;
+	DuplicateAssertInspection inspection;
 	PsiClass psiClass;
 
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		inspection = new EmptyMethodInspection();
+		inspection = new DuplicateAssertInspection();
 		psiClass = loadExample("DuplicateAssertTest.java");
 	}
 
