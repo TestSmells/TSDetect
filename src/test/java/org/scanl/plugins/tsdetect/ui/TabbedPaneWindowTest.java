@@ -40,6 +40,7 @@ public class TabbedPaneWindowTest extends InspectionTest {
     public void setUp() throws Exception{
         super.setUp();
         testPane = new TabbedPaneWindow();
+        tempProj = Objects.requireNonNull(ProjectManager.getInstanceIfCreated()).getOpenProjects()[0];
         PsiFile psiFile = loadExample("EmptyTestMethodData.java").getContainingFile(); //converts into a PsiFile
         if(psiFile instanceof  PsiJavaFile) //determines if the PsiFile is a PsiJavaFile
         {
@@ -59,7 +60,8 @@ public class TabbedPaneWindowTest extends InspectionTest {
                 allClasses.addAll(smellyClasses);
             }
         }
-
+        myFixture.addClass(psiFile.getText());
+        testPane.visitSmellDetection(tempProj);
     }
 
     public void testCreation(){
@@ -68,7 +70,7 @@ public class TabbedPaneWindowTest extends InspectionTest {
 
 
     public void testGetMethodBySmell(){
-        List<InspectionMethodModel> tempListOfMethods = testPane.getMethodBySmell(SmellType.EMPTY_TEST, allMethods);
+        List<InspectionMethodModel> tempListOfMethods = testPane.getMethodBySmell(SmellType.EMPTY_TEST);
         assertNotEmpty(tempListOfMethods);
         boolean tempContainsSmell = false;
         for(InspectionMethodModel m:tempListOfMethods){
@@ -81,7 +83,7 @@ public class TabbedPaneWindowTest extends InspectionTest {
     }
 
     public void testGetClassBySmell(){
-        List<InspectionClassModel> tempListOfClasses = testPane.getClassesBySmell(SmellType.EMPTY_TEST, allClasses);
+        List<InspectionClassModel> tempListOfClasses = testPane.getClassesBySmell(SmellType.EMPTY_TEST);
         assertNotEmpty(tempListOfClasses);
         boolean tempContainsSmell = false;
         for(InspectionClassModel m:tempListOfClasses){
