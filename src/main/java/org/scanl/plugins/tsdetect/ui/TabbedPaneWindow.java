@@ -16,8 +16,10 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.FileBasedIndex;
+import org.apache.maven.model.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.SmellVisitor;
+import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.model.InspectionClassModel;
 import org.scanl.plugins.tsdetect.model.IdentifierTableModel;
 import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
@@ -37,8 +39,12 @@ public class TabbedPaneWindow {
 	private JPanel smellDistribution;
 	private JTable smellTable;
 	private JButton smellDistributionButton;
-	private IdentifierTableModel data;
 
+	/**
+	 * Constructor for the tabbed pane window that contains the tables and data for one view of our plugin.
+	 * Grabs the project and gets the PSI objects so we're able to search through the project,
+	 * and also initializes the table functions and names.
+	 */
 	public TabbedPaneWindow() {
 		Project project = ProjectManager.getInstance().getOpenProjects()[0];
 
@@ -56,18 +62,26 @@ public class TabbedPaneWindow {
 			}
 		});
 
+		//set up button name and actions
 		smellDistributionButton.addActionListener(e -> setSmellDistributionTable(project));
+		smellDistributionButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME"));
+		smellDistributionButton.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.TOOLTIP"));
+		//set the tab name and tooltip
+		detailsPanels.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.TABLE.TAB.NAME"));
+		detailsPanels.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.TABLE.TAB.TOOLTIP"));
+		//sets tooltip for table
+		smellTable.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.TABLE.DESCRIPTION"));
 	}
 
 	/**
 	 * Creates the smell distribution table
 	 * @param project The Project that is currently opened
 	 */
-	private void setSmellDistributionTable(Project project){
+	protected void setSmellDistributionTable(Project project){
 		Collection<VirtualFile> vFiles = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME,
 				JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project)); //gets the files in the project
 
-		data = new IdentifierTableModel();
+		IdentifierTableModel data = new IdentifierTableModel();
 		ArrayList<InspectionMethodModel> allMethods = new ArrayList<>();
 		ArrayList<InspectionClassModel> allClasses = new ArrayList<>();
 		for(VirtualFile vf : vFiles)
@@ -109,7 +123,7 @@ public class TabbedPaneWindow {
 	 * @param methods the list of all smelly methods
 	 * @return a list of methods with a specific smell
 	 */
-	private List<InspectionMethodModel> getMethodBySmell(SmellType smell, List<InspectionMethodModel> methods){
+	protected List<InspectionMethodModel> getMethodBySmell(SmellType smell, List<InspectionMethodModel> methods){
 		List<InspectionMethodModel> smellyMethods = new ArrayList<>();
 		for(InspectionMethodModel m:methods){
 			if(m.getSmellTypeList().contains(smell))
@@ -119,7 +133,13 @@ public class TabbedPaneWindow {
 	}
 
 
-	private List<InspectionClassModel> getClassesBySmell(SmellType smell, List<InspectionClassModel> smellyClasses){
+	/**
+	 * Gets class that contains a matching smell
+	 * @param smell The smell thats being searched for
+	 * @param smellyClasses	The list of all smelly classes
+	 * @return	a list of classes with the specific smell
+	 */
+	protected List<InspectionClassModel> getClassesBySmell(SmellType smell, List<InspectionClassModel> smellyClasses){
 		List<InspectionClassModel> classes = new ArrayList<>();
 		for(InspectionClassModel smellyClass: smellyClasses){
 			if(smellyClass.getSmellTypeList().contains(smell))
@@ -128,6 +148,10 @@ public class TabbedPaneWindow {
 		return classes;
 	}
 
+	/**
+	 * Simple getter for the content within the panel
+	 * @return returns the panel object
+	 */
 	public JPanel getContent() {
 		return inspectionPanel;
 	}
