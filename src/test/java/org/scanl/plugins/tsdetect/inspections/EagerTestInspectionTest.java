@@ -18,6 +18,8 @@ public class EagerTestInspectionTest extends InspectionTest {
         this.inspection = new EagerTestInspection();
         this.psiSmellClass = loadExample("EagerTestData.java");
         this.psiNoSmellClass = loadExample("EmptyTestMethodData.java");
+
+        this.myFixture.addClass(loadExample("TestClass.java").getText());
     }
 
     public void testDisplayName(){
