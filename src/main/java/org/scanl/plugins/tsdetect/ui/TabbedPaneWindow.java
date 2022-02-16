@@ -15,6 +15,7 @@ import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.indexing.FileBasedIndex;
 import org.apache.maven.model.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -149,7 +150,6 @@ public class TabbedPaneWindow {
 			{
 				SmellVisitor sv = new SmellVisitor(); //creates the smell visitor
 				psiFile.accept(sv); //visits the methods
-
 				allMethods.addAll(sv.getSmellyMethods());
 				allClasses.addAll(sv.getSmellyClasses());
 
@@ -213,6 +213,6 @@ public class TabbedPaneWindow {
 
 	private void createUIComponents() {
 		DefaultMutableTreeNode smellNode = new DefaultMutableTreeNode("SmellTypes");
-		smellTree = new JTree(smellNode);
+		smellTree = new Tree(smellNode);
 	}
 }

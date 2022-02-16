@@ -53,6 +53,7 @@ public class DuplicateAssertInspection extends SmellInspection{
 	public boolean hasSmell(PsiElement element) {
 		if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
 		boolean output = false;
+		duplicateAsserts.clear();
 		if(element instanceof PsiMethod) {
 			PsiMethod method = (PsiMethod) element;
 			for (PsiStatement statement : Objects.requireNonNull(method.getBody()).getStatements()) {
@@ -69,8 +70,6 @@ public class DuplicateAssertInspection extends SmellInspection{
 					}
 				}
 			}
-
-
 		}
 		return output;
 	}
