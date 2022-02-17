@@ -131,12 +131,27 @@ public class TabbedPaneWindow {
 		root.removeAllChildren();
 
 		for(SmellType smellType:SmellType.values()){
-			parseTree(root, smellType);
+			DefaultMutableTreeNode smellTypeNode = new DefaultMutableTreeNode(smellType);
+			for(InspectionClassModel smellyClass:getClassesBySmell(smellType)){
+				DefaultMutableTreeNode classNode = new DefaultMutableTreeNode(smellyClass.getPsiObject());
+				for(InspectionMethodModel method:getMethodBySmell(smellType)){
+					if(method.getClassName().getName().equals(smellyClass.getName())){
+						DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode(method.getPsiObject());
+						classNode.add(methodNode);
+					}
+				}
+				smellTypeNode.add(classNode);
+			}
+			root.add(smellTypeNode);
 		}
 
 		model.reload(root);
 	}
 
+	/**
+	 * Visits all of the smell detection stuff
+	 * @param project the project that is open
+	 */
 	protected void visitSmellDetection(Project project){
 		Collection<VirtualFile> vFiles = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME,
 				JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project)); //gets the files in the project
@@ -184,21 +199,6 @@ public class TabbedPaneWindow {
 				classes.add(smellyClass);
 		}
 		return classes;
-	}
-
-	private void parseTree(DefaultMutableTreeNode tn, SmellType smellType){
-		DefaultMutableTreeNode smellTypeNode = new DefaultMutableTreeNode(smellType);
-		for(InspectionClassModel smellyClass:getClassesBySmell(smellType)){
-			DefaultMutableTreeNode classNode = new DefaultMutableTreeNode(smellyClass.getPsiObject());
-			for(InspectionMethodModel method:getMethodBySmell(smellType)){
-				if(method.getClassName().getName().equals(smellyClass.getName())){
-					DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode(method.getPsiObject());
-					classNode.add(methodNode);
-				}
-			}
-			smellTypeNode.add(classNode);
-		}
-		tn.add(smellTypeNode);
 	}
 
 	/**
