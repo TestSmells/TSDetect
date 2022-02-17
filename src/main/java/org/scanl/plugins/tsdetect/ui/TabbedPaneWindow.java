@@ -153,8 +153,26 @@ public class TabbedPaneWindow {
 				allMethods.addAll(sv.getSmellyMethods());
 				allClasses.addAll(sv.getSmellyClasses());
 
+					List<InspectionMethodModel> methods = sv.getSmellyMethods(); //gets all the smelly methods
+					List<InspectionClassModel> smellyClasses = sv.getSmellyClasses();
+					allMethods.addAll(methods);
+					allClasses.addAll(smellyClasses);
+				}
 			}
 		}
+		HashMap<SmellType, List<InspectionMethodModel>> smellyMethods = new HashMap<>(); //hash to store smelly methods by smell
+		HashMap<SmellType, List<InspectionClassModel>> smellyClasses = new HashMap<>(); //hash to store smelly classes by smell
+
+		for(SmellType smellType: SmellType.values())
+		{
+			smellyMethods.put(smellType, getMethodBySmell(smellType, allMethods));
+			smellyClasses.put(smellType, getClassesBySmell(smellType, allClasses));
+		}
+
+		data.constructSmellTable(smellyMethods, smellyClasses); //constructs the smell table
+
+		smellTable.setModel(data); //sets the model to be the table and visible
+		smellTable.setVisible(true);
 	}
 
 	/**
@@ -164,7 +182,7 @@ public class TabbedPaneWindow {
 	 */
 	protected List<InspectionMethodModel> getMethodBySmell(SmellType smell){
 		List<InspectionMethodModel> smellyMethods = new ArrayList<>();
-		for(InspectionMethodModel m:allMethods){
+		for(InspectionMethodModel m:methods){
 			if(m.getSmellTypeList().contains(smell))
 				smellyMethods.add(m);
 		}
@@ -175,32 +193,16 @@ public class TabbedPaneWindow {
 	/**
 	 * Gets class that contains a matching smell
 	 * @param smell The smell thats being searched for
+	 * @param smellyClasses	The list of all smelly classes
 	 * @return	a list of classes with the specific smell
 	 */
-	protected List<InspectionClassModel> getClassesBySmell(SmellType smell){
+	protected List<InspectionClassModel> getClassesBySmell(SmellType smell, List<InspectionClassModel> smellyClasses){
 		List<InspectionClassModel> classes = new ArrayList<>();
-		for(InspectionClassModel smellyClass: allClasses){
+		for(InspectionClassModel smellyClass: smellyClasses){
 			if(smellyClass.getSmellTypeList().contains(smell))
 				classes.add(smellyClass);
 		}
 		return classes;
-	}
-
-
-
-	private void parseTree(DefaultMutableTreeNode tn, SmellType smellType){
-		DefaultMutableTreeNode smellTypeNode = new DefaultMutableTreeNode(smellType);
-		for(InspectionClassModel smellyClass:getClassesBySmell(smellType)){
-			DefaultMutableTreeNode classNode = new DefaultMutableTreeNode(smellyClass.getName());
-			for(InspectionMethodModel method:getMethodBySmell(smellType)){
-				if(method.getClassName().getName().equals(smellyClass.getName())){
-					DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode(method.getName());
-					classNode.add(methodNode);
-				}
-			}
-			smellTypeNode.add(classNode);
-		}
-		tn.add(smellTypeNode);
 	}
 
 	/**
@@ -209,10 +211,5 @@ public class TabbedPaneWindow {
 	 */
 	public JPanel getContent() {
 		return inspectionPanel;
-	}
-
-	private void createUIComponents() {
-		DefaultMutableTreeNode smellNode = new DefaultMutableTreeNode("SmellTypes");
-		smellTree = new Tree(smellNode);
 	}
 }
