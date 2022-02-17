@@ -45,20 +45,13 @@ public class TabbedPaneWindowTest extends InspectionTest {
         if(psiFile instanceof  PsiJavaFile) //determines if the PsiFile is a PsiJavaFile
         {
             PsiJavaFile psiJavaFile = (PsiJavaFile) psiFile;
-            PsiClass @NotNull [] classes = psiJavaFile.getClasses(); //gets the classes
-            for(PsiClass psiClass: classes) {
-                SmellVisitor sv = new SmellVisitor(); //creates the smell visitor
-                psiFile.accept(sv); //visits the methods
+            SmellVisitor sv = new SmellVisitor(); //creates the smell visitor
+            psiFile.accept(sv); //visits the methods
 
-                List<InspectionMethodModel> methods = sv.getSmellyMethods(); //gets all the smelly methods
-                for(InspectionMethodModel method:methods){
-                    System.out.println(method.getName());
-                }
-                List<InspectionClassModel> smellyClasses = sv.getSmellyClasses();
-                System.out.println("added" + methods.size());
-                allMethods.addAll(methods);
-                allClasses.addAll(smellyClasses);
-            }
+            List<InspectionMethodModel> methods = sv.getSmellyMethods(); //gets all the smelly methods
+            List<InspectionClassModel> smellyClasses = sv.getSmellyClasses();
+            allMethods.addAll(methods);
+            allClasses.addAll(smellyClasses);
         }
         myFixture.addClass(psiFile.getText());
         testPane.visitSmellDetection(tempProj);

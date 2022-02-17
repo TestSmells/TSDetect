@@ -78,22 +78,22 @@ public class TabbedPaneWindow {
 
 		//set up button name and actions
 		smellDistributionButton.addActionListener(e -> setSmellDistributionTable(project));
-		smellDistributionButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "button.analysis.name"));
-		smellDistributionButton.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "button.analysis.tooltip"));
+		smellDistributionButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME"));
+		smellDistributionButton.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.TOOLTIP"));
 		//set the tab name and tooltip
-		detailsPanels.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "smell.table.tab.name"));
-		detailsPanels.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "smell.table.tab.tooltip"));
+		detailsPanels.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.TABLE.TAB.NAME"));
+		detailsPanels.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.TABLE.TAB.TOOLTIP"));
 		//sets tooltip for table
-		smellTable.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "smell.table.description"));
+		smellTable.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.TABLE.DESCRIPTION"));
 
 		detectedSmellsButton.addActionListener(e -> setSmellTree(project));
-		detectedSmellsButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "button.analysis.name"));
-		detectedSmellsButton.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "button.analysis.tooltip"));
+		detectedSmellsButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME"));
+		detectedSmellsButton.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.TOOLTIP"));
 		//set the tab name and tooltip
-		detectedSmells.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "smell.detected.tree.tab.name"));
-		detectedSmells.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "smell.detected.tree.tab.tooltip"));
+		detectedSmells.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.DETECTED.TREE.TAB.NAME"));
+		detectedSmells.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.DETECTED.TREE.TAB.TOOLTIP"));
 		//sets tooltip for table
-		smellTable.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "smell.detected.tree.description"));
+		smellTable.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.DETECTED.TREE.DESCRIPTION"));
 
 	}
 
@@ -153,26 +153,8 @@ public class TabbedPaneWindow {
 				allMethods.addAll(sv.getSmellyMethods());
 				allClasses.addAll(sv.getSmellyClasses());
 
-					List<InspectionMethodModel> methods = sv.getSmellyMethods(); //gets all the smelly methods
-					List<InspectionClassModel> smellyClasses = sv.getSmellyClasses();
-					allMethods.addAll(methods);
-					allClasses.addAll(smellyClasses);
-				}
 			}
 		}
-		HashMap<SmellType, List<InspectionMethodModel>> smellyMethods = new HashMap<>(); //hash to store smelly methods by smell
-		HashMap<SmellType, List<InspectionClassModel>> smellyClasses = new HashMap<>(); //hash to store smelly classes by smell
-
-		for(SmellType smellType: SmellType.values())
-		{
-			smellyMethods.put(smellType, getMethodBySmell(smellType, allMethods));
-			smellyClasses.put(smellType, getClassesBySmell(smellType, allClasses));
-		}
-
-		data.constructSmellTable(smellyMethods, smellyClasses); //constructs the smell table
-
-		smellTable.setModel(data); //sets the model to be the table and visible
-		smellTable.setVisible(true);
 	}
 
 	/**
@@ -182,7 +164,7 @@ public class TabbedPaneWindow {
 	 */
 	protected List<InspectionMethodModel> getMethodBySmell(SmellType smell){
 		List<InspectionMethodModel> smellyMethods = new ArrayList<>();
-		for(InspectionMethodModel m:methods){
+		for(InspectionMethodModel m:allMethods){
 			if(m.getSmellTypeList().contains(smell))
 				smellyMethods.add(m);
 		}
@@ -193,16 +175,30 @@ public class TabbedPaneWindow {
 	/**
 	 * Gets class that contains a matching smell
 	 * @param smell The smell thats being searched for
-	 * @param smellyClasses	The list of all smelly classes
 	 * @return	a list of classes with the specific smell
 	 */
-	protected List<InspectionClassModel> getClassesBySmell(SmellType smell, List<InspectionClassModel> smellyClasses){
+	protected List<InspectionClassModel> getClassesBySmell(SmellType smell){
 		List<InspectionClassModel> classes = new ArrayList<>();
-		for(InspectionClassModel smellyClass: smellyClasses){
+		for(InspectionClassModel smellyClass: allClasses){
 			if(smellyClass.getSmellTypeList().contains(smell))
 				classes.add(smellyClass);
 		}
 		return classes;
+	}
+
+	private void parseTree(DefaultMutableTreeNode tn, SmellType smellType){
+		DefaultMutableTreeNode smellTypeNode = new DefaultMutableTreeNode(smellType);
+		for(InspectionClassModel smellyClass:getClassesBySmell(smellType)){
+			DefaultMutableTreeNode classNode = new DefaultMutableTreeNode(smellyClass.getPsiObject());
+			for(InspectionMethodModel method:getMethodBySmell(smellType)){
+				if(method.getClassName().getName().equals(smellyClass.getName())){
+					DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode(method.getPsiObject());
+					classNode.add(methodNode);
+				}
+			}
+			smellTypeNode.add(classNode);
+		}
+		tn.add(smellTypeNode);
 	}
 
 	/**
@@ -211,5 +207,10 @@ public class TabbedPaneWindow {
 	 */
 	public JPanel getContent() {
 		return inspectionPanel;
+	}
+
+	private void createUIComponents() {
+		DefaultMutableTreeNode smellNode = new DefaultMutableTreeNode("SmellTypes");
+		smellTree = new Tree(smellNode);
 	}
 }
