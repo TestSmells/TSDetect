@@ -6,6 +6,7 @@ package org.scanl.plugins.tsdetect.model;
  */
 public enum SmellType {
     EMPTY_TEST,
+    EAGER_TEST,
     DUPLICATE_ASSERT,
     GENERAL_FIXTURE,
     LAZY_TEST,
