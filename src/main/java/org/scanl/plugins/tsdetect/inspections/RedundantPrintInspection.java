@@ -20,7 +20,6 @@ public class RedundantPrintInspection extends SmellInspection{
 
 	private List<PsiMethodCallExpression> issueStatements = new ArrayList<>();
 
-
 	@Override
 	public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
 		return new JavaElementVisitor() {
@@ -29,8 +28,8 @@ public class RedundantPrintInspection extends SmellInspection{
 				if(hasSmell(method)){
 					for(PsiMethodCallExpression expression:issueStatements)
 						holder.registerProblem(expression, DESCRIPTION,
-								new QuickFixRemove("inspection.smell.redundantPrint.fix.remove"),
-								new QuickFixComment("inspection.smell.redundantPrint.fix.comment"));
+								new QuickFixRemove("INSPECTION.SMELL.REDUNDANT_PRINT.FIX.REMOVE"),
+								new QuickFixComment("INSPECTION.SMELL.REDUNDANT_PRINT.FIX.COMMENT"));
 				}
 				super.visitMethod(method);
 			}
