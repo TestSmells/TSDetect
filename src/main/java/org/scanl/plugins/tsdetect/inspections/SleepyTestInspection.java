@@ -42,4 +42,7 @@ public class SleepyTestInspection extends SmellInspection {
     public SmellType getSmellType() {
         return SmellType.SLEEPY_TEST;
     }
+
+    @Override
+    public Class<? extends PsiElement> getVisitedType() { return PsiMethodCallExpression.class; }
 }
