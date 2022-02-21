@@ -21,15 +21,14 @@ public class IgnoredTestInspection extends SmellInspection{
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly){
         return new JavaElementVisitor(){
             @Override
-            public void visitClass(PsiClass cls){
-                if(hasSmell(cls)){
-                    for(PsiStatement statement:issueStatements){
-                        holder.registerProblem(statement, DESCRIPTION,
-                                new QuickFixRemove("INSPECTION.SMELL.IGNORED_TEST.FIX.REMOVE"),
-                                new QuickFixComment("INSPECTION.SMELL.IGNORED_TEST.FIX.COMMENT"));
-                    }
-                }
-            }
+            public void visitMethod(PsiMethod method) {
+				if (method.getBody() == null)
+					return;
+				if (hasSmell(method))
+					holder.registerProblem(method, DESCRIPTION,
+							new QuickFixRemove("INSPECTION.SMELL.EMPTY_TEST.FIX.REMOVE"),
+							new QuickFixComment("INSPECTION.SMELL.EMPTY_TEST.FIX.COMMENT"));
+			}
         };
     }
 
@@ -43,30 +42,27 @@ public class IgnoredTestInspection extends SmellInspection{
      */
     @Override
     public boolean hasSmell(PsiElement element) {
-        PsiClass currClass = (PsiClass) element;
-        System.out.println(currClass.getName());
+        PsiMethod method = (PsiMethod) element;
         if (!PluginSettings.GetSetting(getSmellType().toString())){
-            System.out.println("No type, Exiting");
             return false;
         }
         issueStatements = new ArrayList<>();
-        PsiMethod[] psiMethods = currClass.getMethods();
+        //PsiMethod[] psiMethods = currClass.getMethods();
 
-        for(PsiMethod method:psiMethods){
-            PsiAnnotation[] annotations = method.getModifierList().getAnnotations();
-            if(annotations.length == 0){
-                return false;
+        PsiAnnotation[] annotations = method.getModifierList().getAnnotations();
+        if(annotations.length == 0){
+            return false;
+        }
+        for(PsiAnnotation annotation:annotations){
+            //if an annotation exists with "Ignore", then return false
+            if(Objects.equals(annotation.getQualifiedName(), "Ignore")){
+                return true;
             }
-            for(PsiAnnotation annotation:annotations){
-                //if an annotation exists with "Ignore", then return false
-                if(Objects.equals(annotation.getQualifiedName(), "Ignore")){
-                    return true;
-                }
-                if(Objects.equals(annotation.getQualifiedName(), "Disable")){
-                    return true;
-                }
+            if(Objects.equals(annotation.getQualifiedName(), "Disable")){
+                return true;
             }
         }
+
         return false;
     }
 

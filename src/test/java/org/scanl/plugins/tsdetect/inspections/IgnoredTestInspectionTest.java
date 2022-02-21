@@ -8,7 +8,6 @@ import org.scanl.plugins.tsdetect.model.SmellType;
 import java.io.FileNotFoundException;
 
 @TestDataPath("$CONTENT_ROOT/src/test/testData")
-//@TestDataPath("$CONTENT_ROOT/src/test/java/org/scanl/plugins/tsdetect/inspections")
 public class IgnoredTestInspectionTest extends InspectionTest {
     IgnoredTestInspection inspection;
     private PsiClass psiClass;
