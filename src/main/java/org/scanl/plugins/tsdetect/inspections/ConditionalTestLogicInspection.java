@@ -7,9 +7,6 @@ import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.SmellType;
-import org.scanl.plugins.tsdetect.quickfixes.QuickFixComment;
-import org.scanl.plugins.tsdetect.quickfixes.QuickFixRemove;
-
 
 public class ConditionalTestLogicInspection extends SmellInspection {
 
@@ -18,12 +15,10 @@ public class ConditionalTestLogicInspection extends SmellInspection {
 		return new JavaElementVisitor() {
 			@Override
 			public void visitStatement(PsiStatement statement){
-				PsiMethod psiMethod= PsiTreeUtil.getParentOfType(statement, PsiMethod.class);
-				if (JUnitUtil.isTestAnnotated(psiMethod)) {
-					if (hasSmell(statement)) {
-						holder.registerProblem(statement, DESCRIPTION);
-					}
+				if (hasSmell(statement)) {
+					holder.registerProblem(statement, DESCRIPTION);
 				}
+
 				super.visitStatement(statement);
 			}
 		};
@@ -32,6 +27,11 @@ public class ConditionalTestLogicInspection extends SmellInspection {
 	@Override
 	public boolean hasSmell(PsiElement element) {
 		if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
+		if(!(element instanceof PsiStatement)) return false;
+
+		PsiClass psiClass = PsiTreeUtil.getParentOfType(element, PsiClass.class);
+		if (!JUnitUtil.isTestClass(psiClass)) return false;
+
 		if(element instanceof PsiIfStatement)
 			return true;
 		if(element instanceof PsiForStatement)
