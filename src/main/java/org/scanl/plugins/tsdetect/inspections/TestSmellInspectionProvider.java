@@ -5,6 +5,7 @@ import com.intellij.codeInspection.InspectionToolProvider;
 import com.intellij.codeInspection.LocalInspectionTool;
 import org.jetbrains.annotations.NotNull;
 
+
 /**
  * The provider for the Test Smell Inspection, determines which inspection classes to run
  */
@@ -17,6 +18,7 @@ public class TestSmellInspectionProvider implements InspectionToolProvider {
 	@Override
 	public Class<? extends LocalInspectionTool> @NotNull [] getInspectionClasses() {
 		return new Class[]{
+				ConditionalTestLogicInspection.class,
 				DefaultTestInspection.class,
 				DuplicateAssertInspection.class,
 				EagerTestInspection.class,

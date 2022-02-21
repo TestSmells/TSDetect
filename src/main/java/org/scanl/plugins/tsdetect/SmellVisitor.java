@@ -37,9 +37,11 @@ public class SmellVisitor extends JavaRecursiveElementVisitor {
 				e.printStackTrace();
 			}
 		}
-		determineSmellsByClass(cls, inspections);
-		for(PsiMethod method:cls.getMethods())
-			determineSmellsByMethod(method, inspections);
+		if(JUnitUtil.isTestClass(cls)) {
+			determineSmellsByClass(cls, inspections);
+			for (PsiMethod method : cls.getMethods())
+				determineSmellsByMethod(method, inspections);
+		}
 
 	}
 
