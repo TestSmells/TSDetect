@@ -3,6 +3,7 @@ package org.scanl.plugins.tsdetect;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.execution.junit.JUnitUtil;
 import com.intellij.psi.*;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.inspections.SmellInspection;
 import org.scanl.plugins.tsdetect.inspections.TestSmellInspectionProvider;
@@ -10,9 +11,7 @@ import org.scanl.plugins.tsdetect.model.InspectionClassModel;
 import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
 import org.scanl.plugins.tsdetect.model.SmellType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Smell Visitor to visit all the files to determine smells
@@ -67,10 +66,19 @@ public class SmellVisitor extends JavaRecursiveElementVisitor {
 		List<SmellType> smellTypes = new ArrayList<>();
 		boolean issues = false;
 		for(SmellInspection inspection:inspections){
-			boolean helperIssue = inspection.hasSmell(method);
-			if(helperIssue){
-				issues = true;
-				smellTypes.add(inspection.getSmellType());
+			if (inspection.getVisitedType().equals(PsiMethod.class)) {
+				if (inspection.hasSmell(method)) {
+					issues = true;
+					smellTypes.add(inspection.getSmellType());
+				}
+			} else {
+				Collection<? extends PsiElement> elements = PsiTreeUtil.collectElementsOfType(method, inspection.getVisitedType());
+				if (elements.isEmpty()) continue;
+
+				if (elements.stream().anyMatch(inspection::hasSmell)) {
+					issues = true;
+					smellTypes.add(inspection.getSmellType());
+				}
 			}
 		}
 		JUnitUtil.isTestAnnotated(method);
