@@ -15,6 +15,7 @@ import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.indexing.FileBasedIndex;
 import org.apache.maven.model.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +27,9 @@ import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
 import org.scanl.plugins.tsdetect.model.SmellType;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
 import java.util.*;
 
 /**
@@ -39,6 +43,14 @@ public class TabbedPaneWindow {
 	private JPanel smellDistribution;
 	private JTable smellTable;
 	private JButton smellDistributionButton;
+
+	private JPanel detectedSmells;
+	private JTree smellTree;
+	private JButton detectedSmellsButton;
+
+	private final List<InspectionMethodModel> allMethods = new ArrayList<>();
+	private final List<InspectionClassModel> allClasses = new ArrayList<>();
+
 
 	/**
 	 * Constructor for the tabbed pane window that contains the tables and data for one view of our plugin.
@@ -56,8 +68,10 @@ public class TabbedPaneWindow {
 				VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);
 				if (virtualFile != null) {
 					PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
-					if (psiFile instanceof PsiJavaFile)
+					if (psiFile instanceof PsiJavaFile) {
 						setSmellDistributionTable(project);
+						setSmellTree(project);
+					}
 				}
 			}
 		});
@@ -71,6 +85,16 @@ public class TabbedPaneWindow {
 		detailsPanels.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.TABLE.TAB.TOOLTIP"));
 		//sets tooltip for table
 		smellTable.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.TABLE.DESCRIPTION"));
+
+		detectedSmellsButton.addActionListener(e -> setSmellTree(project));
+		detectedSmellsButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME"));
+		detectedSmellsButton.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.TOOLTIP"));
+		//set the tab name and tooltip
+		detectedSmells.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.DETECTED.TREE.TAB.NAME"));
+		detectedSmells.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.DETECTED.TREE.TAB.TOOLTIP"));
+		//sets tooltip for table
+		smellTable.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.DETECTED.TREE.DESCRIPTION"));
+
 	}
 
 	/**
@@ -78,37 +102,16 @@ public class TabbedPaneWindow {
 	 * @param project The Project that is currently opened
 	 */
 	protected void setSmellDistributionTable(Project project){
-		Collection<VirtualFile> vFiles = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME,
-				JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project)); //gets the files in the project
-
+		visitSmellDetection(project);
 		IdentifierTableModel data = new IdentifierTableModel();
-		ArrayList<InspectionMethodModel> allMethods = new ArrayList<>();
-		ArrayList<InspectionClassModel> allClasses = new ArrayList<>();
-		for(VirtualFile vf : vFiles)
-		{
-			PsiFile psiFile = PsiManager.getInstance(project).findFile(vf); //converts into a PsiFile
-			if(psiFile instanceof  PsiJavaFile) //determines if the PsiFile is a PsiJavaFile
-			{
-				PsiJavaFile psiJavaFile = (PsiJavaFile) psiFile;
-				PsiClass @NotNull [] classes = psiJavaFile.getClasses(); //gets the classes
-				for(PsiClass psiClass: classes) {
-					SmellVisitor sv = new SmellVisitor(); //creates the smell visitor
-					psiFile.accept(sv); //visits the methods
 
-					List<InspectionMethodModel> methods = sv.getSmellyMethods(); //gets all the smelly methods
-					List<InspectionClassModel> smellyClasses = sv.getSmellyClasses();
-					allMethods.addAll(methods);
-					allClasses.addAll(smellyClasses);
-				}
-			}
-		}
 		HashMap<SmellType, List<InspectionMethodModel>> smellyMethods = new HashMap<>(); //hash to store smelly methods by smell
 		HashMap<SmellType, List<InspectionClassModel>> smellyClasses = new HashMap<>(); //hash to store smelly classes by smell
 
 		for(SmellType smellType: SmellType.values())
 		{
-			smellyMethods.put(smellType, getMethodBySmell(smellType, allMethods));
-			smellyClasses.put(smellType, getClassesBySmell(smellType, allClasses));
+			smellyMethods.put(smellType, getMethodBySmell(smellType));
+			smellyClasses.put(smellType, getClassesBySmell(smellType));
 		}
 
 		data.constructSmellTable(smellyMethods, smellyClasses); //constructs the smell table
@@ -118,14 +121,65 @@ public class TabbedPaneWindow {
 	}
 
 	/**
+	 * Creates the smell distribution tree by smell then tree then method
+	 * @param project The Project that is currently opened
+	 */
+	protected void setSmellTree(Project project){
+		visitSmellDetection(project);
+		DefaultTreeModel model = (DefaultTreeModel)smellTree.getModel();
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
+		root.removeAllChildren();
+
+		for(SmellType smellType:SmellType.values()){
+			DefaultMutableTreeNode smellTypeNode = new DefaultMutableTreeNode(smellType);
+			for(InspectionClassModel smellyClass:getClassesBySmell(smellType)){
+				DefaultMutableTreeNode classNode = new DefaultMutableTreeNode(smellyClass.getPsiObject());
+				for(InspectionMethodModel method:getMethodBySmell(smellType)){
+					if(method.getClassName().getName().equals(smellyClass.getName())){
+						DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode(method.getPsiObject());
+						classNode.add(methodNode);
+					}
+				}
+				smellTypeNode.add(classNode);
+			}
+			root.add(smellTypeNode);
+		}
+
+		model.reload(root);
+	}
+
+	/**
+	 * Visits all of the smell detection stuff
+	 * @param project the project that is open
+	 */
+	protected void visitSmellDetection(Project project){
+		Collection<VirtualFile> vFiles = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME,
+				JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project)); //gets the files in the project
+
+		allMethods.clear();
+		allClasses.clear();
+		for(VirtualFile vf : vFiles)
+		{
+			PsiFile psiFile = PsiManager.getInstance(project).findFile(vf); //converts into a PsiFile
+			if(psiFile instanceof  PsiJavaFile) //determines if the PsiFile is a PsiJavaFile
+			{
+				SmellVisitor sv = new SmellVisitor(); //creates the smell visitor
+				psiFile.accept(sv); //visits the methods
+				allMethods.addAll(sv.getSmellyMethods());
+				allClasses.addAll(sv.getSmellyClasses());
+
+			}
+		}
+	}
+
+	/**
 	 * Gets the methods for a matching smell
 	 * @param smell The smell that is being searched for
-	 * @param methods the list of all smelly methods
 	 * @return a list of methods with a specific smell
 	 */
-	protected List<InspectionMethodModel> getMethodBySmell(SmellType smell, List<InspectionMethodModel> methods){
+	protected List<InspectionMethodModel> getMethodBySmell(SmellType smell){
 		List<InspectionMethodModel> smellyMethods = new ArrayList<>();
-		for(InspectionMethodModel m:methods){
+		for(InspectionMethodModel m:allMethods){
 			if(m.getSmellTypeList().contains(smell))
 				smellyMethods.add(m);
 		}
@@ -136,12 +190,11 @@ public class TabbedPaneWindow {
 	/**
 	 * Gets class that contains a matching smell
 	 * @param smell The smell thats being searched for
-	 * @param smellyClasses	The list of all smelly classes
 	 * @return	a list of classes with the specific smell
 	 */
-	protected List<InspectionClassModel> getClassesBySmell(SmellType smell, List<InspectionClassModel> smellyClasses){
+	protected List<InspectionClassModel> getClassesBySmell(SmellType smell){
 		List<InspectionClassModel> classes = new ArrayList<>();
-		for(InspectionClassModel smellyClass: smellyClasses){
+		for(InspectionClassModel smellyClass: allClasses){
 			if(smellyClass.getSmellTypeList().contains(smell))
 				classes.add(smellyClass);
 		}
@@ -154,5 +207,10 @@ public class TabbedPaneWindow {
 	 */
 	public JPanel getContent() {
 		return inspectionPanel;
+	}
+
+	private void createUIComponents() {
+		DefaultMutableTreeNode smellNode = new DefaultMutableTreeNode("SmellTypes");
+		smellTree = new Tree(smellNode);
 	}
 }
