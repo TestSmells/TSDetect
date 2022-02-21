@@ -32,6 +32,8 @@ public abstract class SmellInspection extends AbstractBaseJavaLocalInspectionToo
 	public abstract boolean hasSmell(PsiElement element);
 	public abstract SmellType getSmellType();
 
+	public Class<? extends PsiElement> getVisitedType() { return PsiMethod.class; }
+
 	protected final String DESCRIPTION = PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,
 			"INSPECTION.SMELL." + getSmellType().toString() + ".DESCRIPTION");
 
