@@ -1,6 +1,7 @@
 package org.scanl.plugins.tsdetect.inspections;
 
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiMethod;
 import com.intellij.testFramework.TestDataPath;
 import org.junit.Test;
 import org.scanl.plugins.tsdetect.InspectionTest;
@@ -46,12 +47,13 @@ public class IgnoredTestInspectionTest extends InspectionTest {
     }
 
     public void testHasSmell(){
-        assertTrue(inspection.hasSmell(psiClass));
+        PsiMethod method = psiClass.findMethodsByName("IgnoredTest02", false)[0];
+        assertTrue(inspection.hasSmell(method));
     }
 
     public void testHasNoSmell() throws FileNotFoundException {
-        PsiClass notGeneralFixtureExample = loadExample("EmptyTestMethodData.java");
-        assertFalse(inspection.hasSmell(notGeneralFixtureExample));
+        PsiMethod method = psiClass.findMethodsByName("Ignored_Test03", false)[0];
+        assertFalse(inspection.hasSmell(method));
     }
 
 }
