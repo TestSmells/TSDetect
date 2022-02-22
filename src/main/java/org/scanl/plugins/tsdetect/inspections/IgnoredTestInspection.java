@@ -41,7 +41,6 @@ public class IgnoredTestInspection extends SmellInspection{
     @Override
     public boolean hasSmell(PsiElement element) {
         if(element instanceof PsiMethod) {
-            System.out.println("bah");
             PsiMethod method = (PsiMethod) element;
             if (!PluginSettings.GetSetting(getSmellType().toString())) {
                 return false;
@@ -54,15 +53,16 @@ public class IgnoredTestInspection extends SmellInspection{
             }
             for (PsiAnnotation annotation : annotations) {
                 //if an annotation exists with "Ignore", then return false
-                if (Objects.equals(annotation.getQualifiedName(), "Ignore")) {
-                    return true;
-                }
-                if (Objects.equals(annotation.getQualifiedName(), "Disable")) {
-                    return true;
+                if(annotation.getQualifiedName() != null) {
+                    if (annotation.getQualifiedName().contains("Ignore")) {
+                        return true;
+                    }
+                    if (annotation.getQualifiedName().contains("Disabled")) {
+                        return true;
+                    }
                 }
             }
         }
-
         return false;
     }
 
