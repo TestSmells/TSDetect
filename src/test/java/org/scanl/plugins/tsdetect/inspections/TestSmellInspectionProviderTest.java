@@ -24,7 +24,8 @@ public class TestSmellInspectionProviderTest extends LightJavaCodeInsightFixture
 				GeneralFixtureInspection.class,
 				LazyTestInspection.class,
 				RedundantPrintInspection.class,
-				SleepyTestInspection.class
+				SleepyTestInspection.class,
+				IgnoredTestInspection.class
 		};
 		Class<? extends LocalInspectionTool> @NotNull [] actualClasses = provider.getInspectionClasses();
 		assertArrayEquals(expectedClasses, actualClasses);
