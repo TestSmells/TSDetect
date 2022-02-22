@@ -2,10 +2,12 @@ package org.scanl.plugins.tsdetect.inspections;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.testFramework.TestDataPath;
+import org.junit.Test;
 import org.scanl.plugins.tsdetect.InspectionTest;
 import org.scanl.plugins.tsdetect.model.SmellType;
 
 import java.io.FileNotFoundException;
+
 
 @TestDataPath("$CONTENT_ROOT/src/test/testData")
 public class IgnoredTestInspectionTest extends InspectionTest {
