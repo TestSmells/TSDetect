@@ -12,5 +12,6 @@ public enum SmellType {
     GENERAL_FIXTURE,
     LAZY_TEST,
     REDUNDANT_PRINT,
+    IGNORED_TEST,
     SLEEPY_TEST
 }
