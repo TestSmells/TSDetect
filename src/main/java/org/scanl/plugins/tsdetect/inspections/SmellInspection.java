@@ -161,6 +161,27 @@ public abstract class SmellInspection extends AbstractBaseJavaLocalInspectionToo
 	}
 
 	/**
+	 * Gets all method calls made within a method
+	 * @param method
+	 * @return
+	 */
+	static List<PsiMethodCallExpression> getMethodExpressions(PsiMethod method){
+		List<PsiMethodCallExpression> methodCallExpressionList = new ArrayList<>();
+		PsiStatement @NotNull [] statements = Objects.requireNonNull(method.getBody()).getStatements();
+		for(PsiStatement statement: statements) {
+			if(statement instanceof PsiExpressionStatement)
+			{
+				PsiExpressionStatement expressionStatement = (PsiExpressionStatement) statement;
+				PsiExpression expression = expressionStatement.getExpression();
+				if(expression instanceof PsiMethodCallExpression) {
+					PsiMethodCallExpression methodCallExpression = (PsiMethodCallExpression) expression;
+					methodCallExpressionList.add(methodCallExpression);
+				}
+			}
+		}
+		return methodCallExpressionList;
+	}
+	/**
 	 * Gets all Method Calls in all production methods
 	 * @return a list of methods that exist in all production classes
 	 */
