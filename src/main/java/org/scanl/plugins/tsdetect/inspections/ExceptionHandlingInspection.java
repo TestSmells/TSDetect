@@ -18,9 +18,7 @@ public class ExceptionHandlingInspection extends SmellInspection{
 			@Override
 			public void visitElement(PsiElement expression) {
 				if (hasSmell(expression))
-					holder.registerProblem(expression, DESCRIPTION,
-							new QuickFixRemove("INSPECTION.SMELL.SLEEPY_TEST.FIX.REMOVE"),
-							new QuickFixComment("INSPECTION.SMELL.SLEEPY_TEST.FIX.COMMENT"));
+					holder.registerProblem(expression, DESCRIPTION);
 				super.visitElement(expression);
 			}
 		};
