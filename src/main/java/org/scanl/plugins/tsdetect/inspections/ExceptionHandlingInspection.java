@@ -10,7 +10,7 @@ import org.scanl.plugins.tsdetect.model.SmellType;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixComment;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixRemove;
 
-public class ExpectionHandlingInspection extends SmellInspection{
+public class ExceptionHandlingInspection extends SmellInspection{
 
 	@Override
 	public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
