@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.SmellType;
 
+import java.util.Objects;
+
 public class DefaultTestInspection extends SmellInspection{
 
 	@Override
@@ -14,7 +16,7 @@ public class DefaultTestInspection extends SmellInspection{
 			@Override
 			public void visitClass(PsiClass cls) {
 				if(hasSmell(cls)) {
-					holder.registerProblem(cls.getNameIdentifier(), DESCRIPTION);
+					holder.registerProblem(Objects.requireNonNull(cls.getNameIdentifier()), DESCRIPTION);
 				}
 			}
 		};
@@ -26,8 +28,8 @@ public class DefaultTestInspection extends SmellInspection{
 
 		if(element instanceof PsiClass){
 			PsiClass cls = (PsiClass)element;
-			if(cls.getQualifiedName().equals("ExampleInstrumentedTest") || cls.getQualifiedName().equals("ExampleUnitTest"))
-				return true;
+			return Objects.requireNonNull(cls.getQualifiedName()).equals("ExampleInstrumentedTest")
+					|| cls.getQualifiedName().equals("ExampleUnitTest");
 		}
 		return false;
 	}

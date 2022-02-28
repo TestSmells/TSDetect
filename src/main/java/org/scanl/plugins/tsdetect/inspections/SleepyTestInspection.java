@@ -10,6 +10,8 @@ import org.scanl.plugins.tsdetect.model.SmellType;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixComment;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixRemove;
 
+import java.util.Objects;
+
 public class SleepyTestInspection extends SmellInspection {
 
     @Override
@@ -32,7 +34,7 @@ public class SleepyTestInspection extends SmellInspection {
         if (!(element instanceof PsiMethodCallExpression)) return false;
 
         PsiClass psiClass = PsiTreeUtil.getParentOfType(element, PsiClass.class);
-        if (!JUnitUtil.isTestClass(psiClass)) return false;
+        if (!JUnitUtil.isTestClass(Objects.requireNonNull(psiClass))) return false;
 
         PsiMethodCallExpression expression = (PsiMethodCallExpression) element;
         return expression.getMethodExpression().getCanonicalText().equals("Thread.sleep");

@@ -8,6 +8,8 @@ import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.SmellType;
 
+import java.util.Objects;
+
 public class ConditionalTestLogicInspection extends SmellInspection {
 
 	@Override
@@ -30,7 +32,7 @@ public class ConditionalTestLogicInspection extends SmellInspection {
 		if(!(element instanceof PsiStatement)) return false;
 
 		PsiClass psiClass = PsiTreeUtil.getParentOfType(element, PsiClass.class);
-		if (!JUnitUtil.isTestClass(psiClass)) return false;
+		if (!JUnitUtil.isTestClass(Objects.requireNonNull(psiClass))) return false;
 
 		if(element instanceof PsiIfStatement)
 			return true;
