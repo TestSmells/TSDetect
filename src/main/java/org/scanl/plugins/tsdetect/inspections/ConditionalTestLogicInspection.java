@@ -26,7 +26,7 @@ public class ConditionalTestLogicInspection extends SmellInspection {
 
 	@Override
 	public boolean hasSmell(PsiElement element) {
-		if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
+		if (!shouldTestElement(element)) return false;
 		if(!(element instanceof PsiStatement)) return false;
 
 		PsiClass psiClass = PsiTreeUtil.getParentOfType(element, PsiClass.class);

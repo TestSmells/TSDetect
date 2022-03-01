@@ -14,20 +14,10 @@ import org.scanl.plugins.tsdetect.model.SmellType;
 public class ConditionalTestLogicInspectionTest extends InspectionTest {
 	ConditionalTestLogicInspection inspection;
 	PsiClass psiClass;
-	MockedStatic<JUnitUtil> junitUtil;
-
-
-	@Override
-	protected void tearDown() throws Exception {
-		junitUtil.close();
-		super.tearDown();
-	}
 
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		junitUtil = Mockito.mockStatic(JUnitUtil.class);
-		junitUtil.when(() -> JUnitUtil.isTestClass(Mockito.any(PsiClass.class))).thenReturn(true);
 		inspection = new ConditionalTestLogicInspection();
 		psiClass = loadExample("ConditionalTestLogicData.java");
 		myFixture.addClass(psiClass.getText());

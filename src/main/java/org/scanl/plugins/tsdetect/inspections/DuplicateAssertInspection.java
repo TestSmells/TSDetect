@@ -3,7 +3,6 @@ package org.scanl.plugins.tsdetect.inspections;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
-import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.SmellType;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixComment;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixRemove;
@@ -32,8 +31,8 @@ public class DuplicateAssertInspection extends SmellInspection{
 					if(statements.size() > 1){
 						for (PsiStatement statement : statements) {
 							holder.registerProblem(statement, DESCRIPTION,
-									new QuickFixRemove("INSPECTION.SMELL.DUPLICATE_ASSERT.FIX.REMOVE"),
-									new QuickFixComment("INSPECTION.SMELL.DUPLICATE_ASSERT.FIX.COMMENT"));
+									new QuickFixRemove(getResourceName("FIX.REMOVE")),
+									new QuickFixComment(getResourceName("FIX.COMMENT")));
 						}
 
 					}
@@ -51,7 +50,7 @@ public class DuplicateAssertInspection extends SmellInspection{
 	 */
 	@Override
 	public boolean hasSmell(PsiElement element) {
-		if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
+		if (!shouldTestElement(element)) return false;
 		boolean output = false;
 		duplicateAsserts.clear();
 		if(element instanceof PsiMethod) {
