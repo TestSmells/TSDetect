@@ -167,8 +167,7 @@ public abstract class SmellInspection extends AbstractBaseJavaLocalInspectionToo
 	List<PsiMethod> getAllMethodCalls(){
 		ArrayList<PsiMethod> methods = new ArrayList<>();
 		Project project = ProjectManager.getInstance().getOpenProjects()[0];
-		Collection<VirtualFile> vFiles = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME,
-				JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project)); //finds all virtual files
+		Collection<VirtualFile> vFiles = FileTypeIndex.getFiles(JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project)); //gets the files in the project
 		for(VirtualFile vf: vFiles){
 			PsiFile psiFile = PsiManager.getInstance(project).findFile(Objects.requireNonNull(vf));
 			if(psiFile instanceof PsiJavaFile ) { //if is a java file
