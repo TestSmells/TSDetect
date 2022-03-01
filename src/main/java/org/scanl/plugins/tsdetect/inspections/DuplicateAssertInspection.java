@@ -31,7 +31,7 @@ public class DuplicateAssertInspection extends SmellInspection{
 				for (List<PsiStatement> statements : duplicateAsserts.values()) {
 					if(statements.size() > 1){
 						for (PsiStatement statement : statements) {
-							holder.registerProblem(statement, getDescription(),
+							holder.registerProblem(statement, DESCRIPTION,
 									new QuickFixRemove("INSPECTION.SMELL.DUPLICATE_ASSERT.FIX.REMOVE"),
 									new QuickFixComment("INSPECTION.SMELL.DUPLICATE_ASSERT.FIX.COMMENT"));
 						}
@@ -51,7 +51,7 @@ public class DuplicateAssertInspection extends SmellInspection{
 	 */
 	@Override
 	public boolean hasSmell(PsiElement element) {
-		if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
+		if (!shouldTestElement(element)) return false;
 		boolean output = false;
 		duplicateAsserts.clear();
 		if(element instanceof PsiMethod) {

@@ -3,7 +3,6 @@ package org.scanl.plugins.tsdetect.inspections;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
-import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.SmellType;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixComment;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixRemove;
@@ -11,8 +10,8 @@ import org.scanl.plugins.tsdetect.quickfixes.QuickFixRemove;
 import java.util.*;
 
 /**
- * Empty Method Inspection
- * Looks for test methods that are empty
+ * General Fixture Inspection
+ * Looks for test classes that have any fields that are never used
  */
 public class GeneralFixtureInspection extends SmellInspection{
 
@@ -25,11 +24,10 @@ public class GeneralFixtureInspection extends SmellInspection{
 			public void visitClass(PsiClass cls) {
 				if(hasSmell(cls)) {
 					//any fields left must be unused
-					for (String unusedField : unusedFields.keySet()) {
-						holder.registerProblem(unusedFields.get(unusedField), getDescription(),
-								new QuickFixRemove("INSPECTION.SMELL.GENERAL_FIXTURE.FIX.REMOVE"),
-								new QuickFixComment("INSPECTION.SMELL.GENERAL_FIXTURE.FIX.COMMENT")
-						);
+					for (PsiElement unusedField : unusedFields.values()) {
+						holder.registerProblem(unusedField, DESCRIPTION,
+								new QuickFixRemove(getResourceName("FIX.REMOVE")),
+								new QuickFixComment(getResourceName("FIX.COMMENT")));
 					}
 				}
 			}
@@ -43,7 +41,7 @@ public class GeneralFixtureInspection extends SmellInspection{
 	 */
 	@Override
 	public boolean hasSmell(PsiElement element) {
-		if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
+		if (!shouldTestElement(element)) return false;
 		unusedFields = new HashMap<>();
 		if(element instanceof PsiClass) {
 			PsiClass cls = (PsiClass) element;

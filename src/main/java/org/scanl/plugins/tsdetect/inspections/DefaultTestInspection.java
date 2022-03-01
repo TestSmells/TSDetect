@@ -24,14 +24,11 @@ public class DefaultTestInspection extends SmellInspection{
 
 	@Override
 	public boolean hasSmell(PsiElement element) {
-		if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
+		if (!shouldTestElement(element)) return false;
+		if (!(element instanceof PsiClass)) return false;
 
-		if(element instanceof PsiClass){
-			PsiClass cls = (PsiClass)element;
-			return Objects.requireNonNull(cls.getQualifiedName()).equals("ExampleInstrumentedTest")
-					|| cls.getQualifiedName().equals("ExampleUnitTest");
-		}
-		return false;
+		PsiClass cls = (PsiClass) element;
+		return cls.getQualifiedName().equals("ExampleInstrumentedTest") || cls.getQualifiedName().equals("ExampleUnitTest");
 	}
 
 	@Override

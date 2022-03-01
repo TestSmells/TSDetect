@@ -33,7 +33,7 @@ public class LazyTestInspection  extends SmellInspection{
 
 	@Override
 	public boolean hasSmell(PsiElement element) {
-		if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
+		if (!shouldTestElement(element)) return false;
 		issueStatements = new ArrayList<>();
 		List<PsiMethod> psiMethods = getAllMethodCalls();
 		if(element instanceof PsiClass) {
