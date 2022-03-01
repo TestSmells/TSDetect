@@ -26,6 +26,7 @@ public abstract class InspectionTest extends LightJavaCodeInsightFixtureTestCase
         // the normal JUnitUtil struggles to understand our test data, because they aren't truly part of a project
         junitUtil = Mockito.mockStatic(JUnitUtil.class);
         junitUtil.when(() -> JUnitUtil.isTestClass(Mockito.any(PsiClass.class))).thenReturn(true);
+        junitUtil.when(() -> JUnitUtil.isTestClass(Mockito.argThat(c -> c.getName().equals("TestClass")))).thenReturn(false);
     }
 
     @Override

@@ -11,20 +11,11 @@ import org.scanl.plugins.tsdetect.model.SmellType;
 public class ExceptionHandlingInspectionTest extends InspectionTest {
 
 	PsiClass psiClass;
-	MockedStatic<JUnitUtil> junitUtil;
 	ExceptionHandlingInspection inspection;
-
-	@Override
-	protected void tearDown() throws Exception {
-		junitUtil.close();
-		super.tearDown();
-	}
 
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		junitUtil = Mockito.mockStatic(JUnitUtil.class);
-		junitUtil.when(() -> JUnitUtil.isTestClass(Mockito.any(PsiClass.class))).thenReturn(true);
 		inspection = new ExceptionHandlingInspection();
 		psiClass = loadExample("ExceptionHandlingData.java");
 		myFixture.addClass(psiClass.getText());

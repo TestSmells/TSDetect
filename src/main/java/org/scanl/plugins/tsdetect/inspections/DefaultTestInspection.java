@@ -22,7 +22,7 @@ public class DefaultTestInspection extends SmellInspection{
 
 	@Override
 	public boolean hasSmell(PsiElement element) {
-		if (shouldTestElement(element)) return false;
+		if (!shouldTestElement(element)) return false;
 		if (!(element instanceof PsiClass)) return false;
 
 		PsiClass cls = (PsiClass) element;

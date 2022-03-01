@@ -1,6 +1,7 @@
 package org.scanl.plugins.tsdetect.inspections;
 
 import com.intellij.psi.*;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.TestDataPath;
 import org.scanl.plugins.tsdetect.InspectionTest;
 import org.scanl.plugins.tsdetect.model.SmellType;
@@ -47,7 +48,7 @@ public class RedundantPrintInspectionTest extends InspectionTest {
 
 	public void testHasSmell(){
 		PsiMethod method = psiClass.findMethodsByName("Printf", false)[0];
-		assertTrue(inspection.hasSmell(method));
+		assertTrue(inspection.hasSmell(method.getBody().getStatements()[3].getFirstChild())); // get the method call expression
 	}
 
 	public void testHasNoSmell(){
