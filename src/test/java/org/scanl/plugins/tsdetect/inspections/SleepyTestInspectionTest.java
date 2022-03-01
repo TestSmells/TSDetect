@@ -18,21 +18,10 @@ public class SleepyTestInspectionTest extends InspectionTest {
 
 	SleepyTestInspection inspection;
 	PsiClass psiClass;
-	MockedStatic<JUnitUtil> junitUtil;
-
-	@Override
-	protected void tearDown() throws Exception {
-		junitUtil.close();
-		super.tearDown();
-	}
 
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-
-		// the normal JUnitUtil struggles to understand our test data, because they aren't truly part of a project
-		junitUtil = Mockito.mockStatic(JUnitUtil.class);
-		junitUtil.when(() -> JUnitUtil.isTestClass(Mockito.any(PsiClass.class))).thenReturn(true);
 
 		inspection = new SleepyTestInspection();
 		psiClass = loadExample("SleepyTestData.java");

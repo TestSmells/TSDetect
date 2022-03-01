@@ -1,17 +1,12 @@
 package org.scanl.plugins.tsdetect.inspections;
 
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.codeInspection.ui.InspectionOptionsPanel;
 import com.intellij.psi.*;
-import com.intellij.ui.DocumentAdapter;
 import org.jetbrains.annotations.NotNull;
-import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.SmellType;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixComment;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixRemove;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.Objects;
 
 /**
@@ -29,8 +24,8 @@ public class EmptyMethodInspection extends SmellInspection{
 					return;
 				if (hasSmell(method))
 					holder.registerProblem(method, DESCRIPTION,
-							new QuickFixRemove("INSPECTION.SMELL.EMPTY_TEST.FIX.REMOVE"),
-							new QuickFixComment("INSPECTION.SMELL.EMPTY_TEST.FIX.COMMENT"));
+							new QuickFixRemove(getResourceName("FIX.REMOVE")),
+							new QuickFixComment(getResourceName("FIX.COMMENT")));
 			}
 		};
 	}
@@ -42,7 +37,7 @@ public class EmptyMethodInspection extends SmellInspection{
 	 */
 	@Override
 	public boolean hasSmell(PsiElement element) {
-		if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
+		if (!shouldTestElement(element)) return false;
 
 		if(element instanceof PsiMethod) {
 			PsiMethod method = (PsiMethod) element;
