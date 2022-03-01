@@ -3,7 +3,6 @@ package org.scanl.plugins.tsdetect.inspections;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
-import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.SmellType;
 
 import java.util.Objects;
@@ -28,7 +27,8 @@ public class DefaultTestInspection extends SmellInspection{
 		if (!(element instanceof PsiClass)) return false;
 
 		PsiClass cls = (PsiClass) element;
-		return cls.getQualifiedName().equals("ExampleInstrumentedTest") || cls.getQualifiedName().equals("ExampleUnitTest");
+		return Objects.requireNonNull(cls.getQualifiedName()).equals("ExampleInstrumentedTest")
+				|| cls.getQualifiedName().equals("ExampleUnitTest");
 	}
 
 	@Override

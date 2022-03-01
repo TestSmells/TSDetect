@@ -31,9 +31,9 @@ public class DuplicateAssertInspection extends SmellInspection{
 				for (List<PsiStatement> statements : duplicateAsserts.values()) {
 					if(statements.size() > 1){
 						for (PsiStatement statement : statements) {
-							holder.registerProblem(statement, DESCRIPTION,
-									new QuickFixRemove("INSPECTION.SMELL.DUPLICATE_ASSERT.FIX.REMOVE"),
-									new QuickFixComment("INSPECTION.SMELL.DUPLICATE_ASSERT.FIX.COMMENT"));
+							holder.registerProblem(statement, getDescription(),
+									new QuickFixRemove(getResource("FIX.REMOVE")),
+									new QuickFixComment(getResource("FIX.COMMENT")));
 						}
 
 					}

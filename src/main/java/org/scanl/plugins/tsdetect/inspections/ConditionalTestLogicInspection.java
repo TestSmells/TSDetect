@@ -31,9 +31,6 @@ public class ConditionalTestLogicInspection extends SmellInspection {
 		if (!shouldTestElement(element)) return false;
 		if(!(element instanceof PsiStatement)) return false;
 
-		PsiClass psiClass = PsiTreeUtil.getParentOfType(element, PsiClass.class);
-		if (!JUnitUtil.isTestClass(Objects.requireNonNull(psiClass))) return false;
-
 		if(element instanceof PsiIfStatement)
 			return true;
 		if(element instanceof PsiForStatement)

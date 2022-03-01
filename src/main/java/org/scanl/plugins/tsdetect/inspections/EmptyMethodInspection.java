@@ -23,7 +23,7 @@ public class EmptyMethodInspection extends SmellInspection{
 				if (method.getBody() == null)
 					return;
 				if (hasSmell(method))
-					holder.registerProblem(method, DESCRIPTION,
+					holder.registerProblem(method, getDescription(),
 							new QuickFixRemove(getResourceName("FIX.REMOVE")),
 							new QuickFixComment(getResourceName("FIX.COMMENT")));
 			}

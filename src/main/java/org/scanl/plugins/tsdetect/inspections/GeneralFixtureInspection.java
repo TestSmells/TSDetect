@@ -25,7 +25,7 @@ public class GeneralFixtureInspection extends SmellInspection{
 				if(hasSmell(cls)) {
 					//any fields left must be unused
 					for (PsiElement unusedField : unusedFields.values()) {
-						holder.registerProblem(unusedField, DESCRIPTION,
+						holder.registerProblem(unusedField, getDescription(),
 								new QuickFixRemove(getResourceName("FIX.REMOVE")),
 								new QuickFixComment(getResourceName("FIX.COMMENT")));
 					}

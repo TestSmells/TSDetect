@@ -40,8 +40,6 @@ public abstract class SmellInspection extends AbstractBaseJavaLocalInspectionToo
 
 	protected String getResource(String resource) { return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, getResourceName(resource)); }
 
-	protected final String DESCRIPTION = getResource("DESCRIPTION");
-
 	/**
 	 * Helper method that determines whether the test smell inspection should run. If the inspection is disabled, or if
 	 * the code being tested is not actually a JUnit test, then the inspection should not run.
@@ -95,8 +93,7 @@ public abstract class SmellInspection extends AbstractBaseJavaLocalInspectionToo
 	public @NonNls @NotNull String getShortName() { return getResource("NAME.SHORT"); }
 
 	public String getDescription(){
-		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,
-				"INSPECTION.SMELL." + getSmellType().toString() + ".DESCRIPTION");
+		return getResource("DESCRIPTION");
 	}
 
 	@SuppressWarnings({"WeakerAccess"})
