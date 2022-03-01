@@ -16,7 +16,7 @@ public class DefaultTestInspection extends SmellInspection{
 			@Override
 			public void visitClass(PsiClass cls) {
 				if(hasSmell(cls)) {
-					holder.registerProblem(Objects.requireNonNull(cls.getNameIdentifier()), DESCRIPTION);
+					holder.registerProblem(Objects.requireNonNull(cls.getNameIdentifier()), getDescription());
 				}
 			}
 		};

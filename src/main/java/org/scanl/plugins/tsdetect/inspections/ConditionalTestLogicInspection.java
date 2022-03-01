@@ -18,7 +18,7 @@ public class ConditionalTestLogicInspection extends SmellInspection {
 			@Override
 			public void visitStatement(PsiStatement statement){
 				if (hasSmell(statement)) {
-					holder.registerProblem(statement, DESCRIPTION);
+					holder.registerProblem(statement, getDescription());
 				}
 
 				super.visitStatement(statement);

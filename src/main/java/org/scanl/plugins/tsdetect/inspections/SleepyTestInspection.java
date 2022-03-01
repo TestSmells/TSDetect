@@ -20,7 +20,7 @@ public class SleepyTestInspection extends SmellInspection {
             @Override
             public void visitMethodCallExpression(PsiMethodCallExpression expression) {
                 if (hasSmell(expression))
-                    holder.registerProblem(expression, DESCRIPTION,
+                    holder.registerProblem(expression, getDescription(),
                             new QuickFixRemove("INSPECTION.SMELL.SLEEPY_TEST.FIX.REMOVE"),
                             new QuickFixComment("INSPECTION.SMELL.SLEEPY_TEST.FIX.COMMENT"));
                 super.visitMethodCallExpression(expression);

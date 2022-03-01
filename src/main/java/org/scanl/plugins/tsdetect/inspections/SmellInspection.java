@@ -34,9 +34,6 @@ public abstract class SmellInspection extends AbstractBaseJavaLocalInspectionToo
 
 	public Class<? extends PsiElement> getVisitedType() { return PsiMethod.class; }
 
-	protected final String DESCRIPTION = PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,
-			"INSPECTION.SMELL." + getSmellType().toString() + ".DESCRIPTION");
-
 	/**
 	 * DO NOT OVERRIDE this method.
 	 *
@@ -75,6 +72,11 @@ public abstract class SmellInspection extends AbstractBaseJavaLocalInspectionToo
 	@Override
 	public @NonNls @NotNull String getShortName() {
 		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + getSmellType().toString() + ".NAME.SHORT");
+	}
+
+	public String getDescription(){
+		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,
+				"INSPECTION.SMELL." + getSmellType().toString() + ".DESCRIPTION");
 	}
 
 	@SuppressWarnings({"WeakerAccess"})

@@ -27,7 +27,7 @@ public class RedundantPrintInspection extends SmellInspection{
 			public void visitMethod(PsiMethod method){
 				if(hasSmell(method)){
 					for(PsiMethodCallExpression expression:issueStatements)
-						holder.registerProblem(expression, DESCRIPTION,
+						holder.registerProblem(expression, getDescription(),
 								new QuickFixRemove("INSPECTION.SMELL.REDUNDANT_PRINT.FIX.REMOVE"),
 								new QuickFixComment("INSPECTION.SMELL.REDUNDANT_PRINT.FIX.COMMENT"));
 				}

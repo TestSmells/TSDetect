@@ -26,7 +26,7 @@ import java.util.Objects;
 )
 public class ProjectSettingsState implements PersistentStateComponent<ProjectSettingsState> {
 
-    private static final Logger logger = LogManager.getLogger("ProjectSettingsState");
+    private static final Logger logger = LogManager.getLogger(ProjectSettingsState.class);
 
     public Map<String, Boolean> settings = new HashMap<>();
 

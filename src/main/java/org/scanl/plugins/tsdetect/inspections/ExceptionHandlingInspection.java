@@ -18,7 +18,7 @@ public class ExceptionHandlingInspection extends SmellInspection{
 			@Override
 			public void visitElement(PsiElement expression) {
 				if (hasSmell(expression))
-					holder.registerProblem(expression, DESCRIPTION);
+					holder.registerProblem(expression, getDescription());
 				super.visitElement(expression);
 			}
 		};

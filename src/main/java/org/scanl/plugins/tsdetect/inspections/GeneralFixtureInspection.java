@@ -26,7 +26,7 @@ public class GeneralFixtureInspection extends SmellInspection{
 				if(hasSmell(cls)) {
 					//any fields left must be unused
 					for (String unusedField : unusedFields.keySet()) {
-						holder.registerProblem(unusedFields.get(unusedField), DESCRIPTION,
+						holder.registerProblem(unusedFields.get(unusedField), getDescription(),
 								new QuickFixRemove("INSPECTION.SMELL.GENERAL_FIXTURE.FIX.REMOVE"),
 								new QuickFixComment("INSPECTION.SMELL.GENERAL_FIXTURE.FIX.COMMENT")
 						);

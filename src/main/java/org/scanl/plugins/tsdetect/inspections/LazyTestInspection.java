@@ -25,7 +25,7 @@ public class LazyTestInspection  extends SmellInspection{
 			public void visitClass(PsiClass cls) {
 				if(hasSmell(cls)) {
 					for(PsiStatement statement:issueStatements)
-						holder.registerProblem(statement, DESCRIPTION);
+						holder.registerProblem(statement, getDescription());
 				}
 			}
 		};
