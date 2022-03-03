@@ -28,10 +28,7 @@ public class AssertionRouletteInspection extends SmellInspection {
 				for (List<PsiElement> statements : asserts.values()) {
 					if(statements.size() > 1){
 						for (PsiElement statement : statements) {
-							holder.registerProblem(statement, getDescription(),
-									new QuickFixRemove("INSPECTION.SMELL.ASSERTION_ROULETTE.FIX.REMOVE"),
-									new QuickFixComment("INSPECTION.SMELL.ASSERTION_ROULETTE.FIX.COMMENT")
-							);
+							holder.registerProblem(statement, getDescription());
 						}
 
 					}

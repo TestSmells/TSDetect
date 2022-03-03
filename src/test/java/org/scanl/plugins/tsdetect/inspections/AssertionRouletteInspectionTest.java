@@ -8,7 +8,6 @@ import org.scanl.plugins.tsdetect.model.SmellType;
 public class AssertionRouletteInspectionTest extends InspectionTest {
 
     SmellInspection inspection;
-    PsiClass defaultClass1;
     PsiClass psiClass;
 
     @Override
