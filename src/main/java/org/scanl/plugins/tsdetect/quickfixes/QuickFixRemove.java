@@ -8,12 +8,15 @@ import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.openapi.project.Project;
 import com.intellij.profile.codeInspection.ProjectInspectionProfileManager;
 import com.intellij.util.IncorrectOperationException;
+import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
+import org.apache.logging.log4j.Logger;
 
 public class QuickFixRemove implements LocalQuickFix {
 
 	private String resourceLocation;
+	private final Logger logger = LogManager.getLogger(this.getClass());
 
 	public QuickFixRemove(String resourceLocation){
 		this.resourceLocation = resourceLocation;
@@ -49,7 +52,7 @@ public class QuickFixRemove implements LocalQuickFix {
 		try {
 			descriptor.getPsiElement().delete();
 		} catch (IncorrectOperationException e) {
-			System.out.println(e);
+			logger.error(e);
 		}
 	}
 
