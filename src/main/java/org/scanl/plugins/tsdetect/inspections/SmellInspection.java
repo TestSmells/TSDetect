@@ -40,8 +40,6 @@ public abstract class SmellInspection extends AbstractBaseJavaLocalInspectionToo
 
 	protected String getResource(String resource) { return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, getResourceName(resource)); }
 
-	protected final String DESCRIPTION = getResource("DESCRIPTION");
-
 	/**
 	 * Helper method that determines whether the test smell inspection should run. If the inspection is disabled, or if
 	 * the code being tested is not actually a JUnit test, then the inspection should not run.
@@ -93,6 +91,10 @@ public abstract class SmellInspection extends AbstractBaseJavaLocalInspectionToo
 	 */
 	@Override
 	public @NonNls @NotNull String getShortName() { return getResource("NAME.SHORT"); }
+
+	public String getDescription(){
+		return getResource("DESCRIPTION");
+	}
 
 	@SuppressWarnings({"WeakerAccess"})
 	@NonNls
@@ -184,8 +186,7 @@ public abstract class SmellInspection extends AbstractBaseJavaLocalInspectionToo
 	List<PsiMethod> getAllMethodCalls(){
 		ArrayList<PsiMethod> methods = new ArrayList<>();
 		Project project = ProjectManager.getInstance().getOpenProjects()[0];
-		Collection<VirtualFile> vFiles = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME,
-				JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project)); //finds all virtual files
+		Collection<VirtualFile> vFiles = FileTypeIndex.getFiles(JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project)); //gets the files in the project
 		for(VirtualFile vf: vFiles){
 			PsiFile psiFile = PsiManager.getInstance(project).findFile(Objects.requireNonNull(vf));
 			if(psiFile instanceof PsiJavaFile ) { //if is a java file

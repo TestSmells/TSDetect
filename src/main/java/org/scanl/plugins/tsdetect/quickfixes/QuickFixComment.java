@@ -10,12 +10,15 @@ import com.intellij.profile.codeInspection.ProjectInspectionProfileManager;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiComment;
 import com.intellij.util.IncorrectOperationException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 
 public class QuickFixComment implements LocalQuickFix {
 	String resourceName;
 
+	private final Logger logger = LogManager.getLogger(this.getClass());
 	public QuickFixComment(String resourceName){
 		this.resourceName = resourceName;
 	}
@@ -52,7 +55,7 @@ public class QuickFixComment implements LocalQuickFix {
 			PsiComment pisComment = JavaPsiFacade.getElementFactory(project).createCommentFromText(psiText, null);
 			descriptor.getPsiElement().replace(pisComment);
 		} catch (IncorrectOperationException e) {
-			System.out.println(e);
+			logger.error(e);
 		}
 	}
 

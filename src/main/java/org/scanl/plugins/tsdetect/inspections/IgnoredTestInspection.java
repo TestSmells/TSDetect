@@ -23,7 +23,7 @@ public class IgnoredTestInspection extends SmellInspection{
 				if (method.getBody() == null)
 					return;
 				if (hasSmell(method))
-					holder.registerProblem(method, DESCRIPTION,
+					holder.registerProblem(method, getDescription(),
 							new QuickFixRemove("INSPECTION.SMELL.IGNORED_TEST.FIX.REMOVE"),
 							new QuickFixComment("INSPECTION.SMELL.IGNORED_TEST.FIX.COMMENT"));
 			}

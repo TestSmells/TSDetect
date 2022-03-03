@@ -4,6 +4,8 @@ import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.execution.junit.JUnitUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.inspections.SmellInspection;
 import org.scanl.plugins.tsdetect.inspections.TestSmellInspectionProvider;
@@ -17,10 +19,11 @@ import java.util.*;
  * Smell Visitor to visit all the files to determine smells
  */
 public class SmellVisitor extends JavaRecursiveElementVisitor {
+
+	private final Logger logger = LogManager.getLogger(this.getClass());
 	private final List<InspectionMethodModel> psiMethods = new ArrayList<>();
 	private final List<InspectionClassModel> psiClasses = new ArrayList<>();
 	private List<String> smellyClasses = new ArrayList<>();
-
 	private final TestSmellInspectionProvider provider = new TestSmellInspectionProvider();
 
 	@Override
@@ -34,7 +37,7 @@ public class SmellVisitor extends JavaRecursiveElementVisitor {
 				SmellInspection a = (SmellInspection) c.newInstance();
 				inspections.add(a);
 			} catch (InstantiationException | IllegalAccessException e) {
-				e.printStackTrace();
+				logger.error(e);
 			}
 		}
 			determineSmellsByClass(cls, inspections);

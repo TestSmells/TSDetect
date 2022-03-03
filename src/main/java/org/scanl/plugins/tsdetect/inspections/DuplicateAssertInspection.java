@@ -3,6 +3,7 @@ package org.scanl.plugins.tsdetect.inspections;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
+import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.SmellType;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixComment;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixRemove;
@@ -30,7 +31,7 @@ public class DuplicateAssertInspection extends SmellInspection{
 				for (List<PsiStatement> statements : duplicateAsserts.values()) {
 					if(statements.size() > 1){
 						for (PsiStatement statement : statements) {
-							holder.registerProblem(statement, DESCRIPTION,
+							holder.registerProblem(statement, getDescription(),
 									new QuickFixRemove(getResourceName("FIX.REMOVE")),
 									new QuickFixComment(getResourceName("FIX.COMMENT")));
 						}
