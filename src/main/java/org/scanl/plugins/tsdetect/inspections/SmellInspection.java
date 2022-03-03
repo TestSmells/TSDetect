@@ -12,12 +12,14 @@ import com.intellij.psi.*;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.MethodSignature;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.util.indexing.FileBasedIndex;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
+import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.SmellType;
 
 import javax.swing.*;
@@ -34,8 +36,25 @@ public abstract class SmellInspection extends AbstractBaseJavaLocalInspectionToo
 
 	public Class<? extends PsiElement> getVisitedType() { return PsiMethod.class; }
 
-	protected final String DESCRIPTION = PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,
-			"INSPECTION.SMELL." + getSmellType().toString() + ".DESCRIPTION");
+	protected String getResourceName(String resource) { return "INSPECTION.SMELL." + getSmellType().toString() + "." + resource; }
+
+	protected String getResource(String resource) { return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, getResourceName(resource)); }
+
+	/**
+	 * Helper method that determines whether the test smell inspection should run. If the inspection is disabled, or if
+	 * the code being tested is not actually a JUnit test, then the inspection should not run.
+	 *
+	 * @param element The element being tested.
+	 * @return A boolean indicating whether the inspection should be ran.
+	 */
+	protected boolean shouldTestElement(PsiElement element) {
+		if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
+
+		PsiClass psiClass = element instanceof PsiClass ? (PsiClass) element : PsiTreeUtil.getParentOfType(element, PsiClass.class);
+		if (psiClass == null) return false;
+
+		return JUnitUtil.isTestClass(psiClass);
+	}
 
 	/**
 	 * DO NOT OVERRIDE this method.
@@ -63,9 +82,7 @@ public abstract class SmellInspection extends AbstractBaseJavaLocalInspectionToo
 	 * @see InspectionEP#bundle
 	 */
 	@Override
-	public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getDisplayName() {
-		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + getSmellType().toString() + ".NAME.DISPLAY");
-	}
+	public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getDisplayName() { return getResource("NAME.DISPLAY"); }
 
 	/**
 	 * DO NOT OVERRIDE this method.
@@ -73,8 +90,10 @@ public abstract class SmellInspection extends AbstractBaseJavaLocalInspectionToo
 	 * @see InspectionEP#shortName
 	 */
 	@Override
-	public @NonNls @NotNull String getShortName() {
-		return PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + getSmellType().toString() + ".NAME.SHORT");
+	public @NonNls @NotNull String getShortName() { return getResource("NAME.SHORT"); }
+
+	public String getDescription(){
+		return getResource("DESCRIPTION");
 	}
 
 	@SuppressWarnings({"WeakerAccess"})
@@ -188,8 +207,7 @@ public abstract class SmellInspection extends AbstractBaseJavaLocalInspectionToo
 	List<PsiMethod> getAllMethodCalls(){
 		ArrayList<PsiMethod> methods = new ArrayList<>();
 		Project project = ProjectManager.getInstance().getOpenProjects()[0];
-		Collection<VirtualFile> vFiles = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME,
-				JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project)); //finds all virtual files
+		Collection<VirtualFile> vFiles = FileTypeIndex.getFiles(JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project)); //gets the files in the project
 		for(VirtualFile vf: vFiles){
 			PsiFile psiFile = PsiManager.getInstance(project).findFile(Objects.requireNonNull(vf));
 			if(psiFile instanceof PsiJavaFile ) { //if is a java file
