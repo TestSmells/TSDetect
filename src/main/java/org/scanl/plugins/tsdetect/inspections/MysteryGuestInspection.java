@@ -17,7 +17,7 @@ public class MysteryGuestInspection extends SmellInspection{
 			@Override
 			public void visitDeclarationStatement(PsiDeclarationStatement statement){
 				if (hasSmell(statement)) {
-					holder.registerProblem(statement, DESCRIPTION);
+					holder.registerProblem(statement, getDescription());
 				}
 
 				super.visitDeclarationStatement(statement);
@@ -47,7 +47,6 @@ public class MysteryGuestInspection extends SmellInspection{
 		PsiDeclarationStatement statement = (PsiDeclarationStatement) element;
 		PsiLocalVariable v = (PsiLocalVariable) statement.getDeclaredElements()[0];
 		for(String variableType:mysteryTypes){
-			System.out.println(v.getTypeElement());
 			if(v.getTypeElement().getText().contains(variableType))
 				return true;
 		}
