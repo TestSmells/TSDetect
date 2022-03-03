@@ -17,6 +17,7 @@ public class TestSmellInspectionProviderTest extends LightJavaCodeInsightFixture
 
 	public void testGetInspectionClasses(){
 		Class[] expectedClasses = new Class[]{
+				AssertionRouletteInspection.class,
 				ConditionalTestLogicInspection.class,
 				DefaultTestInspection.class,
 				DuplicateAssertInspection.class,
