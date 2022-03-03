@@ -5,6 +5,7 @@ import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.SmellType;
+import org.scanl.plugins.tsdetect.quickfixes.QuickFixComment;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixRemove;
 
 import java.util.*;
@@ -28,8 +29,11 @@ public class AssertionRouletteInspection extends SmellInspection {
 					if(statements.size() > 1){
 						for (PsiElement statement : statements) {
 							holder.registerProblem(statement, DESCRIPTION,
-							new QuickFixRemove("INSPECTION.SMELL.ASSERTION_ROULETTE.FIX.REMOVE"));
+									new QuickFixRemove("INSPECTION.SMELL.ASSERTION_ROULETTE.FIX.REMOVE"),
+									new QuickFixComment("INSPECTION.SMELL.ASSERTION_ROULETTE.FIX.COMMENT")
+							);
 						}
+
 					}
 				}
 				asserts.clear();
