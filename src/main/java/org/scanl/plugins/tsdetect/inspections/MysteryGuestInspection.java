@@ -32,17 +32,17 @@ public class MysteryGuestInspection extends SmellInspection{
 
 		List<String> mysteryTypes = new ArrayList<>(
 				Arrays.asList(
+						"Context",
+						"Cursor",
 						"File",
 						"FileOutputStream",
-						"SQLiteOpenHelper",
-						"SQLiteDatabase",
-						"Cursor",
-						"Context",
 						"HttpClient",
 						"HttpResponse",
 						"HttpPost",
 						"HttpGet",
-						"SoapObject"
+						"SoapObject",
+						"SQLiteOpenHelper",
+						"SQLiteDatabase"
 				));
 		PsiDeclarationStatement statement = (PsiDeclarationStatement) element;
 		PsiLocalVariable v = (PsiLocalVariable) statement.getDeclaredElements()[0];
