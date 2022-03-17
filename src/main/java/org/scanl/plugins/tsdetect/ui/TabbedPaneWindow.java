@@ -9,16 +9,17 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.treeStructure.Tree;
-import com.intellij.util.indexing.FileBasedIndex;
-import org.apache.maven.model.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.DefaultPieDataset;
 import org.scanl.plugins.tsdetect.SmellVisitor;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.model.InspectionClassModel;
@@ -28,9 +29,9 @@ import org.scanl.plugins.tsdetect.model.SmellType;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import java.util.*;
+import java.util.List;
 
 /**
  * The Tabbed Pane Window
@@ -47,6 +48,7 @@ public class TabbedPaneWindow {
 	private JPanel detectedSmells;
 	private JTree smellTree;
 	private JButton detectedSmellsButton;
+	private JPanel smellDistributionChart;
 
 	private final List<InspectionMethodModel> allMethods = new ArrayList<>();
 	private final List<InspectionClassModel> allClasses = new ArrayList<>();
@@ -118,6 +120,23 @@ public class TabbedPaneWindow {
 
 		smellTable.setModel(data); //sets the model to be the table and visible
 		smellTable.setVisible(true);
+
+		DefaultPieDataset dataset = new DefaultPieDataset();
+		for(Map.Entry<SmellType, List<InspectionClassModel>> entry : smellyClasses.entrySet()) {
+			dataset.setValue(entry.getKey().toString(), entry.getValue().size());
+		}
+
+		JFreeChart chart = ChartFactory.createPieChart(
+				"",
+				dataset,
+				true,
+				true,
+				false
+		);
+
+		smellDistributionChart.setLayout(new java.awt.BorderLayout());
+		smellDistributionChart.add(new ChartPanel(chart));
+		smellDistributionChart.validate();
 	}
 
 	/**
