@@ -19,6 +19,7 @@ public class TestSmellInspectionProvider implements InspectionToolProvider {
 	public Class<? extends LocalInspectionTool> @NotNull [] getInspectionClasses() {
 		return new Class[]{
 				ConditionalTestLogicInspection.class,
+				ConstructorInitializationInspection.class,
 				DefaultTestInspection.class,
 				DuplicateAssertInspection.class,
 				EagerTestInspection.class,
