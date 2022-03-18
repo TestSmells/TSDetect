@@ -1,6 +1,7 @@
 package org.scanl.plugins.tsdetect.inspections;
 
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiMethod;
 import com.intellij.testFramework.TestDataPath;
 import org.scanl.plugins.tsdetect.InspectionTest;
 import org.scanl.plugins.tsdetect.model.SmellType;
@@ -47,10 +48,12 @@ public class EagerTestInspectionTest extends InspectionTest {
     }
 
     public void testHasSmell() {
-        assertTrue(this.inspection.hasSmell(psiSmellClass));
+        PsiMethod method = psiSmellClass.findMethodsByName("Eager1", false)[0];
+        assertTrue(inspection.hasSmell(method));
     }
 
     public void testHasNoSmell() {
-        assertFalse(this.inspection.hasSmell(psiNoSmellClass));
+        PsiMethod method = psiNoSmellClass.findMethodsByName("EmptyTest", false)[0];
+        assertFalse(inspection.hasSmell(method));
     }
 }
