@@ -22,8 +22,8 @@ public class LazyTestInspection  extends SmellInspection{
 	public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
 		return new JavaElementVisitor() {
 			@Override
-			public void visitClass(PsiClass cls) {
-				if(hasSmell(cls)) {
+			public void visitMethod(PsiMethod method) {
+				if(hasSmell(method)) {
 					for(PsiStatement statement:issueStatements)
 						holder.registerProblem(statement, getDescription());
 				}
@@ -36,10 +36,12 @@ public class LazyTestInspection  extends SmellInspection{
 		if (!shouldTestElement(element)) return false;
 		issueStatements = new ArrayList<>();
 		List<PsiMethod> psiMethods = getAllMethodCalls();
-		if(element instanceof PsiClass) {
-			PsiClass psiClass = (PsiClass) element;
+		if(element instanceof PsiMethod) {
+			PsiMethod testMethod = (PsiMethod) element;
+			PsiClass psiClass = testMethod.getContainingClass();
 			for(PsiMethod proMethod:psiMethods) {
 				List<PsiStatement> possibleIssues = new ArrayList<>();
+				assert psiClass != null;
 				for (PsiMethod method : psiClass.getMethods()) {
 					for (PsiStatement statement : Objects.requireNonNull(method.getBody()).getStatements()) {
 						if (determineMatchingStatement(statement, proMethod)) {
@@ -47,8 +49,12 @@ public class LazyTestInspection  extends SmellInspection{
 						}
 					}
 				}
-				if(possibleIssues.size()>1)
-					issueStatements.addAll(possibleIssues);
+				if(possibleIssues.size()>1) {
+					for(PsiStatement statement:possibleIssues) {
+						if(!((PsiMethod)statement.getParent().getParent()).getName().equals(testMethod.getName()))
+							issueStatements.add(statement);
+					}
+				}
 			}
 		}
 		return issueStatements.size()>0;
