@@ -16,8 +16,8 @@ public class EagerTestInspection extends SmellInspection {
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
         return new JavaElementVisitor() {
             @Override
-            public void visitClass(PsiClass cls) {
-                if(hasSmell(cls)) {
+            public void visitMethod(PsiMethod method) {
+                if(hasSmell(method)) {
                     for(PsiStatement statement : issueStatements)
                         holder.registerProblem(statement, getDescription());
                 }
@@ -28,30 +28,28 @@ public class EagerTestInspection extends SmellInspection {
     @Override
     public boolean hasSmell(PsiElement element) {
         if (!shouldTestElement(element)) return false;
+        if (!(element instanceof PsiMethod)) return false;
+        System.out.println(element);
 
-        this.issueStatements = new ArrayList<>();
+        this.issueStatements.clear();
 
         List<PsiMethod> allProductionMethods = getAllMethodCalls();
 
-        if (element instanceof PsiClass) {
-            PsiClass testClass = (PsiClass) element;
+        PsiMethod testMethod = (PsiMethod) element;
 
-            for (PsiMethod testMethod : testClass.getMethods()) {
-                List<PsiStatement> possibleIssues = new ArrayList<>();
-
-                for (PsiStatement statement : Objects.requireNonNull(testMethod.getBody()).getStatements()) {
-                    for (PsiMethod productionMethod : allProductionMethods) {
-                        if (determineMatchingStatement(statement, productionMethod)) {
-                            possibleIssues.add(statement);
-                        }
-                    }
+        List<PsiStatement> possibleIssues = new ArrayList<>();
+        for (PsiStatement statement : Objects.requireNonNull(testMethod.getBody()).getStatements()) {
+            for (PsiMethod productionMethod : allProductionMethods) {
+                if (determineMatchingStatement(statement, productionMethod)) {
+                    possibleIssues.add(statement);
                 }
-
-                if (possibleIssues.size() > 0)
-                    this.issueStatements.addAll(possibleIssues);
             }
         }
 
+        if (possibleIssues.size() > 1)
+            this.issueStatements.addAll(possibleIssues);
+
+        System.out.println((issueStatements.size()>0) + " " + testMethod.getName());
         return this.issueStatements.size() > 0;
     }
 

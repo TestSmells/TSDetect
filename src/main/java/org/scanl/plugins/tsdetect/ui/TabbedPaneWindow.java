@@ -69,15 +69,14 @@ public class TabbedPaneWindow {
 				if (virtualFile != null) {
 					PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
 					if (psiFile instanceof PsiJavaFile) {
-						setSmellDistributionTable(project);
-						setSmellTree(project);
+						setAllDispalys(project);
 					}
 				}
 			}
 		});
 
 		//set up button name and actions
-		smellDistributionButton.addActionListener(e -> setSmellDistributionTable(project));
+		smellDistributionButton.addActionListener(e -> setAllDispalys(project));
 		smellDistributionButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME"));
 		smellDistributionButton.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.TOOLTIP"));
 		//set the tab name and tooltip
@@ -86,7 +85,7 @@ public class TabbedPaneWindow {
 		//sets tooltip for table
 		smellTable.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.TABLE.DESCRIPTION"));
 
-		detectedSmellsButton.addActionListener(e -> setSmellTree(project));
+		detectedSmellsButton.addActionListener(e -> setAllDispalys(project));
 		detectedSmellsButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME"));
 		detectedSmellsButton.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.TOOLTIP"));
 		//set the tab name and tooltip
@@ -97,12 +96,16 @@ public class TabbedPaneWindow {
 
 	}
 
+	protected void setAllDispalys(Project project){
+		visitSmellDetection(project);
+		setSmellDistributionTable();
+		setSmellTree();
+	}
+
 	/**
 	 * Creates the smell distribution table
-	 * @param project The Project that is currently opened
 	 */
-	protected void setSmellDistributionTable(Project project){
-		visitSmellDetection(project);
+	protected void setSmellDistributionTable(){
 		IdentifierTableModel data = new IdentifierTableModel();
 
 		HashMap<SmellType, List<InspectionMethodModel>> smellyMethods = new HashMap<>(); //hash to store smelly methods by smell
@@ -122,21 +125,21 @@ public class TabbedPaneWindow {
 
 	/**
 	 * Creates the smell distribution tree by smell then tree then method
-	 * @param project The Project that is currently opened
 	 */
-	protected void setSmellTree(Project project){
-		visitSmellDetection(project);
+	protected void setSmellTree(){
 		DefaultTreeModel model = (DefaultTreeModel)smellTree.getModel();
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
 		root.removeAllChildren();
 
 		for(SmellType smellType:SmellType.values()){
-			DefaultMutableTreeNode smellTypeNode = new DefaultMutableTreeNode(smellType);
+			DefaultMutableTreeNode smellTypeNode = new DefaultMutableTreeNode(
+					PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,
+							"INSPECTION.SMELL." + smellType.toString() + ".NAME.DISPLAY"));
 			for(InspectionClassModel smellyClass:getClassesBySmell(smellType)){
-				DefaultMutableTreeNode classNode = new DefaultMutableTreeNode(smellyClass.getPsiObject());
+				DefaultMutableTreeNode classNode = new DefaultMutableTreeNode(smellyClass.getName());
 				for(InspectionMethodModel method:getMethodBySmell(smellType)){
 					if(method.getClassName().getName().equals(smellyClass.getName())){
-						DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode(method.getPsiObject());
+						DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode(method.getName());
 						classNode.add(methodNode);
 					}
 				}

@@ -40,10 +40,10 @@ public class SmellVisitor extends JavaRecursiveElementVisitor {
 				logger.error(e);
 			}
 		}
-			determineSmellsByClass(cls, inspections);
-			for (PsiMethod method : cls.getMethods())
-				determineSmellsByMethod(method, inspections);
-
+		determineSmellsByClass(cls, inspections);
+		for (PsiMethod method : cls.getMethods())
+			determineSmellsByMethod(method, inspections);
+		System.out.println(getSmellyMethods());
 	}
 
 	public void determineSmellsByClass(PsiClass cls, List<SmellInspection> inspections){
@@ -61,7 +61,6 @@ public class SmellVisitor extends JavaRecursiveElementVisitor {
 		if(issues) {
 			InspectionClassModel inspectionClassModel = new InspectionClassModel(Objects.requireNonNull(cls).getQualifiedName(), cls, classSmellTypes);
 			getSmellyClasses().add(inspectionClassModel);
-			smellyClasses.add(cls.getQualifiedName());
 		}
 	}
 
@@ -90,6 +89,7 @@ public class SmellVisitor extends JavaRecursiveElementVisitor {
 			PsiClass psiClass = method.getContainingClass();
 			assert psiClass != null;
 			InspectionClassModel classModel = new InspectionClassModel(psiClass.getQualifiedName(), psiClass, smellTypes);
+			System.out.println(smellTypes + " " + method.getName());
 			getSmellyMethods().add(new InspectionMethodModel(method.getName(), classModel, method, smellTypes));
 			if(!smellyClasses.contains(psiClass.getQualifiedName())){
 				getSmellyClasses().add(classModel);
