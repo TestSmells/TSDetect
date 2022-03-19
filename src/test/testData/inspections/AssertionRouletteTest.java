@@ -18,7 +18,26 @@ public class AssertionRouletteTest {
 		assertNotEquals("Test", "DifferentTest");
 		assertNotEquals("This is A Fail", "Test");
 	}
+	private void assertMethod(int y){
+		int x = 0;
+	}
+	@Test
+	public void hasAssertTrueTwice(){
+		assertTrue(false);
+		assertTrue(true);
 
+		this.assertMethod(1);
+		this.assertMethod(2);
+
+		assert(true!=true);
+		assert(true!=false);
+
+	}
+	@Test
+	public void hasFailTwiceWithoutMessages(){
+		fail();
+		fail();
+	}
 	/**
 	 * message explaining what the same call is actually different
 	 */
