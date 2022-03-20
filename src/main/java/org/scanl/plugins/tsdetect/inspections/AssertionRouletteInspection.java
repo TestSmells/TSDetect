@@ -51,7 +51,7 @@ public class AssertionRouletteInspection extends SmellInspection {
 	}
 
 	/**
-	 * Determines if the PSI Method is empty or not
+	 * Determines if the PSI Element contains multiple of the same Junit assertions with no message clarifying them
 	 * @param element the method being looked for to see if it has smells
 	 * @return if the PSI Method is empty or not
 	 */
