@@ -58,28 +58,29 @@ public class AssertionRouletteInspection extends SmellInspection {
 	@Override
 	public boolean hasSmell(PsiElement element) {
 		if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
+		if(!(element instanceof PsiMethod)) return false;
+		if (!shouldTestElement(element)) return false;
+
 		boolean output = false;
 
-		if(shouldTestElement(element)) {
-			List<PsiMethodCallExpression> x = getMethodExpressions((PsiMethod) element);
-			for (PsiMethodCallExpression psiMethodCallExpression : x) {
-				int count = psiMethodCallExpression.getArgumentList().getExpressionCount();
-				String key = psiMethodCallExpression.getMethodExpression().getQualifiedName();
+		List<PsiMethodCallExpression> x = getMethodExpressions((PsiMethod) element);
+		for (PsiMethodCallExpression psiMethodCallExpression : x) {
+			int count = psiMethodCallExpression.getArgumentList().getExpressionCount();
+			String key = psiMethodCallExpression.getMethodExpression().getQualifiedName();
 
-				if (key.equals("fail")) {
-					if (count < 1) {
-						output = found(key, psiMethodCallExpression);
-					}
+			if (key.equals("fail")) {
+				if (count < 1) {
+					output = found(key, psiMethodCallExpression);
 				}
-				else if(assertsWithOneParameter.contains(key)){
-					if (count < 2){
-						output = found(key,psiMethodCallExpression);
-					}
+			}
+			else if(assertsWithOneParameter.contains(key)){
+				if (count < 2){
+					output = found(key,psiMethodCallExpression);
 				}
-				else if(assertsWithTwoParameters.contains(key)) {
-					if (count < 3) {
-						output = found(key, psiMethodCallExpression);
-					}
+			}
+			else if(assertsWithTwoParameters.contains(key)) {
+				if (count < 3) {
+					output = found(key, psiMethodCallExpression);
 				}
 			}
 		}
