@@ -5,8 +5,6 @@ import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.SmellType;
-import org.scanl.plugins.tsdetect.quickfixes.QuickFixComment;
-import org.scanl.plugins.tsdetect.quickfixes.QuickFixRemove;
 
 import java.util.*;
 
@@ -16,18 +14,21 @@ import java.util.*;
  */
 public class AssertionRouletteInspection extends SmellInspection {
 	HashMap<String, List<PsiElement>> asserts = new HashMap<>();
-	HashSet<String> oneParams = new HashSet<>(
-			Arrays.asList("assertFalse",
+	HashSet<String> assertsWithOneParameter = new HashSet<>(
+			Arrays.asList(
+					"assertTrue",
+					"assertFalse",
 					"assertNotNull",
-					"assertNull",
-					"assertTrue"
+					"assertNull"
 			));
-//	HashSet<String> twoParams = new HashSet<>(
-//			Arrays.asList("assertFalse",
-//					"assertNotNull",
-//					"assertNull",
-//					"assertTrue"
-//			));
+	HashSet<String> assertsWithTwoParameters = new HashSet<>(
+			Arrays.asList("assertArrayEquals",
+					"assertEquals",
+					"assertNotSame",
+					"assertSame",
+					"assertThrows",
+					"assertNotEquals"
+			));
 
 	@Override
 	public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
@@ -42,7 +43,6 @@ public class AssertionRouletteInspection extends SmellInspection {
 						for (PsiElement statement : statements) {
 							holder.registerProblem(statement, getDescription());
 						}
-
 					}
 				}
 				asserts.clear();
@@ -67,15 +67,18 @@ public class AssertionRouletteInspection extends SmellInspection {
 				String key = psiMethodCallExpression.getMethodExpression().getQualifiedName();
 
 				if (key.equals("fail")) {
-					output = found(key,psiMethodCallExpression);
-				} else if (key.startsWith("assert")) {
-					if(oneParams.contains(key)){
-						if (count < 2){
-							output = found(key,psiMethodCallExpression);
-						}
+					if (count < 1) {
+						output = found(key, psiMethodCallExpression);
 					}
-					else if (count < 3) {
+				}
+				else if(assertsWithOneParameter.contains(key)){
+					if (count < 2){
 						output = found(key,psiMethodCallExpression);
+					}
+				}
+				else if(assertsWithTwoParameters.contains(key)) {
+					if (count < 3) {
+						output = found(key, psiMethodCallExpression);
 					}
 				}
 			}
