@@ -101,6 +101,7 @@ public class DuplicateAssertTestTest {
         assertNotSame("first","first","message8");
     }
     @Test
+
     public void assertSameWorks(){
         assertSame("first","first","message9");
         assertSame("first","first","message0");
@@ -121,10 +122,9 @@ public class DuplicateAssertTestTest {
      * no message, all is duplicate
      */
     @Test
-    public void assertTrueWorksNoMessage(){
+    public void assertTrueNoMessage(){
         assertTrue(true);
         assertTrue(true);
-
     }
     @Test
     public void assertEqualsWorksNoMessage(){

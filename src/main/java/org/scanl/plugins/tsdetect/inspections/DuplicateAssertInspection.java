@@ -16,7 +16,7 @@ import java.util.*;
  */
 public class DuplicateAssertInspection extends SmellInspection{
 	HashMap<String, List<PsiMethodCallExpression>> duplicateAsserts = new HashMap<>();
-	HashMap<String, HashSet<String>> methodParametersUsed = new HashMap<>();
+	HashMap<String, HashSet<String>> foundParameters = new HashMap<>();
 	HashSet<String> assertsWithOneParameter = new HashSet<>(
 			Arrays.asList(
 					"assertTrue",
@@ -73,6 +73,7 @@ public class DuplicateAssertInspection extends SmellInspection{
 		for (PsiMethodCallExpression psiMethodCallExpression : x) {
 			int count = psiMethodCallExpression.getArgumentList().getExpressionCount();
 			String key = psiMethodCallExpression.getMethodExpression().getQualifiedName();
+			System.out.println(key);
 			if (key.equals("fail")) {
 				if (count == 1) {
 					output = foundWithMessage(psiMethodCallExpression);
@@ -128,13 +129,13 @@ public class DuplicateAssertInspection extends SmellInspection{
 	private boolean foundWithoutMessage(PsiMethodCallExpression psiMethodCallExpression){
 		String key = psiMethodCallExpression.getMethodExpression().getQualifiedName();
 		@NotNull PsiExpressionList x = psiMethodCallExpression.getArgumentList();
+		List<String> args = new ArrayList<>();
 		for (PsiExpression expression : x.getExpressions()) {
-			System.out.println(expression);
-
+			args.add(expression.getText());
+			System.out.println(expression.getText());
 		}
-		if(methodParametersUsed.containsKey(key)){
-			if(methodParametersUsed.get(key).contains(x.toString().replaceAll("\\+W",""))){
-
+		if(foundParameters.containsKey(key)){
+			if(foundParameters.get(key).contains(x.toString().replaceAll("\\+W",""))){
 			}
 		}
 
