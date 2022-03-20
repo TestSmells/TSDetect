@@ -8,17 +8,32 @@ import org.scanl.plugins.tsdetect.model.SmellType;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixComment;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixRemove;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Empty Method Inspection
  * Looks for test methods that are empty
  */
 public class DuplicateAssertInspection extends SmellInspection{
-	HashMap<String, List<PsiStatement>> duplicateAsserts = new HashMap<>();
+	HashMap<String, List<PsiMethodCallExpression>> duplicateAsserts = new HashMap<>();
+	HashMap<String, HashSet<String>> methodParametersUsed = new HashMap<>();
+	HashSet<String> assertsWithOneParameter = new HashSet<>(
+			Arrays.asList(
+					"assertTrue",
+					"assertFalse",
+					"assertNotNull",
+					"assertNull"
+			));
+
+	HashSet<String> assertsWithTwoParameters = new HashSet<>(
+			Arrays.asList(
+					"assertArrayEquals",
+					"assertEquals",
+					"assertNotSame",
+					"assertSame",
+					"assertThrows",
+					"assertNotEquals"
+			));
 
 	@Override
 	public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
@@ -28,18 +43,15 @@ public class DuplicateAssertInspection extends SmellInspection{
 				if (method.getBody() == null)
 					return;
 				hasSmell(method);
-				for (List<PsiStatement> statements : duplicateAsserts.values()) {
+				for (List<PsiMethodCallExpression> statements : duplicateAsserts.values()) {
 					if(statements.size() > 1){
-						for (PsiStatement statement : statements) {
+						for (PsiMethodCallExpression statement : statements) {
 							holder.registerProblem(statement, getDescription(),
-									new QuickFixRemove(getResourceName("FIX.REMOVE")),
-									new QuickFixComment(getResourceName("FIX.COMMENT")));
+								new QuickFixComment(getResourceName("FIX.COMMENT")));
 						}
-
 					}
 				}
 				duplicateAsserts.clear();
-
 			}
 		};
 	}
@@ -51,27 +63,82 @@ public class DuplicateAssertInspection extends SmellInspection{
 	 */
 	@Override
 	public boolean hasSmell(PsiElement element) {
+		if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
+		if(!(element instanceof PsiMethod)) return false;
 		if (!shouldTestElement(element)) return false;
-		boolean output = false;
-		duplicateAsserts.clear();
-		if(element instanceof PsiMethod) {
-			PsiMethod method = (PsiMethod) element;
-			for (PsiStatement statement : Objects.requireNonNull(method.getBody()).getStatements()) {
-				String name = statement.getText().replaceAll("\\s", "");
-				if(name.contains("assert")){
-					if(duplicateAsserts.containsKey(name)){
-						duplicateAsserts.get(name).add(statement);
-						output = true;
-					}
-					else{
-						duplicateAsserts.put(name, new ArrayList<>());
-						duplicateAsserts.get(name).add(statement);
 
-					}
+		boolean output = false;
+
+		List<PsiMethodCallExpression> x = getMethodExpressions((PsiMethod) element);
+		for (PsiMethodCallExpression psiMethodCallExpression : x) {
+			int count = psiMethodCallExpression.getArgumentList().getExpressionCount();
+			String key = psiMethodCallExpression.getMethodExpression().getQualifiedName();
+			if (key.equals("fail")) {
+				if (count == 1) {
+					output = foundWithMessage(psiMethodCallExpression);
+				}
+				else {
+					output = foundWithoutMessage(psiMethodCallExpression);
+				}
+			}
+			else if(assertsWithOneParameter.contains(key)){
+				if (count == 2){
+					output = foundWithMessage(psiMethodCallExpression);
+				}
+				else{
+					output = foundWithoutMessage(psiMethodCallExpression);
+				}
+			}
+			else if(assertsWithTwoParameters.contains(key)) {
+				if (count == 3) {
+					output = foundWithMessage(psiMethodCallExpression);
+				}
+				else{
+					output = foundWithoutMessage(psiMethodCallExpression);
 				}
 			}
 		}
 		return output;
+	}
+	/**
+	 * if has does not have duplicate arguments, then is not duplicate assert
+		- covered by checking if all params are equal, if false then not duplicate assert
+
+	 * if has duplicate arguments and unique message, then is not duplicate assert
+		- covered by checking if arguments are equal, then checking if message is already found
+	 * if has duplicate arguments AND not unique message, then is duplicate assert
+	 	- covered by checking if arguments are equal, then checking if message is already found
+
+	 * if has duplicate arguments and no message, then is duplicate assert
+	 	- covered by checking if arguments are equal and no message exists
+	 */
+
+	/**
+	 * handles if a Junit assert without a message is found
+	 */
+	private boolean foundWithMessage(PsiMethodCallExpression psiMethodCallExpression) {
+		String key = psiMethodCallExpression.getMethodExpression().getQualifiedName();
+		return false;
+	}
+
+	/**
+	 * handles if a JUnit assert with a message is found
+	 * @return
+	 */
+	private boolean foundWithoutMessage(PsiMethodCallExpression psiMethodCallExpression){
+		String key = psiMethodCallExpression.getMethodExpression().getQualifiedName();
+		@NotNull PsiExpressionList x = psiMethodCallExpression.getArgumentList();
+		for (PsiExpression expression : x.getExpressions()) {
+			System.out.println(expression);
+
+		}
+		if(methodParametersUsed.containsKey(key)){
+			if(methodParametersUsed.get(key).contains(x.toString().replaceAll("\\+W",""))){
+
+			}
+		}
+
+		return false;
 	}
 
 	/**
