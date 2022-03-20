@@ -7,6 +7,7 @@ package org.scanl.plugins.tsdetect.model;
 public enum SmellType {
     ASSERTION_ROULETTE,
     CONDITIONAL_TEST,
+    CONSTRUCTOR_INITIALIZATION,
     DEFAULT_TEST,
     DUPLICATE_ASSERT,
     EMPTY_TEST,
@@ -15,6 +16,7 @@ public enum SmellType {
     GENERAL_FIXTURE,
     IGNORED_TEST,
     LAZY_TEST,
+    MYSTERY_GUEST,
     REDUNDANT_PRINT,
      SLEEPY_TEST
 }

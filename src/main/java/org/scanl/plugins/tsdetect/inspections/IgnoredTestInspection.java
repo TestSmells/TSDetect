@@ -24,8 +24,8 @@ public class IgnoredTestInspection extends SmellInspection{
 					return;
 				if (hasSmell(method))
 					holder.registerProblem(method, getDescription(),
-							new QuickFixRemove("INSPECTION.SMELL.IGNORED_TEST.FIX.REMOVE"),
-							new QuickFixComment("INSPECTION.SMELL.IGNORED_TEST.FIX.COMMENT"));
+                            new QuickFixRemove(getResourceName("FIX.REMOVE")),
+                            new QuickFixComment(getResourceName("FIX.COMMENT")));
 			}
         };
     }
