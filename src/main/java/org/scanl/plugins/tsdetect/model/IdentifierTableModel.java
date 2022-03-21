@@ -51,7 +51,11 @@ public class IdentifierTableModel extends AbstractTableModel {
 			SmellType sm = smellTypes.get(i-1);
 			data[i][0] = PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + sm.toString() + ".NAME.DISPLAY");
 			data[i][1] = classes.get(sm).size();
-			data[i][2] = smellTypeListHashMap.get(sm).size();
+			int infectedMethods = smellTypeListHashMap.get(sm).size();
+			if(infectedMethods==0)
+				data[i][2] = null;
+			else
+				data[i][2] = infectedMethods;
 		}
 	}
 
