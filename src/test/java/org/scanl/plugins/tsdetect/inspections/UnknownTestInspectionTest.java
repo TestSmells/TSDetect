@@ -51,7 +51,7 @@ public class UnknownTestInspectionTest extends InspectionTest{
         assertTrue(inspection.hasSmell(method));
     }
 
-    public void testHasNoSmell() throws FileNotFoundException {
+    public void testHasNoSmell(){
         PsiMethod method = psiClass.findMethodsByName("NoUnknownTestSmell", false)[0];
         assertFalse(inspection.hasSmell(method));
     }
