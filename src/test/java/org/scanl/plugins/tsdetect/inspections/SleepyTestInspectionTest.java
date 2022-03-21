@@ -1,20 +1,16 @@
 package org.scanl.plugins.tsdetect.inspections;
 
-import com.intellij.execution.junit.JUnitUtil;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.TestDataPath;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.scanl.plugins.tsdetect.InspectionTest;
 import org.scanl.plugins.tsdetect.model.SmellType;
 
 
 @TestDataPath("$CONTENT_ROOT/src/test/testData")
 public class SleepyTestInspectionTest extends InspectionTest {
-
 
 	SleepyTestInspection inspection;
 	PsiClass psiClass;
