@@ -5,6 +5,7 @@ package org.scanl.plugins.tsdetect.model;
  * everything with the action should work
  */
 public enum SmellType {
+    ASSERTION_ROULETTE,
     CONDITIONAL_TEST,
     CONSTRUCTOR_INITIALIZATION,
     DEFAULT_TEST,
