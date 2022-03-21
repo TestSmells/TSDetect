@@ -82,8 +82,7 @@ public class SmellVisitor extends JavaRecursiveElementVisitor {
 				}
 			}
 		}
-		JUnitUtil.isTestAnnotated(method);
-		//JUnitUtil.isTestAnnotated(method) checks if it is an annotated test
+
 		if(issues) {
 			PsiClass psiClass = method.getContainingClass();
 			assert psiClass != null;
