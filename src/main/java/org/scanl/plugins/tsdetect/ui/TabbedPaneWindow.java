@@ -112,6 +112,7 @@ public class TabbedPaneWindow {
 
 		for(SmellType smellType: SmellType.values())
 		{
+			// check for other configurations to add
 			smellyMethods.put(smellType, getMethodBySmell(smellType));
 			smellyClasses.put(smellType, getClassesBySmell(smellType));
 		}
@@ -123,7 +124,10 @@ public class TabbedPaneWindow {
 
 		DefaultPieDataset dataset = new DefaultPieDataset();
 		for(Map.Entry<SmellType, List<InspectionClassModel>> entry : smellyClasses.entrySet()) {
-			dataset.setValue(entry.getKey().toString(), entry.getValue().size());
+			int size = entry.getValue().size();
+			if (size != 0) {
+				dataset.setValue(entry.getKey().toString(), size);
+			}
 		}
 
 		JFreeChart chart = ChartFactory.createPieChart(
