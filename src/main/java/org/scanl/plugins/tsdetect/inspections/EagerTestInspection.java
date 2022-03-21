@@ -29,7 +29,6 @@ public class EagerTestInspection extends SmellInspection {
     public boolean hasSmell(PsiElement element) {
         if (!shouldTestElement(element)) return false;
         if (!(element instanceof PsiMethod)) return false;
-        System.out.println(element);
 
         this.issueStatements.clear();
 
@@ -49,7 +48,6 @@ public class EagerTestInspection extends SmellInspection {
         if (possibleIssues.size() > 1)
             this.issueStatements.addAll(possibleIssues);
 
-        System.out.println((issueStatements.size()>0) + " " + testMethod.getName());
         return this.issueStatements.size() > 0;
     }
 

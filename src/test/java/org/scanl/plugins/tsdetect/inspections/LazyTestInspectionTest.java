@@ -68,14 +68,12 @@ public class LazyTestInspectionTest extends InspectionTest {
 				"expected method",methods.get(0).getName(),"getVal");
 	}
 
-	public void testHasSmell() {
-		PsiMethod method = psiSmellClass.findMethodsByName("Lazy", false)[0];
-		assertTrue(inspection.hasSmell(method));
+	public void testHasSmell(){
+		assertTrue(inspection.hasSmell(psiSmellClass));
 	}
 
-	public void testHasNoSmell() {
-		PsiMethod method = psiNoSmellClass.findMethodsByName("EmptyTest", false)[0];
-		assertFalse(inspection.hasSmell(method));
+	public void testHasNoSmell(){
+		assertFalse(inspection.hasSmell(psiNoSmellClass));
 	}
 
 }
