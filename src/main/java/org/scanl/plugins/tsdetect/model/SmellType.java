@@ -17,5 +17,6 @@ public enum SmellType {
     LAZY_TEST,
     MYSTERY_GUEST,
     REDUNDANT_PRINT,
+    SENSITIVE_EQUALITY,
     SLEEPY_TEST
 }
