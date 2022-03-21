@@ -27,6 +27,7 @@ public class TestSmellInspectionProviderTest extends LightJavaCodeInsightFixture
 				GeneralFixtureInspection.class,
 				IgnoredTestInspection.class,
 				LazyTestInspection.class,
+				MagicNumberInspection.class,
 				MysteryGuestInspection.class,
 				RedundantPrintInspection.class,
 				SleepyTestInspection.class
