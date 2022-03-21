@@ -1,41 +1,33 @@
 package org.scanl.plugins.tsdetect.inspections;
 
-import com.intellij.execution.junit.JUnitUtil;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiDeclarationStatement;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiMethodCallExpression;
+import com.intellij.psi.PsiStatement;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.testFramework.TestDataPath;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.scanl.plugins.tsdetect.InspectionTest;
 import org.scanl.plugins.tsdetect.model.SmellType;
 
+public class MysteryGuestInspectionTest extends InspectionTest {
 
-@TestDataPath("$CONTENT_ROOT/src/test/testData")
-public class SleepyTestInspectionTest extends InspectionTest {
-
-
-	SleepyTestInspection inspection;
+	MysteryGuestInspection inspection;
 	PsiClass psiClass;
 
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-
-		inspection = new SleepyTestInspection();
-		psiClass = loadExample("SleepyTestData.java");
-		myFixture.addClass(psiClass.getText());
+		inspection = new MysteryGuestInspection();
+		psiClass = loadExample("MysteryGuestTestData.java");
 	}
 
 	public void testDisplayName(){
-		String expectedDisplayName = "Sleepy Test";
+		String expectedDisplayName = "Mystery Guest";
 		String displayName = inspection.getDisplayName();
 		assertEquals(expectedDisplayName, displayName);
 	}
 
 	public void testShortName(){
-		String expectedDisplayName = "ST";
+		String expectedDisplayName = "MG";
 		String displayName = inspection.getShortName();
 		assertEquals(expectedDisplayName, displayName);
 	}
@@ -47,20 +39,20 @@ public class SleepyTestInspectionTest extends InspectionTest {
 	}
 
 	public void testSmellType(){
-		SmellType expectedSmellType = SmellType.SLEEPY_TEST;
+		SmellType expectedSmellType = SmellType.MYSTERY_GUEST;
 		SmellType smellType = inspection.getSmellType();
 		assertEquals(expectedSmellType, smellType);
 	}
 
 	public void testHasSmell(){
-		PsiMethod method = psiClass.findMethodsByName("SleepyTest", false)[0];
-		boolean result = PsiTreeUtil.findChildrenOfType(method, PsiMethodCallExpression.class).stream().anyMatch(inspection::hasSmell);
+		PsiMethod method = psiClass.findMethodsByName("mysteryGuestTest", false)[0];
+		boolean result = PsiTreeUtil.findChildrenOfType(method, PsiDeclarationStatement.class).stream().anyMatch(inspection::hasSmell);
 		assertTrue(result);
 	}
 
 	public void testHasNoSmell(){
-		PsiMethod method = psiClass.findMethodsByName("NotSleepyTest", false)[0];
-		boolean result = PsiTreeUtil.findChildrenOfType(method, PsiMethodCallExpression.class).stream().anyMatch(inspection::hasSmell);
+		PsiMethod method = psiClass.findMethodsByName("notDuplicateAssertTest", false)[0];
+		boolean result = PsiTreeUtil.findChildrenOfType(method, PsiDeclarationStatement.class).stream().anyMatch(inspection::hasSmell);
 		assertFalse(result);
 	}
 }

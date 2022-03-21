@@ -23,9 +23,9 @@ public class IgnoredTestInspection extends SmellInspection{
 				if (method.getBody() == null)
 					return;
 				if (hasSmell(method))
-					holder.registerProblem(method, DESCRIPTION,
-							new QuickFixRemove("INSPECTION.SMELL.IGNORED_TEST.FIX.REMOVE"),
-							new QuickFixComment("INSPECTION.SMELL.IGNORED_TEST.FIX.COMMENT"));
+					holder.registerProblem(method, getDescription(),
+                            new QuickFixRemove(getResourceName("FIX.REMOVE")),
+                            new QuickFixComment(getResourceName("FIX.COMMENT")));
 			}
         };
     }
@@ -40,29 +40,27 @@ public class IgnoredTestInspection extends SmellInspection{
      */
     @Override
     public boolean hasSmell(PsiElement element) {
-        if(element instanceof PsiMethod) {
-            PsiMethod method = (PsiMethod) element;
-            if (!PluginSettings.GetSetting(getSmellType().toString())) {
-                return false;
-            }
-            //PsiMethod[] psiMethods = currClass.getMethods();
+        if (!shouldTestElement(element)) return false;
+        if (!(element instanceof PsiMethod)) return false;
 
-            PsiAnnotation[] annotations = method.getModifierList().getAnnotations();
-            if (annotations.length == 0) {
-                return false;
-            }
-            for (PsiAnnotation annotation : annotations) {
-                //if an annotation exists with "Ignore", then return false
-                if(annotation.getQualifiedName() != null) {
-                    if (annotation.getQualifiedName().contains("Ignore")) {
-                        return true;
-                    }
-                    if (annotation.getQualifiedName().contains("Disabled")) {
-                        return true;
-                    }
+        PsiMethod method = (PsiMethod) element;
+
+        PsiAnnotation[] annotations = method.getModifierList().getAnnotations();
+        if (annotations.length == 0) {
+            return false;
+        }
+        for (PsiAnnotation annotation : annotations) {
+            //if an annotation exists with "Ignore", then return false
+            if(annotation.getQualifiedName() != null) {
+                if (annotation.getQualifiedName().contains("Ignore")) {
+                    return true;
+                }
+                if (annotation.getQualifiedName().contains("Disabled")) {
+                    return true;
                 }
             }
         }
+
         return false;
     }
 

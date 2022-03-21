@@ -23,11 +23,13 @@ public class TestSmellInspectionProvider implements InspectionToolProvider {
 				DuplicateAssertInspection.class,
 				EagerTestInspection.class,
 				EmptyMethodInspection.class,
+				ExceptionHandlingInspection.class,
 				GeneralFixtureInspection.class,
+				IgnoredTestInspection.class,
 				LazyTestInspection.class,
+				MysteryGuestInspection.class,
 				RedundantPrintInspection.class,
 				SleepyTestInspection.class,
-				IgnoredTestInspection.class,
 				UnknownTestInspection.class
 		};
 	}

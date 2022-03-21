@@ -3,7 +3,6 @@ package org.scanl.plugins.tsdetect.inspections;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
-import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.SmellType;
 
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ public class EagerTestInspection extends SmellInspection {
             public void visitClass(PsiClass cls) {
                 if(hasSmell(cls)) {
                     for(PsiStatement statement : issueStatements)
-                        holder.registerProblem(statement, DESCRIPTION);
+                        holder.registerProblem(statement, getDescription());
                 }
             }
         };
@@ -28,7 +27,7 @@ public class EagerTestInspection extends SmellInspection {
 
     @Override
     public boolean hasSmell(PsiElement element) {
-        if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
+        if (!shouldTestElement(element)) return false;
 
         this.issueStatements = new ArrayList<>();
 

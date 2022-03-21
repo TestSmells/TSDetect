@@ -1,14 +1,19 @@
 package org.scanl.plugins.tsdetect.inspections;
 
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.execution.junit.JUnitUtil;
 import com.intellij.psi.*;
+import com.intellij.psi.util.PsiTreeUtil;
+import org.codehaus.groovy.ast.expr.MethodCallExpression;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
 import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.SmellType;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixComment;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixRemove;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class UnknownTestInspection extends SmellInspection{
@@ -21,9 +26,9 @@ public class UnknownTestInspection extends SmellInspection{
                 if (method.getBody() == null)
                     return;
                 if (hasSmell(method))
-                    holder.registerProblem(method, DESCRIPTION,
-                            new QuickFixRemove("INSPECTION.SMELL.UNKNOWN_TEST.FIX.REMOVE"),
-                            new QuickFixComment("INSPECTION.SMELL.UNKNOWN_TEST.FIX.COMMENT"));
+                    holder.registerProblem(method, getDescription(),
+                            new QuickFixRemove(getResourceName("FIX.REMOVE")),
+                            new QuickFixComment(getResourceName("FIX.COMMENT")));
             }
         };
     }
@@ -31,17 +36,20 @@ public class UnknownTestInspection extends SmellInspection{
 
     @Override
     public boolean hasSmell(PsiElement element) {
-        if(element instanceof PsiMethod) {
-            PsiMethod method = (PsiMethod) element;
+        if(element instanceof PsiMethod
+                && JUnitUtil.isTestClass(Objects.requireNonNull(PsiTreeUtil.getParentOfType(element, PsiClass.class)))) {
+            //PsiMethod method = (PsiMethod) element;
             if (!PluginSettings.GetSetting(getSmellType().toString())) {
                 return false;
             }
-            for (PsiStatement statement : Objects.requireNonNull(method.getBody()).getStatements()) {
+            List<PsiMethodCallExpression> methods = PsiTreeUtil.getChildrenOfTypeAsList(element, PsiMethodCallExpression.class);
+            for (PsiMethodCallExpression statement : methods) {
                 String name = statement.getText().replaceAll("\\s", "");
-                if(name.contains("assert")){
-                    
+                if(name.contains("assert") || name.contains("Assert")){
+                    return false;
                 }
             }
+            return true;
 
 
         }

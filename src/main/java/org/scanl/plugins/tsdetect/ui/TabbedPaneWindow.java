@@ -153,8 +153,7 @@ public class TabbedPaneWindow {
 	 * @param project the project that is open
 	 */
 	protected void visitSmellDetection(Project project){
-		Collection<VirtualFile> vFiles = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME,
-				JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project)); //gets the files in the project
+		Collection<VirtualFile> vFiles = FileTypeIndex.getFiles(JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project)); //gets the files in the project
 
 		allMethods.clear();
 		allClasses.clear();
