@@ -42,7 +42,8 @@ public class UnknownTestInspection extends SmellInspection{
     @Override
     public boolean hasSmell(PsiElement element) {
         if(element instanceof PsiMethod
-                && JUnitUtil.isTestClass(Objects.requireNonNull(PsiTreeUtil.getParentOfType(element, PsiClass.class)))) {
+                && PsiTreeUtil.getParentOfType(element, PsiClass.class) != null
+                && JUnitUtil.isTestClass(PsiTreeUtil.getParentOfType(element, PsiClass.class))){
                 PsiMethod method = (PsiMethod) element;
             if (!PluginSettings.GetSetting(getSmellType().toString())) {
                 return false;
