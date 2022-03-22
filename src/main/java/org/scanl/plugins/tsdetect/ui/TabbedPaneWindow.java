@@ -72,7 +72,7 @@ public class TabbedPaneWindow {
 		});
 
 		//set up button name and actions
-		smellDistributionButton.addActionListener(e -> setAllDispalys(project));
+		smellDistributionButton.addActionListener(e -> setAllDisplays(project));
 		smellDistributionButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME"));
 		smellDistributionButton.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.TOOLTIP"));
 		//set the tab name and tooltip
