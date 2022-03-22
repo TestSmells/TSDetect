@@ -92,7 +92,7 @@ public class TabbedPaneWindow {
 
 	}
 
-	protected void setAllDispalys(Project project){
+	protected void setAllDisplays(Project project){
 		visitSmellDetection(project);
 		setSmellDistributionTable();
 		setSmellTree();
