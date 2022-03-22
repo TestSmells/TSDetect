@@ -50,7 +50,7 @@ public class UnknownTestInspection extends SmellInspection{
             }
             List<PsiMethodCallExpression> methods = PsiTreeUtil.getChildrenOfTypeAsList(element, PsiMethodCallExpression.class);
             //element.getMethodExpressions
-            
+            //List<PsiMethodCallExpression> methods = getMethodExpressions()
             for (PsiMethodCallExpression statement : methods) {
                 System.out.println(statement);
                 //String name = statement.getText().replaceAll("\\s", "");
