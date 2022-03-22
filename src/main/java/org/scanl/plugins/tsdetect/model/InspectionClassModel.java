@@ -42,5 +42,9 @@ public class InspectionClassModel implements Identifier {
 	{
 		return smellTypesList;
 	}
+
+	public void addSmellType(SmellType e){
+		smellTypesList.add(e);
+	}
 }
 

@@ -1,13 +1,8 @@
 package org.scanl.plugins.tsdetect.inspections;
 
-import com.intellij.codeInspection.InspectionEP;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.*;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
-import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.SmellType;
 
 import java.util.ArrayList;

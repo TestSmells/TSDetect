@@ -40,10 +40,9 @@ public class SmellVisitor extends JavaRecursiveElementVisitor {
 				logger.error(e);
 			}
 		}
-			determineSmellsByClass(cls, inspections);
-			for (PsiMethod method : cls.getMethods())
-				determineSmellsByMethod(method, inspections);
-
+		determineSmellsByClass(cls, inspections);
+		for (PsiMethod method : cls.getMethods())
+			determineSmellsByMethod(method, inspections);
 	}
 
 	public void determineSmellsByClass(PsiClass cls, List<SmellInspection> inspections){
@@ -61,7 +60,6 @@ public class SmellVisitor extends JavaRecursiveElementVisitor {
 		if(issues) {
 			InspectionClassModel inspectionClassModel = new InspectionClassModel(Objects.requireNonNull(cls).getQualifiedName(), cls, classSmellTypes);
 			getSmellyClasses().add(inspectionClassModel);
-			smellyClasses.add(cls.getQualifiedName());
 		}
 	}
 
@@ -84,8 +82,7 @@ public class SmellVisitor extends JavaRecursiveElementVisitor {
 				}
 			}
 		}
-		JUnitUtil.isTestAnnotated(method);
-		//JUnitUtil.isTestAnnotated(method) checks if it is an annotated test
+
 		if(issues) {
 			PsiClass psiClass = method.getContainingClass();
 			assert psiClass != null;
