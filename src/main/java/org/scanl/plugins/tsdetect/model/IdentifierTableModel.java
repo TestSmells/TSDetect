@@ -61,7 +61,7 @@ public class IdentifierTableModel extends AbstractTableModel {
 
 	public List<SmellType> checkedSmells(){
 		List<SmellType> smellTypes = new ArrayList<>();
-		for(SmellType sm:Arrays.asList(SmellType.values())){
+		for(SmellType sm:SmellType.values()){
 			if(PluginSettings.GetSetting(sm.toString()))
 				smellTypes.add(sm);
 		}
