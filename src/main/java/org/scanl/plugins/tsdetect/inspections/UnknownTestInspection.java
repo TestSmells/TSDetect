@@ -36,7 +36,7 @@ public class UnknownTestInspection extends SmellInspection{
 
     /**
      *
-     * @param element
+     * @param element PsiElement
      * @return false if test contains assert
      */
     @Override
@@ -45,28 +45,19 @@ public class UnknownTestInspection extends SmellInspection{
                 && JUnitUtil.isTestClass(Objects.requireNonNull(PsiTreeUtil.getParentOfType(element, PsiClass.class)))) {
                 PsiMethod method = (PsiMethod) element;
             if (!PluginSettings.GetSetting(getSmellType().toString())) {
-                System.out.println("first false return");
                 return false;
             }
-            List<PsiMethodCallExpression> methods = PsiTreeUtil.getChildrenOfTypeAsList(element, PsiMethodCallExpression.class);
-            //element.getMethodExpressions
-            //List<PsiMethodCallExpression> methods = getMethodExpressions()
+            List<PsiMethodCallExpression> methods = getMethodExpressions(method);
             for (PsiMethodCallExpression statement : methods) {
-                System.out.println(statement);
-                //String name = statement.getText().replaceAll("\\s", "");
                 String name = statement.getMethodExpression().getQualifiedName();
-                System.out.println(name);
                 if(name.contains("assert") || name.contains("Assert")){
-                    System.out.println("Assert function found");
                     return false;
                 }
             }
-            System.out.println("True return");
             return true;
 
 
         }
-        System.out.println("last false return");
         return false;
     }
 
