@@ -65,7 +65,7 @@ public class TabbedPaneWindow {
 				if (virtualFile != null) {
 					PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
 					if (psiFile instanceof PsiJavaFile) {
-						setAllDispalys(project);
+						setAllDisplays(project);
 					}
 				}
 			}
