@@ -45,7 +45,6 @@ public class AssertionRouletteInspection extends SmellInspection {
 						}
 					}
 				}
-				asserts.clear();
 			}
 		};
 	}
@@ -57,9 +56,9 @@ public class AssertionRouletteInspection extends SmellInspection {
 	 */
 	@Override
 	public boolean hasSmell(PsiElement element) {
-		if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
 		if(!(element instanceof PsiMethod)) return false;
 		if (!shouldTestElement(element)) return false;
+		asserts.clear();
 
 		boolean output = false;
 
