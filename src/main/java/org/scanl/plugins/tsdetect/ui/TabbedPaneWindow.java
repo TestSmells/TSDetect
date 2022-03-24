@@ -22,6 +22,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
 import org.scanl.plugins.tsdetect.SmellVisitor;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
+import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.InspectionClassModel;
 import org.scanl.plugins.tsdetect.model.IdentifierTableModel;
 import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
@@ -112,9 +113,10 @@ public class TabbedPaneWindow {
 
 		for(SmellType smellType: SmellType.values())
 		{
-			// check for other configurations to add
-			smellyMethods.put(smellType, getMethodBySmell(smellType));
-			smellyClasses.put(smellType, getClassesBySmell(smellType));
+			if (PluginSettings.GetSetting(smellType.toString())) {
+				smellyMethods.put(smellType, getMethodBySmell(smellType));
+				smellyClasses.put(smellType, getClassesBySmell(smellType));
+			}
 		}
 
 		data.constructSmellTable(smellyMethods, smellyClasses); //constructs the smell table
