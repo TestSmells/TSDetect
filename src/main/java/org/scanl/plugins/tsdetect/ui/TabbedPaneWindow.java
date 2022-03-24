@@ -131,7 +131,7 @@ public class TabbedPaneWindow {
 		for(Map.Entry<SmellType, List<InspectionClassModel>> entry : smellyClasses.entrySet()) {
 			int size = entry.getValue().size();
 			if (size != 0) {
-				dataset.setValue(entry.getKey().toString(), size);
+				dataset.setValue(PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + entry.getKey().toString() + ".NAME.DISPLAY"), size);
 			}
 		}
 
