@@ -33,8 +33,8 @@ public class MagicNumberInspection extends SmellInspection {
 				expression.getText().startsWith(("assertNotSame")) ||
 				expression.getText().startsWith(("assertSame")) ||
 				expression.getText().startsWith(("assertThat")) ||
-				expression.getText().equals("assertNotNull") ||
-				expression.getText().equals("assertNull")) {
+				expression.getText().startsWith("assertNotNull") ||
+				expression.getText().startsWith("assertNull")) {
 			for (PsiExpression ex : expression.getArgumentList().getExpressions()) {
 				if (isNumber(ex.getText())) return true;
 				if (ex instanceof PsiMethodCallExpression){
