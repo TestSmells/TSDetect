@@ -67,4 +67,10 @@ public class UnknownTestInspection extends SmellInspection{
     public SmellType getSmellType() {
         return SmellType.UNKNOWN_TEST;
     }
+
+    @Override
+    public Class<? extends PsiElement> getVisitedType()
+    {
+        return PsiElement.class;
+    }
 }
