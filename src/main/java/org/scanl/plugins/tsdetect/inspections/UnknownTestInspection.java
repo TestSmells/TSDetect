@@ -41,8 +41,9 @@ public class UnknownTestInspection extends SmellInspection{
      */
     @Override
     public boolean hasSmell(PsiElement element) {
-        if(element instanceof PsiMethod
-                && PsiTreeUtil.getParentOfType(element, PsiClass.class) != null
+        if(!(element instanceof PsiMethod)) return false;
+        if (!shouldTestElement(element)) return false;
+        if (PsiTreeUtil.getParentOfType(element, PsiClass.class) != null
                 && JUnitUtil.isTestClass(PsiTreeUtil.getParentOfType(element, PsiClass.class))){
                 PsiMethod method = (PsiMethod) element;
             if (!PluginSettings.GetSetting(getSmellType().toString())) {
@@ -50,8 +51,8 @@ public class UnknownTestInspection extends SmellInspection{
             }
             List<PsiMethodCallExpression> methods = getMethodExpressions(method);
             for (PsiMethodCallExpression statement : methods) {
-                String name = statement.getMethodExpression().getQualifiedName();
-                if(name.contains("assert") || name.contains("Assert")){
+                String name = statement.getMethodExpression().getQualifiedName().toLowerCase();
+                if(name.contains("assert")){
                     return false;
                 }
             }
