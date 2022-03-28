@@ -39,9 +39,8 @@ public class DuplicateAssertInspection extends SmellInspection{
 			public void visitMethod(PsiMethod method) {
 				if (method.getBody() == null)
 					return;
-				hasSmell(method);
-				for(PsiExpression statement: problemStatements) {
-					holder.registerProblem(statement, getDescription(),
+				if(hasSmell(method)){
+					holder.registerProblem(method.getBody(), getDescription(),
 							new QuickFixComment(getResourceName("FIX.COMMENT")));
 				}
 			}
@@ -57,59 +56,25 @@ public class DuplicateAssertInspection extends SmellInspection{
 	public boolean hasSmell(PsiElement element) {
 		if(!(element instanceof PsiMethod)) return false;
 		if (!shouldTestElement(element)) return false;
-		boolean output = false;
 
 		List<String> assertCalls = new ArrayList<>();
 		List<String> assertMessages = new ArrayList<>();
-		HashMap<String,List<PsiMethodCallExpression>> callsToElements = new HashMap<>();
-		HashMap<String,List<PsiMethodCallExpression>> messagesToElements = new HashMap<>();
-
-		HashMap<String, Integer> callCounts = new HashMap<>();
-		HashMap<String, Integer> messageCounts = new HashMap<>();
 
 		for (PsiMethodCallExpression psiMethodCallExpression : getMethodExpressions((PsiMethod) element)) {
 			//only care about message if one exists
 			String message = parseMessage(psiMethodCallExpression);
 			if(null != message) {
 				assertMessages.add(message);
-				//Maps messages to lists of elements so that if multiple are found they can be highlighted
-				if (messagesToElements.containsKey(message)){
-					messagesToElements.get(message).add(psiMethodCallExpression);
-				}
-				else{
-					messagesToElements.put(message,new ArrayList<>());
-					messagesToElements.get(message).add(psiMethodCallExpression);
-				}
 			}
 
 			String name = psiMethodCallExpression.getMethodExpression().getQualifiedName();
-
 			assertCalls.add(name);
-
-			//Maps calls to lists of elements so that if multiple are found they can be highlighted
-			if (callsToElements.containsKey(message)){
-				callsToElements.get(message).add(psiMethodCallExpression);
-			}
-			else{
-				callsToElements.put(message,new ArrayList<>());
-				callsToElements.get(message).add(psiMethodCallExpression);
-			}
-
 		}
 		if(new HashSet<>(assertMessages).size() < assertMessages.size()){
-			for (String message : messagesToElements.keySet()) {
-				if(messagesToElements.get(message).size()>0)
-					problemStatements.addAll(messagesToElements.get(message));
-			}
-
 			return true;
 		}
 
 		if(new HashSet<>(assertCalls).size() < assertCalls.size()){
-			for (String call : callsToElements.keySet()) {
-				if(callsToElements.get(call).size()>0)
-					problemStatements.addAll(callsToElements.get(call));
-			}
 			return true;
 		}
 
