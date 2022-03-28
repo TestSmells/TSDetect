@@ -3,10 +3,8 @@ package org.scanl.plugins.tsdetect.inspections;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
-import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.SmellType;
 import org.scanl.plugins.tsdetect.quickfixes.QuickFixComment;
-import org.scanl.plugins.tsdetect.quickfixes.QuickFixRemove;
 
 import java.util.*;
 
@@ -15,8 +13,6 @@ import java.util.*;
  * Looks for test methods that are empty
  */
 public class DuplicateAssertInspection extends SmellInspection{
-	HashMap<String, List<PsiMethodCallExpression>> duplicateAsserts = new HashMap<>();
-	HashMap<String, HashSet<String>> foundParameters = new HashMap<>();
 	HashSet<String> assertsWithOneParameter = new HashSet<>(
 			Arrays.asList(
 					"assertTrue",
@@ -24,7 +20,6 @@ public class DuplicateAssertInspection extends SmellInspection{
 					"assertNotNull",
 					"assertNull"
 			));
-
 	HashSet<String> assertsWithTwoParameters = new HashSet<>(
 			Arrays.asList(
 					"assertArrayEquals",
@@ -35,6 +30,8 @@ public class DuplicateAssertInspection extends SmellInspection{
 					"assertNotEquals"
 			));
 
+	ArrayList<PsiExpression> problemStatements = new ArrayList<>();
+
 	@Override
 	public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
 		return new JavaElementVisitor() {
@@ -43,15 +40,9 @@ public class DuplicateAssertInspection extends SmellInspection{
 				if (method.getBody() == null)
 					return;
 				hasSmell(method);
-				for (List<PsiMethodCallExpression> statements : duplicateAsserts.values()) {
-					if(statements.size() > 1){
-						for (PsiMethodCallExpression statement : statements) {
-							holder.registerProblem(statement, getDescription(),
-								new QuickFixComment(getResourceName("FIX.COMMENT")));
-						}
-					}
-				}
-				duplicateAsserts.clear();
+				for(PsiExpression statement: problemStatements)
+				holder.registerProblem(statement, getDescription(),
+					new QuickFixComment(getResourceName("FIX.COMMENT")));
 			}
 		};
 	}
@@ -63,83 +54,97 @@ public class DuplicateAssertInspection extends SmellInspection{
 	 */
 	@Override
 	public boolean hasSmell(PsiElement element) {
-		if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
 		if(!(element instanceof PsiMethod)) return false;
 		if (!shouldTestElement(element)) return false;
-
 		boolean output = false;
 
-		List<PsiMethodCallExpression> x = getMethodExpressions((PsiMethod) element);
-		for (PsiMethodCallExpression psiMethodCallExpression : x) {
-			int count = psiMethodCallExpression.getArgumentList().getExpressionCount();
+		Set<AssT> methodExpressions = new HashSet<>();
+		for (PsiMethodCallExpression psiMethodCallExpression : getMethodExpressions((PsiMethod) element)) {
+
+			AssT ass = new AssT(psiMethodCallExpression);
+				methodExpressions.add(ass);
+
+		}
+		return output;
+	}
+
+	private class AssT {
+		public final String name;
+		public final PsiMethodCallExpression ref;
+		public Set<PsiExpression> params;
+
+		AssT(PsiMethodCallExpression psiMethodCallExpression){
+			this.ref = psiMethodCallExpression;
 			String key = psiMethodCallExpression.getMethodExpression().getQualifiedName();
-			System.out.println(key);
+			this.name = key;
+
+			int count = psiMethodCallExpression.getArgumentList().getExpressionCount();
 			if (key.equals("fail")) {
 				if (count == 1) {
-					output = foundWithMessage(psiMethodCallExpression);
+					this.params = foundWithMessage(psiMethodCallExpression);
 				}
 				else {
-					output = foundWithoutMessage(psiMethodCallExpression);
+					this.params = foundWithoutMessage(psiMethodCallExpression);
 				}
 			}
 			else if(assertsWithOneParameter.contains(key)){
 				if (count == 2){
-					output = foundWithMessage(psiMethodCallExpression);
+					this.params = foundWithMessage(psiMethodCallExpression);
 				}
 				else{
-					output = foundWithoutMessage(psiMethodCallExpression);
+					this.params = foundWithoutMessage(psiMethodCallExpression);
 				}
 			}
 			else if(assertsWithTwoParameters.contains(key)) {
 				if (count == 3) {
-					output = foundWithMessage(psiMethodCallExpression);
+					this.params = foundWithMessage(psiMethodCallExpression);
 				}
 				else{
-					output = foundWithoutMessage(psiMethodCallExpression);
+					this.params = foundWithoutMessage(psiMethodCallExpression);
 				}
 			}
 		}
-		return output;
-	}
-	/**
-	 * if has does not have duplicate arguments, then is not duplicate assert
-		- covered by checking if all params are equal, if false then not duplicate assert
 
-	 * if has duplicate arguments and unique message, then is not duplicate assert
-		- covered by checking if arguments are equal, then checking if message is already found
-	 * if has duplicate arguments AND not unique message, then is duplicate assert
-	 	- covered by checking if arguments are equal, then checking if message is already found
-
-	 * if has duplicate arguments and no message, then is duplicate assert
-	 	- covered by checking if arguments are equal and no message exists
-	 */
-
-	/**
-	 * handles if a Junit assert without a message is found
-	 */
-	private boolean foundWithMessage(PsiMethodCallExpression psiMethodCallExpression) {
-		String key = psiMethodCallExpression.getMethodExpression().getQualifiedName();
-		return false;
-	}
-
-	/**
-	 * handles if a JUnit assert with a message is found
-	 * @return
-	 */
-	private boolean foundWithoutMessage(PsiMethodCallExpression psiMethodCallExpression){
-		String key = psiMethodCallExpression.getMethodExpression().getQualifiedName();
-		@NotNull PsiExpressionList x = psiMethodCallExpression.getArgumentList();
-		List<String> args = new ArrayList<>();
-		for (PsiExpression expression : x.getExpressions()) {
-			args.add(expression.getText());
-			System.out.println(expression.getText());
+		private Set<PsiExpression> foundWithoutMessage(PsiMethodCallExpression psiMethodCallExpression) {
+			HashSet<PsiExpression> psiParameters = new HashSet<>();
+			PsiExpression @NotNull [] x = psiMethodCallExpression.getArgumentList().getExpressions();
+			psiParameters.addAll(List.of(x));
+			return psiParameters;
 		}
-		if(foundParameters.containsKey(key)){
-			if(foundParameters.get(key).contains(x.toString().replaceAll("\\+W",""))){
+
+		private Set<PsiExpression> foundWithMessage(PsiMethodCallExpression psiMethodCallExpression) {
+			HashSet<PsiExpression> psiParameters = new HashSet<>();
+			PsiExpression @NotNull [] x = psiMethodCallExpression.getArgumentList().getExpressions();
+			int i = 0;
+			while (i < x.length-1){
+					psiParameters.add(x[i]);
+				i++;
 			}
+			psiParameters.addAll(List.of(x));
+			return psiParameters;
 		}
 
-		return false;
+		@Override
+		public String toString() {
+			return "AssT{" +
+					"name='" + name + '\'' +
+//					", ref=" + ref +
+					", params=" + params +
+					'}';
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			AssT assT = (AssT) o;
+			return Objects.equals(name, assT.name) && Objects.equals(params, assT.params);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(name,params);
+		}
 	}
 
 	/**
