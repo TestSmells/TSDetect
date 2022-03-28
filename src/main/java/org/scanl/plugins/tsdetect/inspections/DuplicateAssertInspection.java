@@ -40,9 +40,10 @@ public class DuplicateAssertInspection extends SmellInspection{
 				if (method.getBody() == null)
 					return;
 				hasSmell(method);
-				for(PsiExpression statement: problemStatements)
-				holder.registerProblem(statement, getDescription(),
-					new QuickFixComment(getResourceName("FIX.COMMENT")));
+				for(PsiExpression statement: problemStatements) {
+					holder.registerProblem(statement, getDescription(),
+							new QuickFixComment(getResourceName("FIX.COMMENT")));
+				}
 			}
 		};
 	}
@@ -58,93 +59,89 @@ public class DuplicateAssertInspection extends SmellInspection{
 		if (!shouldTestElement(element)) return false;
 		boolean output = false;
 
-		Set<Assrt> methodExpressions = new HashSet<>();
-		for (PsiMethodCallExpression psiMethodCallExpression : getMethodExpressions((PsiMethod) element)) {
+		List<String> assertCalls = new ArrayList<>();
+		List<String> assertMessages = new ArrayList<>();
+		HashMap<String,List<PsiMethodCallExpression>> callsToElements = new HashMap<>();
+		HashMap<String,List<PsiMethodCallExpression>> messagesToElements = new HashMap<>();
 
-			Assrt assrt = new Assrt(psiMethodCallExpression);
-				methodExpressions.add(assrt);
+		HashMap<String, Integer> callCounts = new HashMap<>();
+		HashMap<String, Integer> messageCounts = new HashMap<>();
+
+		for (PsiMethodCallExpression psiMethodCallExpression : getMethodExpressions((PsiMethod) element)) {
+			//only care about message if one exists
+			String message = parseMessage(psiMethodCallExpression);
+			if(null != message) {
+				assertMessages.add(message);
+				//Maps messages to lists of elements so that if multiple are found they can be highlighted
+				if (messagesToElements.containsKey(message)){
+					messagesToElements.get(message).add(psiMethodCallExpression);
+				}
+				else{
+					messagesToElements.put(message,new ArrayList<>());
+					messagesToElements.get(message).add(psiMethodCallExpression);
+				}
+			}
+
+			String name = psiMethodCallExpression.getMethodExpression().getQualifiedName();
+
+			assertCalls.add(name);
+
+			//Maps calls to lists of elements so that if multiple are found they can be highlighted
+			if (callsToElements.containsKey(message)){
+				callsToElements.get(message).add(psiMethodCallExpression);
+			}
+			else{
+				callsToElements.put(message,new ArrayList<>());
+				callsToElements.get(message).add(psiMethodCallExpression);
+			}
 
 		}
-		return output;
+		if(new HashSet<>(assertMessages).size() < assertMessages.size()){
+			for (String message : messagesToElements.keySet()) {
+				if(messagesToElements.get(message).size()>0)
+					problemStatements.addAll(messagesToElements.get(message));
+			}
+
+			return true;
+		}
+
+		if(new HashSet<>(assertCalls).size() < assertCalls.size()){
+			for (String call : callsToElements.keySet()) {
+				if(callsToElements.get(call).size()>0)
+					problemStatements.addAll(callsToElements.get(call));
+			}
+			return true;
+		}
+
+
+		return false;
 	}
 
-	private class Assrt {
-		public final String name;
-		public final PsiMethodCallExpression ref;
-		public Set<PsiExpression> params;
-
-		Assrt(PsiMethodCallExpression psiMethodCallExpression){
-			this.ref = psiMethodCallExpression;
-			String key = psiMethodCallExpression.getMethodExpression().getQualifiedName();
-			this.name = key;
-
-			int count = psiMethodCallExpression.getArgumentList().getExpressionCount();
-			if (key.equals("fail")) {
-				if (count == 1) {
-					this.params = foundWithMessage(psiMethodCallExpression);
-				}
-				else {
-					this.params = foundWithoutMessage(psiMethodCallExpression);
-				}
-			}
-			else if(assertsWithOneParameter.contains(key)){
-				if (count == 2){
-					this.params = foundWithMessage(psiMethodCallExpression);
-				}
-				else{
-					this.params = foundWithoutMessage(psiMethodCallExpression);
-				}
-			}
-			else if(assertsWithTwoParameters.contains(key)) {
-				if (count == 3) {
-					this.params = foundWithMessage(psiMethodCallExpression);
-				}
-				else{
-					this.params = foundWithoutMessage(psiMethodCallExpression);
-				}
+	private String parseMessage(PsiMethodCallExpression psiMethodCallExpression) {
+		int count = psiMethodCallExpression.getArgumentList().getExpressionCount();
+		String key = psiMethodCallExpression.getMethodExpression().getQualifiedName();
+		String message = null;
+		if (key.equals("fail")) {
+			if (count == 1) {
+				message = foundWithMessage(psiMethodCallExpression) ;
 			}
 		}
-
-		private Set<PsiExpression> foundWithoutMessage(PsiMethodCallExpression psiMethodCallExpression) {
-			HashSet<PsiExpression> psiParameters = new HashSet<>();
-			PsiExpression @NotNull [] x = psiMethodCallExpression.getArgumentList().getExpressions();
-			psiParameters.addAll(List.of(x));
-			return psiParameters;
-		}
-
-		private Set<PsiExpression> foundWithMessage(PsiMethodCallExpression psiMethodCallExpression) {
-			HashSet<PsiExpression> psiParameters = new HashSet<>();
-			PsiExpression @NotNull [] x = psiMethodCallExpression.getArgumentList().getExpressions();
-			int i = 0;
-			while (i < x.length-1){
-					psiParameters.add(x[i]);
-				i++;
+		else if(assertsWithOneParameter.contains(key)){
+			if (count == 2){
+				message = foundWithMessage(psiMethodCallExpression);
 			}
-			psiParameters.addAll(List.of(x));
-			return psiParameters;
 		}
+		else if(assertsWithTwoParameters.contains(key)) {
+			if (count == 3) {
+				message = foundWithMessage(psiMethodCallExpression);
+			}
+		}
+		return message;
+	}
 
-		@Override
-		public String toString() {
-			return "AssT{" +
-					"name='" + name + '\'' +
-//					", ref=" + ref +
-					", params=" + params +
-					'}';
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-			Assrt assT = (Assrt) o;
-			return Objects.equals(name, assT.name) && Objects.equals(params, assT.params);
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hash(name,params);
-		}
+	private String foundWithMessage(PsiMethodCallExpression psiMethodCallExpression) {
+		PsiExpression @NotNull [] x = psiMethodCallExpression.getArgumentList().getExpressions();
+		return x[x.length-1].getText();
 	}
 
 	/**
