@@ -30,6 +30,7 @@ public class TestSmellInspectionProviderTest extends LightJavaCodeInsightFixture
 				LazyTestInspection.class,
 				MysteryGuestInspection.class,
 				RedundantPrintInspection.class,
+				ResourceOptimismInspection.class,
 				SensitiveEqualityInspection.class,
 				SleepyTestInspection.class
 		};
