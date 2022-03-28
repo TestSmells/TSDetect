@@ -17,21 +17,21 @@ public class TestSmellInspectionProvider implements InspectionToolProvider {
 	@Override
 	public Class<? extends LocalInspectionTool> @NotNull [] getInspectionClasses() {
 		return new Class[]{
-//				AssertionRouletteInspection.class,
-//				ConditionalTestLogicInspection.class,
-//				ConstructorInitializationInspection.class,
-//				DefaultTestInspection.class,
+				AssertionRouletteInspection.class,
+				ConditionalTestLogicInspection.class,
+				ConstructorInitializationInspection.class,
+				DefaultTestInspection.class,
 				DuplicateAssertInspection.class,
-//				EagerTestInspection.class,
-//				EmptyMethodInspection.class,
-//				ExceptionHandlingInspection.class,
-//				GeneralFixtureInspection.class,
-//				IgnoredTestInspection.class,
-//				LazyTestInspection.class,
-//				MysteryGuestInspection.class,
-//				RedundantPrintInspection.class,
-//				SensitiveEqualityInspection.class,
-//				SleepyTestInspection.class
+				EagerTestInspection.class,
+				EmptyMethodInspection.class,
+				ExceptionHandlingInspection.class,
+				GeneralFixtureInspection.class,
+				IgnoredTestInspection.class,
+				LazyTestInspection.class,
+				MysteryGuestInspection.class,
+				RedundantPrintInspection.class,
+				SensitiveEqualityInspection.class,
+				SleepyTestInspection.class
 		};
 	}
 }

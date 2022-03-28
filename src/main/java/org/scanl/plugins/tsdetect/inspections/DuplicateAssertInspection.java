@@ -68,6 +68,10 @@ public class DuplicateAssertInspection extends SmellInspection{
 			}
 
 			String name = psiMethodCallExpression.getMethodExpression().getQualifiedName();
+			if(assertsWithTwoParameters.contains(name) ||
+				assertsWithOneParameter.contains(name)||
+				name.equals("fail")
+			)
 			assertCalls.add(name);
 		}
 		if(new HashSet<>(assertMessages).size() < assertMessages.size()){
