@@ -17,8 +17,13 @@ import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.treeStructure.Tree;
 import org.jetbrains.annotations.NotNull;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.DefaultPieDataset;
 import org.scanl.plugins.tsdetect.SmellVisitor;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
+import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.InspectionClassModel;
 import org.scanl.plugins.tsdetect.model.IdentifierTableModel;
 import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
@@ -30,6 +35,7 @@ import javax.swing.tree.DefaultTreeModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
+import java.util.List;
 
 /**
  * The Tabbed Pane Window
@@ -46,6 +52,7 @@ public class TabbedPaneWindow {
 	private JPanel detectedSmells;
 	private JTree smellTree;
 	private JButton detectedSmellsButton;
+	private JPanel smellDistributionChart;
 
 
 	/**
@@ -145,15 +152,38 @@ public class TabbedPaneWindow {
 		HashMap<SmellType, List<InspectionMethodModel>> smellyMethods = new HashMap<>(); //hash to store smelly methods by smell
 		HashMap<SmellType, List<InspectionClassModel>> smellyClasses = new HashMap<>(); //hash to store smelly classes by smell
 
-		for (SmellType smellType : SmellType.values()) {
-			smellyMethods.put(smellType, getMethodBySmell(smellType));
-			smellyClasses.put(smellType, getClassesBySmell(smellType));
+		for(SmellType smellType: SmellType.values())
+		{
+			if (PluginSettings.GetSetting(smellType.toString())) {
+				smellyMethods.put(smellType, getMethodBySmell(smellType));
+				smellyClasses.put(smellType, getClassesBySmell(smellType));
+			}
 		}
 
 		data.constructSmellTable(smellyMethods, smellyClasses); //constructs the smell table
 
 		smellTable.setModel(data); //sets the model to be the table and visible
 		smellTable.setVisible(true);
+
+		DefaultPieDataset dataset = new DefaultPieDataset();
+		for(Map.Entry<SmellType, List<InspectionClassModel>> entry : smellyClasses.entrySet()) {
+			int size = entry.getValue().size();
+			if (size != 0) {
+				dataset.setValue(PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + entry.getKey().toString() + ".NAME.DISPLAY"), size);
+			}
+		}
+
+		JFreeChart chart = ChartFactory.createPieChart(
+				"",
+				dataset,
+				true,
+				true,
+				false
+		);
+
+		smellDistributionChart.setLayout(new java.awt.BorderLayout());
+		smellDistributionChart.add(new ChartPanel(chart));
+		smellDistributionChart.validate();
 	}
 
 	/**

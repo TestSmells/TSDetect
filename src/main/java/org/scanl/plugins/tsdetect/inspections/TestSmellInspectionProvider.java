@@ -29,9 +29,11 @@ public class TestSmellInspectionProvider implements InspectionToolProvider {
 				IgnoredTestInspection.class,
 				LazyTestInspection.class,
 				MysteryGuestInspection.class,
+				RedundantAssertionInspection.class,
 				RedundantPrintInspection.class,
 				SensitiveEqualityInspection.class,
-				SleepyTestInspection.class
+				SleepyTestInspection.class,
+				UnknownTestInspection.class
 		};
 	}
 }
