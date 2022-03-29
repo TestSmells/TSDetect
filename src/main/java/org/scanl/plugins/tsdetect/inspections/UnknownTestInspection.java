@@ -45,9 +45,6 @@ public class UnknownTestInspection extends SmellInspection{
         if (!shouldTestElement(element)) return false;
 
         PsiMethod method = (PsiMethod) element;
-        if (!PluginSettings.GetSetting(getSmellType().toString())) {
-            return false;
-        }
         List<PsiMethodCallExpression> methods = getMethodExpressions(method);
         for (PsiMethodCallExpression statement : methods) {
             String name = statement.getMethodExpression().getQualifiedName().toLowerCase();
