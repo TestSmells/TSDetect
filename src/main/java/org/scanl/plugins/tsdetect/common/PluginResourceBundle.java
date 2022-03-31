@@ -37,13 +37,13 @@ public class PluginResourceBundle {
 				bundle = ResourceBundle.getBundle(BUNDLE_INSPECTION);
 				bundles.put(BUNDLE_INSPECTION, new SoftReference<>(bundle));
 			}
-			return Objects.requireNonNull(bundles.get(BUNDLE_INSPECTION).get());
+			return Objects.requireNonNull(Objects.requireNonNull(bundles.get(BUNDLE_INSPECTION)).get());
 		} else {
 			if (!bundles.containsKey(BUNDLE_UI)) {
 				bundle = ResourceBundle.getBundle(BUNDLE_UI);
 				bundles.put(BUNDLE_UI, new SoftReference<>(bundle));
 			}
-			return Objects.requireNonNull(bundles.get(BUNDLE_UI).get());
+			return Objects.requireNonNull(Objects.requireNonNull(bundles.get(BUNDLE_UI)).get());
 		}
 	}
 
