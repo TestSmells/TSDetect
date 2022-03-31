@@ -15,6 +15,8 @@ import org.apache.logging.log4j.Logger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Represents the project-level plugin settings.
@@ -29,15 +31,21 @@ public class ProjectSettingsState implements PersistentStateComponent<ProjectSet
     private static final Logger logger = LogManager.getLogger(ProjectSettingsState.class);
 
     public Map<String, Boolean> settings = new HashMap<>();
+    private static DataContext dataContext;
 
-    public static ProjectSettingsState getInstance() {
-        DataContext dataContext = null;
+    static {
         try {
             dataContext = DataManager.getInstance().getDataContextFromFocusAsync().blockingGet(10000);
-        } catch (Exception e) {
+        } catch (TimeoutException e) {
+            logger.error(e);
+        } catch (ExecutionException e) {
             logger.error(e);
         }
-        return Objects.requireNonNull(Objects.requireNonNull(dataContext).getData(CommonDataKeys.PROJECT)).getService(ProjectSettingsState.class);
+    }
+
+    private static ProjectSettingsState projectSettingsState = Objects.requireNonNull(Objects.requireNonNull(dataContext).getData(CommonDataKeys.PROJECT)).getService(ProjectSettingsState.class);
+    public static ProjectSettingsState getInstance() {
+        return projectSettingsState;
     }
 
     @Nullable
