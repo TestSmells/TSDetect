@@ -165,7 +165,7 @@ public class TabbedPaneWindow {
 		smellTable.setModel(data); //sets the model to be the table and visible
 		smellTable.setVisible(true);
 
-		DefaultPieDataset dataset = new DefaultPieDataset();
+		DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
 		for(Map.Entry<SmellType, List<InspectionClassModel>> entry : smellyClasses.entrySet()) {
 			int size = entry.getValue().size();
 			if (size != 0) {
@@ -181,6 +181,7 @@ public class TabbedPaneWindow {
 				false
 		);
 
+		smellDistributionChart.removeAll();
 		smellDistributionChart.setLayout(new java.awt.BorderLayout());
 		smellDistributionChart.add(new ChartPanel(chart));
 		smellDistributionChart.validate();
