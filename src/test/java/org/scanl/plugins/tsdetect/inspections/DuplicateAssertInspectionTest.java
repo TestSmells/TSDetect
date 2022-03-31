@@ -45,13 +45,31 @@ public class DuplicateAssertInspectionTest extends InspectionTest {
 		assertEquals(expectedSmellType, smellType);
 	}
 
-	public void testHasSmell(){
-		PsiMethod method = psiClass.findMethodsByName("DuplicateAssertTest", false)[0];
-		assertTrue(inspection.hasSmell(method));
-	}
-
 	public void testHasNoSmell(){
-		PsiMethod method = psiClass.findMethodsByName("NotDuplicateAssertTest", false)[0];
+		PsiMethod method = psiClass.findMethodsByName("hasNoActualJunitAsserts", false)[0];
 		assertFalse(inspection.hasSmell(method));
 	}
+
+	public void testHasSmell_hasSameAssertSameMessage(){
+		PsiMethod [] psiMethod = psiClass.findMethodsByName("hasSameAssertSameMessage", false);
+		assertTrue(inspection.hasSmell(psiMethod[0]));
+	}
+
+	public void testHasSmell_hasSameAssertDifferentMessage(){
+		PsiMethod [] psiMethod = psiClass.findMethodsByName("hasSameAssertDifferentMessage", false);
+		assertTrue(inspection.hasSmell(psiMethod[0]));
+	}
+	public void testHasSmell_hasSameMessageDifferentAssert(){
+		PsiMethod [] psiMethod = psiClass.findMethodsByName("hasSameMessageDifferentAssert", false);
+		assertTrue(inspection.hasSmell(psiMethod[0]));
+	}
+	public void testHasSmell_hasDifferentMessageDifferentAssert(){
+		PsiMethod [] psiMethod = psiClass.findMethodsByName("hasDifferentMessageDifferentAssert", false);
+		assertFalse(inspection.hasSmell(psiMethod[0]));
+	}
+//	public void testHasSmell_(){
+//		PsiMethod [] psiMethod = psiClass.findMethodsByName("assertTrueNoMessage", false);
+//		assertTrue(inspection.hasSmell(psiMethod[0]));
+//	}
+//}
 }
