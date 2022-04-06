@@ -31,7 +31,18 @@ import java.util.List;
  * Interface to extend when new inspections are being made
  */
 public abstract class SmellInspection extends AbstractBaseJavaLocalInspectionTool {
+	/**
+	 * This method determines if the element being passed in contains a the test smell that has been
+	 * implemented
+	 * @param element The element that is tested
+	 * @return true if the smell has been found, false if not. Used in the "Run Analysis" scan of the whole project
+	 */
 	public abstract boolean hasSmell(PsiElement element);
+
+	/**
+	 * Used by UI to determine what to label the smell as
+	 * @return  the Smell Enum defined in SmellTypes
+	 */
 	public abstract SmellType getSmellType();
 
 	public Class<? extends PsiElement> getVisitedType() { return PsiMethod.class; }
