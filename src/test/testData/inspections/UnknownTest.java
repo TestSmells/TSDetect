@@ -26,7 +26,6 @@ public class UnknownTest {
         int a = 2;
         int b = 2;
         assertEquals(a, b);
-        System.out.println("Hi");
     }
 
 }
