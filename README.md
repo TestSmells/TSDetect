@@ -46,7 +46,7 @@ This is where the description of the TestSmell detector should go.
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
 ## Contributing
-For contributing test smells to the project see the Test Smells page
+For contributing test smells to the project see the [Contributing Page](Documentation/Contributing.md)
 
 
 ## Setup
