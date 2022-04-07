@@ -26,10 +26,7 @@ import org.jfree.data.general.DefaultPieDataset;
 import org.scanl.plugins.tsdetect.SmellVisitor;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.config.PluginSettings;
-import org.scanl.plugins.tsdetect.model.InspectionClassModel;
-import org.scanl.plugins.tsdetect.model.IdentifierTableModel;
-import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
-import org.scanl.plugins.tsdetect.model.SmellType;
+import org.scanl.plugins.tsdetect.model.*;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -38,6 +35,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The Tabbed Pane Window
@@ -55,6 +53,7 @@ public class TabbedPaneWindow {
 	private JTree smellTree;
 	private JButton detectedSmellsButton;
 	private JPanel smellDistributionChart;
+	private JTree fileTree;
 
 
 	/**
@@ -209,6 +208,41 @@ public class TabbedPaneWindow {
 		}
 
 		model.reload(root);
+
+		DefaultTreeModel fileModel = (DefaultTreeModel) fileTree.getModel();
+		DefaultMutableTreeNode fileRoot = (DefaultMutableTreeNode) fileModel.getRoot();
+		fileRoot.removeAllChildren();
+
+		for (String path : getFilePaths()) {
+			DefaultMutableTreeNode pathNode = new DefaultMutableTreeNode(path);
+
+			for (SmellType smellType : SmellType.values()) {
+				DefaultMutableTreeNode smellTypeNode = new DefaultMutableTreeNode(
+						PluginResourceBundle.message(
+								PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + smellType.toString() + ".NAME.DISPLAY"
+						)
+				);
+
+				for (InspectionClassModel classModel : getClassesBySmell(smellType).stream().filter(clss -> getRelativeFilePath(clss).equals(path)).collect(Collectors.toList())) {
+					DefaultMutableTreeNode classNode = new DefaultMutableTreeNode(classModel.getName());
+
+					for (InspectionMethodModel method : getMethodBySmell(smellType).stream().filter(method -> getRelativeFilePath(method).equals(path)).collect(Collectors.toList())) {
+						DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode(method.getName());
+						classNode.add(methodNode);
+					}
+
+					smellTypeNode.add(classNode);
+				}
+
+				if (smellTypeNode.getChildCount() > 0) {
+					pathNode.add(smellTypeNode);
+				}
+			}
+
+			fileRoot.add(pathNode);
+		}
+
+		fileModel.reload(fileRoot);
 	}
 
 	/**
@@ -266,6 +300,25 @@ public class TabbedPaneWindow {
 	}
 
 	/**
+	 * Gets all file paths of a smelly class
+	 *
+	 * @return a set of path strings of smelly classes
+	 */
+	protected Set<String> getFilePaths() {
+		Set<String> paths = new HashSet<>();
+		for (InspectionClassModel smellyClass: allClasses) {
+			paths.add(getRelativeFilePath(smellyClass));
+		}
+		return paths;
+	}
+
+	protected String getRelativeFilePath(Identifier identifier) {
+		String dir = identifier.getPsiObject().getContainingFile().getContainingDirectory().getName();
+		String fullPath = identifier.getPsiObject().getContainingFile().getOriginalFile().getVirtualFile().getPath();
+		return fullPath.substring(fullPath.indexOf(dir));
+	}
+
+	/**
 	 * Simple getter for the content within the panel
 	 *
 	 * @return returns the panel object
@@ -277,5 +330,8 @@ public class TabbedPaneWindow {
 	private void createUIComponents() {
 		DefaultMutableTreeNode smellNode = new DefaultMutableTreeNode("SmellTypes");
 		smellTree = new Tree(smellNode);
+
+		DefaultMutableTreeNode fileNode = new DefaultMutableTreeNode("Files");
+		fileTree = new Tree(fileNode);
 	}
 }
