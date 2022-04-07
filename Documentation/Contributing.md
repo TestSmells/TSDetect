@@ -1,7 +1,7 @@
 # Adding a Test Smell Inspection
 Adding a test smell is a straightforward process
 
-###1. Create a class that extend [SmellInspection](https://github.com/TestSmells/TSDetect/blob/4f32c1622974f10b615be1307c80ad5c2f686ba2/src/main/java/org/scanl/plugins/tsdetect/inspections/SmellInspection.java)
+### 1. Create a class that extend [SmellInspection](https://github.com/TestSmells/TSDetect/blob/4f32c1622974f10b615be1307c80ad5c2f686ba2/src/main/java/org/scanl/plugins/tsdetect/inspections/SmellInspection.java)
 - Override and implement the following methods. 
   - [buildVisitor()](https://github.com/JetBrains/intellij-community/blob/a320e7b7921045dbab1efca44e1eb1a8fda03554/java/java-analysis-api/src/com/intellij/codeInspection/AbstractBaseJavaLocalInspectionTool.java#L48)
   - This is where registering a problem with [QuickFixes](https://github.com/TestSmells/TSDetect/blob/4f32c1622974f10b615be1307c80ad5c2f686ba2/src/main/java/org/scanl/plugins/tsdetect/quickfixes) should occur.
