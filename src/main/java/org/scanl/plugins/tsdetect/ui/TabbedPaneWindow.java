@@ -17,7 +17,6 @@ import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.AnimatedIcon;
 import com.intellij.ui.treeStructure.Tree;
-import com.intellij.uiDesigner.core.GridConstraints;
 import org.jetbrains.annotations.NotNull;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -31,8 +30,6 @@ import org.scanl.plugins.tsdetect.model.*;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -146,7 +143,7 @@ public class TabbedPaneWindow {
 		// button
 		smellyFilesButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME"));
 		smellyFilesButton.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.TOOLTIP"));
-		smellyFilesButton.addActionListener(e -> new Thread(() ->
+		smellyFilesButton.addActionListener(e -> {
 			smellyFilesButton.setEnabled(false);
 			var spinner = new JLabel(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "PANEL.LOADING.TEXT"), new AnimatedIcon.Default(), SwingConstants.CENTER);
 			inspectionPanel.add(spinner, SwingConstants.CENTER);
@@ -162,6 +159,7 @@ public class TabbedPaneWindow {
 							smellyFilesButton.setEnabled(true);
 						});
 					})).start();
+		});
 	}
 
 	protected void setAllDisplays(Project project) {
