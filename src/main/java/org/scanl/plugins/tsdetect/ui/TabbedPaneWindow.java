@@ -15,7 +15,9 @@ import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.ui.AnimatedIcon;
 import com.intellij.ui.treeStructure.Tree;
+import com.intellij.uiDesigner.core.GridConstraints;
 import org.jetbrains.annotations.NotNull;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -79,25 +81,22 @@ public class TabbedPaneWindow {
 		});
 
 		//set up button name and actions
-		smellDistributionButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
+		smellDistributionButton.addActionListener(e -> {
+			smellDistributionButton.setEnabled(false);
+			var spinner = new JLabel(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "PANEL.LOADING.TEXT"), new AnimatedIcon.Default(), SwingConstants.CENTER);
+			inspectionPanel.add(spinner, SwingConstants.CENTER);
+			smellDistribution.setVisible(false);
 
-				new Thread(() ->
-						ApplicationManager.getApplication().runReadAction(new Runnable() {
-							@Override
-							public void run() {
-								setAllDisplays(project); // this a performance intensive method; do not do any UI updates on this thread
+			new Thread(() ->
+					ApplicationManager.getApplication().runReadAction(() -> {
+						setAllDisplays(project); // this a performance intensive method; do not do any UI updates on this thread
 
-								SwingUtilities.invokeLater(new Runnable() {
-									@Override
-									public void run() {
-
-									}
-								});
-							}
-						})).start();
-			}
+						SwingUtilities.invokeLater(() -> {
+							inspectionPanel.remove(spinner);
+							smellDistribution.setVisible(true);
+							smellDistributionButton.setEnabled(true);
+						});
+					})).start();
 		});
 		smellDistributionButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME"));
 		smellDistributionButton.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.TOOLTIP"));
@@ -107,25 +106,22 @@ public class TabbedPaneWindow {
 		//sets tooltip for table
 		smellTable.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.TABLE.DESCRIPTION"));
 
-		detectedSmellsButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
+		detectedSmellsButton.addActionListener(e -> {
+			detectedSmellsButton.setEnabled(false);
+			var spinner = new JLabel(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "PANEL.LOADING.TEXT"), new AnimatedIcon.Default(), SwingConstants.CENTER);
+			inspectionPanel.add(spinner, SwingConstants.CENTER);
+			detectedSmells.setVisible(false);
 
-				new Thread(() ->
-						ApplicationManager.getApplication().runReadAction(new Runnable() {
-							@Override
-							public void run() {
-								setAllDisplays(project); // this a performance intensive method; do not do any UI updates on this thread
+			new Thread(() ->
+					ApplicationManager.getApplication().runReadAction(() -> {
+						setAllDisplays(project); // this a performance intensive method; do not do any UI updates on this thread
 
-								SwingUtilities.invokeLater(new Runnable() {
-									@Override
-									public void run() {
-
-									}
-								});
-							}
-						})).start();
-			}
+						SwingUtilities.invokeLater(() -> {
+							inspectionPanel.remove(spinner);
+							detectedSmells.setVisible(true);
+							detectedSmellsButton.setEnabled(true);
+						});
+					})).start();
 		});
 		detectedSmellsButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME"));
 		detectedSmellsButton.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.TOOLTIP"));
