@@ -35,7 +35,8 @@ public class TestSmellInspectionProvider implements InspectionToolProvider {
 				ResourceOptimismInspection.class,
 				SensitiveEqualityInspection.class,
 				SleepyTestInspection.class,
-				UnknownTestInspection.class
+				UnknownTestInspection.class,
+				VerboseTestInspection.class
 		};
 	}
 }

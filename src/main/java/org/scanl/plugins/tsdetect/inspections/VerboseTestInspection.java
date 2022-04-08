@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class UnknownTestInspection extends SmellInspection{
+public class VerboseTestInspection extends SmellInspection{
+    final int MAX_STATEMENT_THRESHOLD = 13; //This is the max number of statements a test method can have before it
+    //marks it as a smelly test.
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly){
@@ -28,34 +30,17 @@ public class UnknownTestInspection extends SmellInspection{
         };
     }
 
-
-    /**
-     *
-     * @param element PsiElement
-     * @return false if test contains assert
-     */
     @Override
     public boolean hasSmell(PsiElement element) {
         if(!(element instanceof PsiMethod)) return false;
         if (!shouldTestElement(element)) return false;
-
         PsiMethod method = (PsiMethod) element;
-        List<PsiMethodCallExpression> methods = getMethodExpressions(method);
-        for (PsiMethodCallExpression statement : methods) {
-            String name = statement.getMethodExpression().getQualifiedName().toLowerCase();
-            if(name.contains("assert")){
-                return false;
-            }
-        }
-        return true;
-
-
-
+        return Objects.requireNonNull(method.getBody()).getStatementCount() > MAX_STATEMENT_THRESHOLD;
     }
 
     @Override
     public SmellType getSmellType() {
-        return SmellType.UNKNOWN_TEST;
+        return SmellType.VERBOSE_TEST;
     }
 
     @Override
