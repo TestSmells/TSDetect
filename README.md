@@ -26,7 +26,7 @@
 <!-- Plugin description -->
 
 [//]: # (This Fancy IntelliJ Platform Plugin is going to be your implementation of the brilliant ideas that you have.)
-This is where the description of the TestSmell detector should go.
+TSDetect is your all in one tool for deteing code smells within your tests. Based on the research by [https://testsmells.org/](https://testsmells.org/), This plugin analyzes unit tests in order to find potential design flaws.
 
 [//]: # (This specific section is a source for the [plugin.xml]&#40;/src/main/resources/META-INF/plugin.xml&#41; file which will be extracted by the [Gradle]&#40;/build.gradle.kts&#41; during the build process.)
 
@@ -52,24 +52,23 @@ For contributing test smells to the project see the [Contributing Page](Document
 ## Setup
 
 ### Clone repository
-We recommend [cloning through IntelliJ](https://blog.jetbrains.com/idea/2020/10/clone-a-project-from-github/). This will ensure all dependencies are set up correctly. Be sure to give gradle time to finish setting up. 
+We recommend [cloning through IntelliJ](https://blog.jetbrains.com/idea/2020/10/clone-a-project-from-github/). This will ensure all dependencies are set up correctly. Be sure to give gradle time to finish setting up.  
 
 ### Set JDK Version 
 Ensure that project **JDK** and **Language Level** are set to 13
-
-![Select Project Structure](Documentation/selectProjectStructure.png)
-
 This can be found as shown below
 <kbd>File</kbd> > <kbd>Project Structure</kbd> > <kbd>Project</kbd>
-
-![Open Project Structre](Documentation/openPorjectStructure.png)
+    
+| Open Project Structure                                           | Select JDK13 and Language Level 13                                    |
+|------------------------------------------------------------------|-----------------------------------------------------------------------|
+| ![Open Project Structre](Documentation/openPorjectStructure.png) | ![Select Project Structure](Documentation/selectProjectStructure.png) |
 
 ### Running Plugin
 Select the Run Plugin option from the drop down. 
 ![Pasted image 20220407164839.png](Documentation/runPlugin.png)
  
 ### Running Unit Tests
-- There is a known issue where gradle will not update the version of java used to run unit tests,
+- There is a known issue where gradle will not always update the version of java used to run unit tests,
 can be fixed manually in 
 - This can be remedied by manually going into following setting sand updating to use java 13
   
