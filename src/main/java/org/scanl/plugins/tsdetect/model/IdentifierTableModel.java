@@ -53,7 +53,7 @@ public class IdentifierTableModel extends AbstractTableModel {
 			data[i][1] = classes.get(sm).size();
 			int infectedMethods = smellTypeListHashMap.get(sm).size();
 			if(infectedMethods==0)
-				data[i][2] = null;
+				data[i][2] = "N/A";
 			else
 				data[i][2] = infectedMethods;
 		}
