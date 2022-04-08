@@ -17,7 +17,6 @@ import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.AnimatedIcon;
 import com.intellij.ui.treeStructure.Tree;
-import com.intellij.uiDesigner.core.GridConstraints;
 import org.jetbrains.annotations.NotNull;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -26,18 +25,14 @@ import org.jfree.data.general.DefaultPieDataset;
 import org.scanl.plugins.tsdetect.SmellVisitor;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.config.PluginSettings;
-import org.scanl.plugins.tsdetect.model.InspectionClassModel;
-import org.scanl.plugins.tsdetect.model.IdentifierTableModel;
-import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
-import org.scanl.plugins.tsdetect.model.SmellType;
+import org.scanl.plugins.tsdetect.model.*;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The Tabbed Pane Window
@@ -47,14 +42,20 @@ public class TabbedPaneWindow {
 	private final List<InspectionClassModel> allClasses = new ArrayList<>();
 	private JPanel inspectionPanel; //the main popout panel
 	private JTabbedPane detailsPanels; //the way to nicely get the tabbed pain to switch between
+
 	//Smell Distrubtion UI Elements
 	private JPanel smellDistribution;
 	private JTable smellTable;
+	private JPanel smellDistributionChart;
 	private JButton smellDistributionButton;
+
 	private JPanel detectedSmells;
 	private JTree smellTree;
 	private JButton detectedSmellsButton;
-	private JPanel smellDistributionChart;
+
+	private JPanel smellyFiles;
+	private JTree fileTree;
+	private JButton smellyFilesButton;
 
 
 	/**
@@ -80,7 +81,16 @@ public class TabbedPaneWindow {
 			}
 		});
 
-		//set up button name and actions
+		// pane
+		smellDistribution.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.SMELLS.TAB.NAME"));
+		smellDistribution.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.SMELLS.TAB.TOOLTIP"));
+		// table
+		smellTable.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.SMELLS.TABLE.TOOLTIP"));
+		// chart
+		smellDistributionChart.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.SMELLS.CHART.TOOLTIP"));
+		// button
+		smellDistributionButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME"));
+		smellDistributionButton.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.TOOLTIP"));
 		smellDistributionButton.addActionListener(e -> {
 			smellDistributionButton.setEnabled(false);
 			var spinner = new JLabel(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "PANEL.LOADING.TEXT"), new AnimatedIcon.Default(), SwingConstants.CENTER);
@@ -98,14 +108,15 @@ public class TabbedPaneWindow {
 						});
 					})).start();
 		});
-		smellDistributionButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME"));
-		smellDistributionButton.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.TOOLTIP"));
-		//set the tab name and tooltip
-		detailsPanels.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.TABLE.TAB.NAME"));
-		detailsPanels.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.TABLE.TAB.TOOLTIP"));
-		//sets tooltip for table
-		smellTable.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.TABLE.DESCRIPTION"));
 
+		// pane
+		detectedSmells.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.DETECTED.TAB.NAME"));
+		detectedSmells.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.DETECTED.TAB.TOOLTIP"));
+		// tree
+		smellTree.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.DETECTED.TREE.TOOLTIP"));
+		// button
+		detectedSmellsButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME"));
+		detectedSmellsButton.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.TOOLTIP"));
 		detectedSmellsButton.addActionListener(e -> {
 			detectedSmellsButton.setEnabled(false);
 			var spinner = new JLabel(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "PANEL.LOADING.TEXT"), new AnimatedIcon.Default(), SwingConstants.CENTER);
@@ -123,20 +134,39 @@ public class TabbedPaneWindow {
 						});
 					})).start();
 		});
-		detectedSmellsButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME"));
-		detectedSmellsButton.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.TOOLTIP"));
-		//set the tab name and tooltip
-		detectedSmells.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.DETECTED.TREE.TAB.NAME"));
-		detectedSmells.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.DETECTED.TREE.TAB.TOOLTIP"));
-		//sets tooltip for table
-		smellTable.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.DETECTED.TREE.DESCRIPTION"));
 
+		// pane
+		smellyFiles.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.FILES.TAB.NAME"));
+		smellyFiles.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.FILES.TAB.TOOLTIP"));
+		// tree
+		fileTree.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.FILES.TAB.TREE.DESCRIPTION"));
+		// button
+		smellyFilesButton.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME"));
+		smellyFilesButton.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.TOOLTIP"));
+		smellyFilesButton.addActionListener(e -> {
+			smellyFilesButton.setEnabled(false);
+			var spinner = new JLabel(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "PANEL.LOADING.TEXT"), new AnimatedIcon.Default(), SwingConstants.CENTER);
+			inspectionPanel.add(spinner, SwingConstants.CENTER);
+			smellyFiles.setVisible(false);
+
+			new Thread(() ->
+					ApplicationManager.getApplication().runReadAction(() -> {
+						setAllDisplays(project); // this a performance intensive method; do not do any UI updates on this thread
+
+						SwingUtilities.invokeLater(() -> {
+							inspectionPanel.remove(spinner);
+							smellyFiles.setVisible(true);
+							smellyFilesButton.setEnabled(true);
+						});
+					})).start();
+		});
 	}
 
 	protected void setAllDisplays(Project project) {
 		visitSmellDetection(project);
 		setSmellDistributionTable();
 		setSmellTree();
+		setFileTree();
 	}
 
 	/**
@@ -211,6 +241,43 @@ public class TabbedPaneWindow {
 		model.reload(root);
 	}
 
+	protected void setFileTree() {
+		DefaultTreeModel model = (DefaultTreeModel) fileTree.getModel();
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+		root.removeAllChildren();
+
+		for (String path : getFilePaths()) {
+			DefaultMutableTreeNode pathNode = new DefaultMutableTreeNode(path);
+
+			for (SmellType smellType : SmellType.values()) {
+				DefaultMutableTreeNode smellTypeNode = new DefaultMutableTreeNode(
+						PluginResourceBundle.message(
+								PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + smellType.toString() + ".NAME.DISPLAY"
+						)
+				);
+
+				for (InspectionClassModel classModel : getClassesBySmell(smellType).stream().filter(clss -> getRelativeFilePath(clss).equals(path)).collect(Collectors.toList())) {
+					DefaultMutableTreeNode classNode = new DefaultMutableTreeNode(classModel.getName());
+
+					for (InspectionMethodModel method : getMethodBySmell(smellType).stream().filter(method -> getRelativeFilePath(method).equals(path)).collect(Collectors.toList())) {
+						DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode(method.getName());
+						classNode.add(methodNode);
+					}
+
+					smellTypeNode.add(classNode);
+				}
+
+				if (smellTypeNode.getChildCount() > 0) {
+					pathNode.add(smellTypeNode);
+				}
+			}
+
+			root.add(pathNode);
+		}
+
+		model.reload(root);
+	}
+
 	/**
 	 * Visits all of the smell detection stuff
 	 *
@@ -266,6 +333,31 @@ public class TabbedPaneWindow {
 	}
 
 	/**
+	 * Gets all (relative) file paths of a smelly class
+	 *
+	 * @return a set of path strings of smelly classes
+	 */
+	protected Set<String> getFilePaths() {
+		Set<String> paths = new HashSet<>();
+		for (InspectionClassModel smellyClass: allClasses) {
+			paths.add(getRelativeFilePath(smellyClass));
+		}
+		return paths;
+	}
+
+	/**
+	 * Helper method to get a relative file path
+	 *
+	 * @param identifier Some sort of psi...thing
+	 * @return relative file path of identifier
+	 */
+	protected String getRelativeFilePath(Identifier identifier) {
+		String dir = identifier.getPsiObject().getContainingFile().getContainingDirectory().getName();
+		String fullPath = identifier.getPsiObject().getContainingFile().getOriginalFile().getVirtualFile().getPath();
+		return fullPath.substring(fullPath.indexOf(dir));
+	}
+
+	/**
 	 * Simple getter for the content within the panel
 	 *
 	 * @return returns the panel object
@@ -277,5 +369,8 @@ public class TabbedPaneWindow {
 	private void createUIComponents() {
 		DefaultMutableTreeNode smellNode = new DefaultMutableTreeNode("SmellTypes");
 		smellTree = new Tree(smellNode);
+
+		DefaultMutableTreeNode fileNode = new DefaultMutableTreeNode("Files");
+		fileTree = new Tree(fileNode);
 	}
 }
