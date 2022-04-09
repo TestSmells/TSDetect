@@ -13,14 +13,17 @@ It may be helpful to look at the existing smells as example, such as
 [Empty Method Inspection](https://github.com/TestSmells/TSDetect/blob/4f32c1622974f10b615be1307c80ad5c2f686ba2/src/main/java/org/scanl/plugins/tsdetect/inspections/EmptyMethodInspection.java).
 
 ### 2. Add an enum for the [SmellType](https://github.com/TestSmells/TSDetect/blob/4f32c1622974f10b615be1307c80ad5c2f686ba2/src/main/java/org/scanl/plugins/tsdetect/model/SmellType.java)
-- This should follow the naming convention SMELL_NAME
-- This must be unique as it is used in the internationalization.
+- This should follow the capital camel case naming convention: SMELL_NAME
+  - In the case of single name smells, we have defaulted to appending _TEST to the end
+    
+  - Ex. VERBOSE_TEST rather than just VERBOSE
+- This must be unique as it is used in the [text.properties](https://github.com/TestSmells/TSDetect/blob/4f32c1622974f10b615be1307c80ad5c2f686ba2/src/main/resources/I18n/inspection/text_en.properties).
 
 ### 3. Add SmellNameInspection.class file to [TestSmellInspectionProvider](https://github.com/TestSmells/TSDetect/blob/4f32c1622974f10b615be1307c80ad5c2f686ba2/src/main/java/org/scanl/plugins/tsdetect/inspections/TestSmellInspectionProvider.java)
 - This should be the same name as the smell inspection that was created in step [1](https://github.com/TestSmells/TSDetect/blob/4f32c1622974f10b615be1307c80ad5c2f686ba2/src/main/java/org/scanl/plugins/tsdetect/inspections/Contributing.md#L4).
 
 ### 4. Add text data to text.properties files in [Properties files](https://github.com/TestSmells/TSDetect/blob/4f32c1622974f10b615be1307c80ad5c2f686ba2/src/main/resources/I18n/inspection/text_en.properties)
-- All lines must be prefixed with INSPECTIONS.SMELL.
+- All lines must be prefixed with INSPECTION.SMELL.
 - This is followed by the enum for the smell as defined in step [2](https://github.com/TestSmells/TSDetect/blob/4f32c1622974f10b615be1307c80ad5c2f686ba2/src/main/java/org/scanl/plugins/tsdetect/inspections/Contributing.md#L12)
 - Then the following must be defined
   - INSPECTION.SMELL.SMELL_NAME.DESCRIPTION=Description of the smell that is being defined
