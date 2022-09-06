@@ -33,7 +33,7 @@ TSDetect is your all in one tool for deteing code smells within your tests. Base
 [//]: # (To keep everything working, do not remove `<!-- ... -->` sections. )
 <!-- Plugin description end -->
 
-## Installation
+## Installation (Needs to be updated)
 
 - Using IDE built-in plugin system:
   
