@@ -10,4 +10,5 @@ public class Util {
         URL url = Util.class.getResource("/images/loading.gif");
         return new ImageIcon(url);
     }
+
 }
