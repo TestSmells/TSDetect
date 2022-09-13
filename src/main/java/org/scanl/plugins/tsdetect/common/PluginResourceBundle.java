@@ -33,13 +33,13 @@ public class PluginResourceBundle {
 		ResourceBundle bundle;
 
 		if (type == Type.INSPECTION) {
-			if (!bundles.containsKey(BUNDLE_INSPECTION)) {
+			if (!bundles.containsKey(BUNDLE_INSPECTION) || Objects.requireNonNull(bundles.get(BUNDLE_INSPECTION)).get()==null) {
 				bundle = ResourceBundle.getBundle(BUNDLE_INSPECTION);
 				bundles.put(BUNDLE_INSPECTION, new SoftReference<>(bundle));
 			}
 			return Objects.requireNonNull(Objects.requireNonNull(bundles.get(BUNDLE_INSPECTION)).get());
 		} else {
-			if (!bundles.containsKey(BUNDLE_UI)) {
+			if (!bundles.containsKey(BUNDLE_UI) || Objects.requireNonNull(bundles.get(BUNDLE_UI)).get()==null) {
 				bundle = ResourceBundle.getBundle(BUNDLE_UI);
 				bundles.put(BUNDLE_UI, new SoftReference<>(bundle));
 			}
