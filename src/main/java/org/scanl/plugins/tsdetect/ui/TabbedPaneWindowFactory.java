@@ -13,7 +13,8 @@ import org.jetbrains.annotations.NotNull;
 public class TabbedPaneWindowFactory implements ToolWindowFactory {
 	@Override
 	public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-		TabbedPaneWindow myToolWindow = new TabbedPaneWindow();
+		SmellTabbedPaneWindow myToolWindow = new SmellTabbedPaneWindow();
+		//TabbedPaneWindow myToolWindow = new TabbedPaneWindow();
 		ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
 		Content content = contentFactory.createContent(myToolWindow.getContent(), "", false);
 		toolWindow.getContentManager().addContent(content);

@@ -9,7 +9,7 @@
 
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="SCANL Tabbed Plugin" secondary="true" icon="AllIcons.General.Modified" anchor="right"
+        <toolWindow id="tsDetect" secondary="true" icon="AllIcons.General.Modified" anchor="right"
                     factoryClass="org.scanl.plugins.tsdetect.ui.TabbedPaneWindowFactory"/>
         <inspectionToolProvider implementation="org.scanl.plugins.tsdetect.inspections.TestSmellInspectionProvider"/>
         <applicationService serviceImplementation="org.scanl.plugins.tsdetect.config.application.AppSettingsState"/>
