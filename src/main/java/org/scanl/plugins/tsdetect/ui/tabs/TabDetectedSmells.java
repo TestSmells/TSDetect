@@ -8,6 +8,9 @@ import org.scanl.plugins.tsdetect.model.SmellType;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +20,22 @@ public class TabDetectedSmells implements TabContent  {
     private JTree treeSmells;
     private List<InspectionMethodModel> allMethods;
     private List<InspectionClassModel> allClasses;
+
+    public TabDetectedSmells(){
+        treeSmells.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent me) {
+                doMouseClicked(me);
+            }
+        });
+    }
+
+    void doMouseClicked(MouseEvent me) {
+        TreePath tp = treeSmells.getPathForLocation(me.getX(), me.getY());
+        if (tp != null)
+            System.out.println(tp.toString());
+        else
+            System.out.println("--");
+    }
 
     @Override
     public JPanel GetContent() {
@@ -50,6 +69,7 @@ public class TabDetectedSmells implements TabContent  {
         }
 
         model.reload(root);
+        treeSmells.setRootVisible(false);
     }
 
     /**

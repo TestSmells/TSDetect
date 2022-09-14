@@ -66,6 +66,7 @@ public class TabSmellyFiles implements TabContent  {
         }
 
         model.reload(root);
+        treeSmells.setRootVisible(false);
     }
 
 
