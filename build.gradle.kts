@@ -29,6 +29,8 @@ dependencies {
     testImplementation("org.mockito:mockito-inline:3.12.4")
     implementation ("org.apache.logging.log4j:log4j-api:2.17.2")
     implementation ("org.apache.logging.log4j:log4j-core:2.17.2")
+    implementation ("org.swinglabs.swingx:swingx-all:1.6.5-1")
+    implementation ("org.bidib.org.oxbow:swingbits:1.2.2")
 
 }
 

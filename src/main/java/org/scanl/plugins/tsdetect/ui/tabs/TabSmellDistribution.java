@@ -7,8 +7,10 @@ import org.jfree.data.general.DefaultPieDataset;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.*;
+import org.scanl.plugins.tsdetect.ui.controls.CustomTable;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,10 +19,16 @@ import java.util.Map;
 public class TabSmellDistribution implements TabContent  {
     private JPanel panelMain;
     private JScrollPane panelTable;
-    private JTable tableSmell;
+    private CustomTable tableSmell;
     private JPanel panelChart;
     private List<InspectionMethodModel> allMethods;
     private List<InspectionClassModel> allClasses;
+
+    public TabSmellDistribution(){
+        tableSmell = new CustomTable();
+        tableSmell.setVisible(true);
+        panelTable.getViewport().add(tableSmell);
+    }
 
     @Override
     public JPanel GetContent() {
@@ -32,23 +40,53 @@ public class TabSmellDistribution implements TabContent  {
         this.allClasses = allClasses;
         this.allMethods = allMethods;
 
-        IdentifierTableModel data = new IdentifierTableModel();
+        DefaultTableModel tableModel = new DefaultTableModel() {
+            final Class<?>[] types = new Class[]{
+                    java.lang.String.class,  java.lang.Long.class,  java.lang.Long.class};
 
-        HashMap<SmellType, List<InspectionMethodModel>> smellyMethods = new HashMap<>(); //hash to store smelly methods by smell
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                return types[columnIndex];
+            }
+        };
+        tableModel.setColumnCount(3);
+        tableModel.setColumnIdentifiers(new Object[]{
+                PluginResourceBundle.message(PluginResourceBundle.Type.UI, "TABLE.HEADER.SMELL.NAME"),
+                PluginResourceBundle.message(PluginResourceBundle.Type.UI, "TABLE.HEADER.INFECTED.CLASS"),
+                PluginResourceBundle.message(PluginResourceBundle.Type.UI, "TABLE.HEADER.INFECTED.METHOD")
+        });
+
         HashMap<SmellType, List<InspectionClassModel>> smellyClasses = new HashMap<>(); //hash to store smelly classes by smell
 
+
+        Object[] row;
+        String smellDisplayName;
+        List<InspectionMethodModel> smellTypeMethods;
+        List<InspectionClassModel> smellTypeClasses;
         for(SmellType smellType: SmellType.values())
         {
             if (PluginSettings.GetSetting(smellType.toString())) {
-                smellyMethods.put(smellType, getMethodBySmell(smellType));
-                smellyClasses.put(smellType, getClassesBySmell(smellType));
+                smellTypeMethods =  getMethodBySmell(smellType);
+                smellTypeClasses =  getClassesBySmell(smellType);
+                smellyClasses.put(smellType, smellTypeClasses);
+                smellDisplayName = PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + smellType + ".NAME.DISPLAY");
+
+                row = new Object[]{smellDisplayName, smellTypeClasses.size(), smellTypeMethods.size()};
+                tableModel.addRow(row);
             }
         }
 
-        data.constructSmellTable(smellyMethods, smellyClasses); //constructs the smell table
+        tableSmell.setModel(tableModel); //sets the model to be the table and visible
+        tableSmell.setModel(tableModel);
+        tableSmell.EnableColumnSort(0, SortOrder.ASCENDING);
+        tableSmell.AutoResizeColumnHeaders(0,1,2);
+        tableSmell.SetMouseCursorForTableHeader();
 
-        tableSmell.setModel(data); //sets the model to be the table and visible
-        tableSmell.setVisible(true);
 
         DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
         for(Map.Entry<SmellType, List<InspectionClassModel>> entry : smellyClasses.entrySet()) {
