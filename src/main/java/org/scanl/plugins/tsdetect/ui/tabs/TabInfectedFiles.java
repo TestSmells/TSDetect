@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class TabSmellyFiles implements TabContent  {
+public class TabInfectedFiles implements TabContent  {
     private JPanel panelMain;
     private JScrollPane panelTable;
     private JTree treeSmells;

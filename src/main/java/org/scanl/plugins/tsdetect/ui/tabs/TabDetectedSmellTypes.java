@@ -14,14 +14,14 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TabDetectedSmells implements TabContent  {
+public class TabDetectedSmellTypes implements TabContent  {
     private JPanel panelMain;
     private JScrollPane panelTable;
     private JTree treeSmells;
     private List<InspectionMethodModel> allMethods;
     private List<InspectionClassModel> allClasses;
 
-    public TabDetectedSmells(){
+    public TabDetectedSmellTypes(){
         treeSmells.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 doMouseClicked(me);

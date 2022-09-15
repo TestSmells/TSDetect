@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TabSmells  implements TabContent  {
+public class TabSmellDistribution implements TabContent  {
     private JPanel panelMain;
     private JScrollPane panelTable;
     private JTable tableSmell;

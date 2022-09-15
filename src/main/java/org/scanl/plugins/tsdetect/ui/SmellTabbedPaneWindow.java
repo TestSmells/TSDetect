@@ -16,9 +16,9 @@ import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.common.Util;
 import org.scanl.plugins.tsdetect.model.InspectionClassModel;
 import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
-import org.scanl.plugins.tsdetect.ui.tabs.TabDetectedSmells;
-import org.scanl.plugins.tsdetect.ui.tabs.TabSmells;
-import org.scanl.plugins.tsdetect.ui.tabs.TabSmellyFiles;
+import org.scanl.plugins.tsdetect.ui.tabs.TabDetectedSmellTypes;
+import org.scanl.plugins.tsdetect.ui.tabs.TabSmellDistribution;
+import org.scanl.plugins.tsdetect.ui.tabs.TabInfectedFiles;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -38,26 +38,37 @@ public class SmellTabbedPaneWindow {
     private JLabel labelLoading;
     private JTabbedPane tabbedPane;
 
-    private final JPanel panelSmells;
-    private final JPanel panelDetectedSmells;
-    private final JPanel panelSmellyFiles;
+    private final JPanel panelSmellDistribution;
+    private final JPanel panelDetectedSmellTypes;
+    private final JPanel panelInfectedFiles;
 
-    private TabDetectedSmells tabDetectedSmells;
-    private TabSmells tabSmells;
-    private TabSmellyFiles tabSmellyFiles;
+    private TabDetectedSmellTypes tabDetectedSmellTypes;
+    private TabSmellDistribution tabSmells;
+    private TabInfectedFiles tabInfectedFiles;
 
     public SmellTabbedPaneWindow() {
-        panelSmells = new JPanel();
-        panelSmells.setVisible(true);
-        tabbedPane.add("Smells", panelSmells);
+        buttonAnalyzeProject.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME"));
+        buttonAnalyzeProject.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.TOOLTIP"));
+        labelLoading.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "LABEL.LOADING.TEXT"));
 
-        panelDetectedSmells = new JPanel();
-        panelDetectedSmells.setVisible(true);
-        tabbedPane.add("Detected Smells", panelDetectedSmells);
+        panelSmellDistribution = new JPanel();
+        panelSmellDistribution.setVisible(true);
+        panelSmellDistribution.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.SMELLS.TAB.NAME"));
+        panelSmellDistribution.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.SMELLS.TAB.TOOLTIP"));
+        tabbedPane.add(panelSmellDistribution);
 
-        panelSmellyFiles = new JPanel();
-        panelSmellyFiles.setVisible(true);
-        tabbedPane.add("Smelly Files", panelSmellyFiles);
+        panelDetectedSmellTypes = new JPanel();
+        panelDetectedSmellTypes.setVisible(true);
+        panelDetectedSmellTypes.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.DETECTED.TAB.NAME"));
+        panelDetectedSmellTypes.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.DETECTED.TAB.TOOLTIP"));
+        tabbedPane.add(panelDetectedSmellTypes);
+
+        panelInfectedFiles = new JPanel();
+        panelInfectedFiles.setVisible(true);
+        panelInfectedFiles.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.FILES.TAB.NAME"));
+        panelInfectedFiles.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.FILES.TAB.TOOLTIP"));
+        tabbedPane.add(panelInfectedFiles);
+
 
         panelInspection.remove(tabbedPane);
         panelInspection.updateUI();
@@ -70,7 +81,7 @@ public class SmellTabbedPaneWindow {
             public void actionPerformed(ActionEvent e) {
                 labelLoading.setText("");
                 labelLoading.setVisible(true);
-                buttonAnalyzeProject.setText("Analyzing Project...Please Wait...");
+                buttonAnalyzeProject.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.LOADING.TEXT"));
                 buttonAnalyzeProject.setEnabled(false);
                 panelInspection.remove(tabbedPane);
                 panelInspection.updateUI();
@@ -84,36 +95,35 @@ public class SmellTabbedPaneWindow {
                                 SwingUtilities.invokeLater(new Runnable() {
                                     @Override
                                     public void run() {
-                                        buttonAnalyzeProject.setText("Analyze Project");
-                                        buttonAnalyzeProject.setVerticalAlignment(1);
+                                        buttonAnalyzeProject.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME"));
                                         buttonAnalyzeProject.setEnabled(true);
 
                                         GridConstraints gc = new GridConstraints();
                                         gc.setFill(FILL_BOTH);
 
-                                        tabDetectedSmells = new TabDetectedSmells();
-                                        tabDetectedSmells.LoadSmellyData(allClasses,allMethods);
-                                        JPanel content1  = tabDetectedSmells.GetContent();
+                                        tabDetectedSmellTypes = new TabDetectedSmellTypes();
+                                        tabDetectedSmellTypes.LoadSmellyData(allClasses,allMethods);
+                                        JPanel content1  = tabDetectedSmellTypes.GetContent();
                                         content1.setVisible(true);
-                                        panelDetectedSmells.setLayout(new java.awt.BorderLayout());
-                                        panelDetectedSmells.add(content1);
-                                        panelDetectedSmells.validate();
+                                        panelDetectedSmellTypes.setLayout(new java.awt.BorderLayout());
+                                        panelDetectedSmellTypes.add(content1);
+                                        panelDetectedSmellTypes.validate();
 
-                                        tabSmellyFiles = new TabSmellyFiles();
-                                        tabSmellyFiles.LoadSmellyData(allClasses,allMethods);
-                                        JPanel content2  = tabSmellyFiles.GetContent();
+                                        tabInfectedFiles = new TabInfectedFiles();
+                                        tabInfectedFiles.LoadSmellyData(allClasses,allMethods);
+                                        JPanel content2  = tabInfectedFiles.GetContent();
                                         content2.setVisible(true);
-                                        panelSmellyFiles.setLayout(new java.awt.BorderLayout());
-                                        panelSmellyFiles.add(content2);
-                                        panelSmellyFiles.validate();
+                                        panelInfectedFiles.setLayout(new java.awt.BorderLayout());
+                                        panelInfectedFiles.add(content2);
+                                        panelInfectedFiles.validate();
 
-                                        tabSmells = new TabSmells();
+                                        tabSmells = new TabSmellDistribution();
                                         tabSmells.LoadSmellyData(allClasses,allMethods);
                                         JPanel content3  = tabSmells.GetContent();
                                         content3.setVisible(true);
-                                        panelSmells.setLayout(new java.awt.BorderLayout());
-                                        panelSmells.add(content3);
-                                        panelSmells.validate();
+                                        panelSmellDistribution.setLayout(new java.awt.BorderLayout());
+                                        panelSmellDistribution.add(content3);
+                                        panelSmellDistribution.validate();
 
                                         panelInspection.add(tabbedPane, gc);
                                         labelLoading.setVisible(false);
@@ -133,9 +143,6 @@ public class SmellTabbedPaneWindow {
         System.out.println("Running...");
         Project project = ProjectManager.getInstance().getOpenProjects()[0];
         visitSmellDetection(project);
-//        setSmellDistributionTable();
-//        setSmellTree();
-//        setFileTree();
         System.out.println("Running Completed");
     }
 
