@@ -1,10 +1,13 @@
 package org.scanl.plugins.tsdetect.ui.tabs;
 
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
+import org.scanl.plugins.tsdetect.common.Util;
 import org.scanl.plugins.tsdetect.model.Identifier;
 import org.scanl.plugins.tsdetect.model.InspectionClassModel;
 import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
 import org.scanl.plugins.tsdetect.model.SmellType;
+import org.scanl.plugins.tsdetect.ui.controls.CustomTreeCellRenderer;
+import org.scanl.plugins.tsdetect.ui.controls.CustomTreeNode;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -37,20 +40,17 @@ public class TabInfectedFiles implements TabContent  {
         root.removeAllChildren();
 
         for (String path : getFilePaths()) {
-            DefaultMutableTreeNode pathNode = new DefaultMutableTreeNode(path);
+            CustomTreeNode pathNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.FILE), path);
 
             for (SmellType smellType : SmellType.values()) {
-                DefaultMutableTreeNode smellTypeNode = new DefaultMutableTreeNode(
-                        PluginResourceBundle.message(
-                                PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + smellType.toString() + ".NAME.DISPLAY"
-                        )
-                );
+                String smellName =  PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + smellType.toString() + ".NAME.DISPLAY");
+                CustomTreeNode smellTypeNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.SMELL), smellName);
 
                 for (InspectionClassModel classModel : getClassesBySmell(smellType).stream().filter(clss -> getRelativeFilePath(clss).equals(path)).collect(Collectors.toList())) {
-                    DefaultMutableTreeNode classNode = new DefaultMutableTreeNode(classModel.getName());
+                    CustomTreeNode classNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.CLASS), classModel.getName());
 
                     for (InspectionMethodModel method : getMethodBySmell(smellType).stream().filter(method -> getRelativeFilePath(method).equals(path)).collect(Collectors.toList())) {
-                        DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode(method.getName());
+                        CustomTreeNode methodNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.METHOD), method.getName());
                         classNode.add(methodNode);
                     }
 
@@ -66,6 +66,7 @@ public class TabInfectedFiles implements TabContent  {
         }
 
         model.reload(root);
+        treeSmells.setCellRenderer(new CustomTreeCellRenderer());
         treeSmells.setRootVisible(false);
     }
 
