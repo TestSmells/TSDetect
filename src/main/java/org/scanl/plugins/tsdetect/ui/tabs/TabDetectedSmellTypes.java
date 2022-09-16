@@ -1,9 +1,12 @@
 package org.scanl.plugins.tsdetect.ui.tabs;
 
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
+import org.scanl.plugins.tsdetect.common.Util;
 import org.scanl.plugins.tsdetect.model.InspectionClassModel;
 import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
 import org.scanl.plugins.tsdetect.model.SmellType;
+import org.scanl.plugins.tsdetect.ui.controls.CustomTreeCellRenderer;
+import org.scanl.plugins.tsdetect.ui.controls.CustomTreeNode;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -52,14 +55,13 @@ public class TabDetectedSmellTypes implements TabContent  {
         root.removeAllChildren();
 
         for (SmellType smellType : SmellType.values()) {
-            DefaultMutableTreeNode smellTypeNode = new DefaultMutableTreeNode(
-                    PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION,
-                            "INSPECTION.SMELL." + smellType.toString() + ".NAME.DISPLAY"));
+            String smellName =  PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + smellType.toString() + ".NAME.DISPLAY");
+            CustomTreeNode smellTypeNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.SMELL), smellName);
             for (InspectionClassModel smellyClass : getClassesBySmell(smellType)) {
-                DefaultMutableTreeNode classNode = new DefaultMutableTreeNode(smellyClass.getName());
+                CustomTreeNode classNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.CLASS), smellyClass.getName());
                 for (InspectionMethodModel method : getMethodBySmell(smellType)) {
                     if (method.getClassName().getName().equals(smellyClass.getName())) {
-                        DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode(method.getName());
+                        CustomTreeNode methodNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.METHOD), method.getName());
                         classNode.add(methodNode);
                     }
                 }
@@ -69,6 +71,7 @@ public class TabDetectedSmellTypes implements TabContent  {
         }
 
         model.reload(root);
+        treeSmells.setCellRenderer(new CustomTreeCellRenderer());
         treeSmells.setRootVisible(false);
     }
 
