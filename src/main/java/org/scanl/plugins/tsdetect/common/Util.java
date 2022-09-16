@@ -15,6 +15,7 @@ public class Util {
     public static ImageIcon GetTreeNodeIcon(TreeNodeIcon icon){
         URL url;
         switch (icon){
+            case FILE: url = Util.class.getResource("/images/tree_node/file.png"); break;
             case CLASS: url = Util.class.getResource("/images/tree_node/folder.png"); break;
             case METHOD: url = Util.class.getResource("/images/tree_node/code.png"); break;
             default: url = Util.class.getResource("/images/tree_node/bug.png");
@@ -27,6 +28,7 @@ public class Util {
     }
 
     public enum TreeNodeIcon{
+        FILE,
         CLASS,
         METHOD,
         SMELL
