@@ -44,7 +44,6 @@ public class SmellTabbedPaneWindowTest extends InspectionTest {
             allClasses.addAll(smellyClasses);
         }
         myFixture.addClass(psiFile.getText());
-        testPane.visitSmellDetection(tempProj);
     }
 
     public void testCreation(){
