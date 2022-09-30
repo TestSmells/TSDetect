@@ -14,8 +14,10 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import org.scanl.plugins.tsdetect.SmellVisitor;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.common.Util;
+import org.scanl.plugins.tsdetect.model.ExecutionResult;
 import org.scanl.plugins.tsdetect.model.InspectionClassModel;
 import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
+import org.scanl.plugins.tsdetect.service.Analyzer;
 import org.scanl.plugins.tsdetect.ui.tabs.TabDetectedSmellTypes;
 import org.scanl.plugins.tsdetect.ui.tabs.TabSmellDistribution;
 import org.scanl.plugins.tsdetect.ui.tabs.TabInfectedFiles;
@@ -23,6 +25,7 @@ import org.scanl.plugins.tsdetect.ui.tabs.TabInfectedFiles;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -30,13 +33,15 @@ import java.util.List;
 import static com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH;
 
 public class SmellTabbedPaneWindow {
-    private final List<InspectionMethodModel> allMethods = new ArrayList<>();
-    private final List<InspectionClassModel> allClasses = new ArrayList<>();
+//    private final List<InspectionMethodModel> allMethods = new ArrayList<>();
+//    private final List<InspectionClassModel> allClasses = new ArrayList<>();
+    private ExecutionResult executionResult;
 
     private JPanel panelInspection;
     private JButton buttonAnalyzeProject;
     private JLabel labelLoading;
     private JTabbedPane tabbedPane;
+    private JLabel labelExecution;
 
     private final JPanel panelSmellDistribution;
     private final JPanel panelDetectedSmellTypes;
@@ -75,10 +80,13 @@ public class SmellTabbedPaneWindow {
 
         labelLoading.setIcon(Util.GetLoadingIcon());
         labelLoading.setVisible(false);
+        labelExecution.setVisible(false);
 
         buttonAnalyzeProject.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                labelExecution.setText("");
+                labelExecution.setVisible(false);
                 labelLoading.setText("");
                 labelLoading.setVisible(true);
                 buttonAnalyzeProject.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.LOADING.TEXT"));
@@ -102,7 +110,7 @@ public class SmellTabbedPaneWindow {
                                         gc.setFill(FILL_BOTH);
 
                                         tabDetectedSmellTypes = new TabDetectedSmellTypes();
-                                        tabDetectedSmellTypes.LoadSmellyData(allClasses,allMethods);
+                                        tabDetectedSmellTypes.LoadSmellyData(executionResult.getAllClasses(),executionResult.getAllMethods());
                                         JPanel content1  = tabDetectedSmellTypes.GetContent();
                                         content1.setVisible(true);
                                         panelDetectedSmellTypes.setLayout(new java.awt.BorderLayout());
@@ -110,7 +118,7 @@ public class SmellTabbedPaneWindow {
                                         panelDetectedSmellTypes.validate();
 
                                         tabInfectedFiles = new TabInfectedFiles();
-                                        tabInfectedFiles.LoadSmellyData(allClasses,allMethods);
+                                        tabInfectedFiles.LoadSmellyData(executionResult.getAllClasses(),executionResult.getAllMethods());
                                         JPanel content2  = tabInfectedFiles.GetContent();
                                         content2.setVisible(true);
                                         panelInfectedFiles.setLayout(new java.awt.BorderLayout());
@@ -118,7 +126,7 @@ public class SmellTabbedPaneWindow {
                                         panelInfectedFiles.validate();
 
                                         tabSmells = new TabSmellDistribution();
-                                        tabSmells.LoadSmellyData(allClasses,allMethods);
+                                        tabSmells.LoadSmellyData(executionResult.getAllClasses(),executionResult.getAllMethods());
                                         JPanel content3  = tabSmells.GetContent();
                                         content3.setVisible(true);
                                         panelSmellDistribution.setLayout(new java.awt.BorderLayout());
@@ -127,6 +135,10 @@ public class SmellTabbedPaneWindow {
 
                                         panelInspection.add(tabbedPane, gc);
                                         labelLoading.setVisible(false);
+                                        String pattern = PluginResourceBundle.message(PluginResourceBundle.Type.UI, ("LABEL.EXECUTION.TEXT"));
+                                        String message = MessageFormat.format(pattern, executionResult.getExecutionTimestampString() ,executionResult.getExecutionDurationInSeconds());
+                                        labelExecution.setText(message);
+                                        labelExecution.setVisible(true);
                                         panelInspection.updateUI();
                                         panelInspection.updateUI();
                                     }
@@ -142,38 +154,13 @@ public class SmellTabbedPaneWindow {
     private void RunAnalysis() {
         System.out.println("Running...");
         Project project = ProjectManager.getInstance().getOpenProjects()[0];
-        visitSmellDetection(project);
+        executionResult = Analyzer.getInstance().DetectTestSmells(project);
         System.out.println("Running Completed");
     }
 
     public JPanel getContent() {
         return panelInspection;
     }
-
-    /**
-     * Visits all of the smell detection stuff
-     *
-     * @param project the project that is open
-     */
-    protected void visitSmellDetection(Project project) {
-        Collection<VirtualFile> vFiles = FileTypeIndex.getFiles(JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project)); //gets the files in the project
-
-        allMethods.clear();
-        allClasses.clear();
-        for (VirtualFile vf : vFiles) {
-            PsiFile psiFile = PsiManager.getInstance(project).findFile(vf); //converts into a PsiFile
-            if (psiFile instanceof PsiJavaFile) //determines if the PsiFile is a PsiJavaFile
-            {
-                SmellVisitor sv = new SmellVisitor(); //creates the smell visitor
-                psiFile.accept(sv); //visits the methods
-                allMethods.addAll(sv.getSmellyMethods());
-                allClasses.addAll(sv.getSmellyClasses());
-
-            }
-        }
-    }
-
-
 
 
 }
