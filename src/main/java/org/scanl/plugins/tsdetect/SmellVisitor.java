@@ -1,7 +1,6 @@
 package org.scanl.plugins.tsdetect;
 
 import com.intellij.codeInspection.LocalInspectionTool;
-import com.intellij.execution.junit.JUnitUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.apache.logging.log4j.LogManager;
@@ -60,6 +59,7 @@ public class SmellVisitor extends JavaRecursiveElementVisitor {
 		if(issues) {
 			InspectionClassModel inspectionClassModel = new InspectionClassModel(Objects.requireNonNull(cls).getQualifiedName(), cls, classSmellTypes);
 			getSmellyClasses().add(inspectionClassModel);
+			smellyClasses.add(inspectionClassModel.getName());
 		}
 	}
 
@@ -93,8 +93,13 @@ public class SmellVisitor extends JavaRecursiveElementVisitor {
 				smellyClasses.add(psiClass.getQualifiedName());
 			}
 			else{ // this is a quick (and ugly hack to) fix issue #119
-				getSmellyClasses().removeIf(obj -> obj.getName().equals(psiClass.getQualifiedName()));
-				getSmellyClasses().add(classModel);
+				for(SmellType smell: smellTypes){
+					getSmellyClasses().forEach(x -> {
+						if(x.getName().equals(psiClass.getQualifiedName()) && !x.getSmellTypeList().contains(smell)) {
+							x.addSmellType(smell);
+						}
+					});
+				}
 			}
 		}
 	}
