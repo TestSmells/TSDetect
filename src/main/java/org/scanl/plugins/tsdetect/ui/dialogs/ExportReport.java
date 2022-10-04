@@ -1,6 +1,7 @@
 package org.scanl.plugins.tsdetect.ui.dialogs;
 
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
+import org.scanl.plugins.tsdetect.model.ExecutionResult;
 import org.scanl.plugins.tsdetect.model.ReportItem;
 import org.scanl.plugins.tsdetect.model.ReportType;
 
@@ -14,9 +15,11 @@ public class ExportReport extends JDialog {
     private JButton buttonCancel;
     private JComboBox<ReportItem> comboBoxReportType;
     private JLabel labelReportType;
+    private ExecutionResult executionResult;
 
-    public ExportReport(Frame owner) {
-        super(owner);
+    public ExportReport(Frame owner, ExecutionResult executionResult) {
+//        super(owner);
+        this.executionResult = executionResult;
         setContentPane(contentPane);
         setModal(true);
         setUndecorated(false);
@@ -57,7 +60,8 @@ public class ExportReport extends JDialog {
     }
 
     private void onOK() {
-        // add your code here
+        ReportItem selectedReport = (ReportItem) comboBoxReportType.getSelectedItem();
+        executionResult.GenerateReport(selectedReport.getReportType());
         dispose();
     }
 

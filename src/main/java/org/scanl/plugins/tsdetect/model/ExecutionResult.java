@@ -48,4 +48,19 @@ public class ExecutionResult {
         return ChronoUnit.SECONDS.between(executionStartTimestamp, executionEndTimestamp);
     }
 
+    public void GenerateReport(ReportType reportType){
+        switch (reportType){
+            case CSV_RAW: ReportCSV(); break;
+            case PIE_SMELL_DISTRIBUTION:ReportPieChart();break;
+        }
+    }
+
+    private void ReportCSV(){
+        for (InspectionClassModel inspectionClass : allClasses) {
+            //inspectionClass.
+
+        }
+    }
+    private void ReportPieChart(){}
+
 }
