@@ -1,12 +1,22 @@
 package org.scanl.plugins.tsdetect.ui;
 
+import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.search.FileTypeIndex;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.uiDesigner.core.GridConstraints;
+import org.scanl.plugins.tsdetect.SmellVisitor;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.common.Util;
 import org.scanl.plugins.tsdetect.model.ExecutionResult;
+import org.scanl.plugins.tsdetect.model.InspectionClassModel;
+import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
 import org.scanl.plugins.tsdetect.service.Analyzer;
 import org.scanl.plugins.tsdetect.ui.dialogs.ExportReport;
 import org.scanl.plugins.tsdetect.ui.tabs.TabDetectedSmellTypes;
@@ -18,6 +28,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH;
 
@@ -76,6 +89,7 @@ public class SmellTabbedPaneWindow {
         tabDetectedSmellTypes = new TabDetectedSmellTypes();
         tabInfectedFiles = new TabInfectedFiles();
         tabSmells = new TabSmellDistribution();
+        buttonExport.setVisible(false);
 
         buttonAnalyzeProject.addActionListener(new ActionListener() {
             @Override
