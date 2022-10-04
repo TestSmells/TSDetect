@@ -1,5 +1,6 @@
 package org.scanl.plugins.tsdetect.ui.tabs;
 
+import com.intellij.util.PsiNavigateUtil;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.common.Util;
 import org.scanl.plugins.tsdetect.model.InspectionClassModel;
@@ -12,32 +13,48 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TabDetectedSmellTypes implements TabContent  {
+public class TabDetectedSmellTypes implements TabContent {
+    private final JTree treeSmells;
     private JPanel panelMain;
     private JScrollPane panelTable;
-    private JTree treeSmells;
     private List<InspectionMethodModel> allMethods;
     private List<InspectionClassModel> allClasses;
 
-    public TabDetectedSmellTypes(){
+    public TabDetectedSmellTypes() {
+        treeSmells = new JTree();
+        treeSmells.setVisible(true);
+        panelTable.getViewport().add(treeSmells);
+
         treeSmells.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
-                doMouseClicked(me);
+                TreePath treePath = treeSmells.getPathForLocation(me.getX(), me.getY());
+                if (treePath != null)
+                    if (treePath.getLastPathComponent() instanceof CustomTreeNode) {
+                        if (((CustomTreeNode) treePath.getLastPathComponent()).getPsiElement() != null) {
+                            PsiNavigateUtil.navigate(((CustomTreeNode) treePath.getLastPathComponent()).getPsiElement(), true);
+                        }
+                    }
             }
         });
-    }
 
-    void doMouseClicked(MouseEvent me) {
-        TreePath tp = treeSmells.getPathForLocation(me.getX(), me.getY());
-        if (tp != null)
-            System.out.println(tp.toString());
-        else
-            System.out.println("--");
+        treeSmells.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent me) {
+                TreePath treePath = treeSmells.getPathForLocation(me.getX(), me.getY());
+                if (treePath != null && treePath.getLastPathComponent() instanceof CustomTreeNode && ((CustomTreeNode) treePath.getLastPathComponent()).getPsiElement() != null) {
+                    treeSmells.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                } else {
+                    treeSmells.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                }
+            }
+        });
     }
 
     @Override
@@ -55,13 +72,13 @@ public class TabDetectedSmellTypes implements TabContent  {
         root.removeAllChildren();
 
         for (SmellType smellType : SmellType.values()) {
-            String smellName =  PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + smellType.toString() + ".NAME.DISPLAY");
+            String smellName = PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + smellType.toString() + ".NAME.DISPLAY");
             CustomTreeNode smellTypeNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.SMELL), smellName);
             for (InspectionClassModel smellyClass : getClassesBySmell(smellType)) {
-                CustomTreeNode classNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.CLASS), smellyClass.getName());
+                CustomTreeNode classNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.CLASS), smellyClass.getPsiObject(), smellyClass.getName());
                 for (InspectionMethodModel method : getMethodBySmell(smellType)) {
                     if (method.getClassName().getName().equals(smellyClass.getName())) {
-                        CustomTreeNode methodNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.METHOD), method.getName());
+                        CustomTreeNode methodNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.METHOD), method.getPsiObject(), method.getName());
                         classNode.add(methodNode);
                     }
                 }
@@ -70,9 +87,9 @@ public class TabDetectedSmellTypes implements TabContent  {
             root.add(smellTypeNode);
         }
 
-        model.reload(root);
         treeSmells.setCellRenderer(new CustomTreeCellRenderer());
         treeSmells.setRootVisible(false);
+        model.reload(root);
     }
 
     /**
@@ -94,7 +111,7 @@ public class TabDetectedSmellTypes implements TabContent  {
     /**
      * Gets class that contains a matching smell
      *
-     * @param smell The smell thats being searched for
+     * @param smell The smell that is being searched for
      * @return a list of classes with the specific smell
      */
     protected List<InspectionClassModel> getClassesBySmell(SmellType smell) {

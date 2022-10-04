@@ -14,12 +14,7 @@
         </constraints>
         <properties/>
         <border type="none"/>
-        <children>
-          <component id="150" class="javax.swing.JTree" binding="treeSmells">
-            <constraints/>
-            <properties/>
-          </component>
-        </children>
+        <children/>
       </scrollpane>
     </children>
   </grid>

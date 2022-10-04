@@ -1,5 +1,7 @@
 package org.scanl.plugins.tsdetect.ui.tabs;
 
+import com.intellij.psi.PsiFile;
+import com.intellij.util.PsiNavigateUtil;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.common.Util;
 import org.scanl.plugins.tsdetect.model.Identifier;
@@ -12,18 +14,51 @@ import org.scanl.plugins.tsdetect.ui.controls.CustomTreeNode;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import java.util.ArrayList;
-import java.util.HashSet;
+import javax.swing.tree.TreePath;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-public class TabInfectedFiles implements TabContent  {
+public class TabInfectedFiles implements TabContent {
+    private final JTree treeSmells;
     private JPanel panelMain;
     private JScrollPane panelTable;
-    private JTree treeSmells;
     private List<InspectionMethodModel> allMethods;
     private List<InspectionClassModel> allClasses;
+
+    public TabInfectedFiles() {
+        treeSmells = new JTree();
+        treeSmells.setVisible(true);
+        panelTable.getViewport().add(treeSmells);
+
+        treeSmells.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent me) {
+                TreePath treePath = treeSmells.getPathForLocation(me.getX(), me.getY());
+                if (treePath != null)
+                    if (treePath.getLastPathComponent() instanceof CustomTreeNode) {
+                        if (((CustomTreeNode) treePath.getLastPathComponent()).getPsiElement() != null) {
+                            PsiNavigateUtil.navigate(((CustomTreeNode) treePath.getLastPathComponent()).getPsiElement(), true);
+                        }
+                    }
+            }
+        });
+
+        treeSmells.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent me) {
+                TreePath treePath = treeSmells.getPathForLocation(me.getX(), me.getY());
+                if (treePath != null && treePath.getLastPathComponent() instanceof CustomTreeNode & ((CustomTreeNode) treePath.getLastPathComponent()).getPsiElement() != null) {
+                    treeSmells.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                } else {
+                    treeSmells.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                }
+            }
+        });
+    }
 
     @Override
     public JPanel GetContent() {
@@ -35,22 +70,24 @@ public class TabInfectedFiles implements TabContent  {
         this.allClasses = allClasses;
         this.allMethods = allMethods;
 
+
         DefaultTreeModel model = (DefaultTreeModel) treeSmells.getModel();
         DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
         root.removeAllChildren();
 
-        for (String path : getFilePaths()) {
-            CustomTreeNode pathNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.FILE), path);
+        for (Map.Entry<String, PsiFile> file : getFilePaths().entrySet()) {
+            String path = file.getKey();
+            CustomTreeNode pathNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.FILE), file.getValue(), path);
 
             for (SmellType smellType : SmellType.values()) {
-                String smellName =  PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + smellType.toString() + ".NAME.DISPLAY");
+                String smellName = PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + smellType.toString() + ".NAME.DISPLAY");
                 CustomTreeNode smellTypeNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.SMELL), smellName);
 
                 for (InspectionClassModel classModel : getClassesBySmell(smellType).stream().filter(clss -> getRelativeFilePath(clss).equals(path)).collect(Collectors.toList())) {
-                    CustomTreeNode classNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.CLASS), classModel.getName());
+                    CustomTreeNode classNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.CLASS), classModel.getPsiObject(), classModel.getName());
 
                     for (InspectionMethodModel method : getMethodBySmell(smellType).stream().filter(method -> getRelativeFilePath(method).equals(path)).collect(Collectors.toList())) {
-                        CustomTreeNode methodNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.METHOD), method.getName());
+                        CustomTreeNode methodNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.METHOD), method.getPsiObject(), method.getName());
                         classNode.add(methodNode);
                     }
 
@@ -65,9 +102,9 @@ public class TabInfectedFiles implements TabContent  {
             root.add(pathNode);
         }
 
-        model.reload(root);
         treeSmells.setCellRenderer(new CustomTreeCellRenderer());
         treeSmells.setRootVisible(false);
+        model.reload(root);
     }
 
 
@@ -76,12 +113,15 @@ public class TabInfectedFiles implements TabContent  {
      *
      * @return a set of path strings of smelly classes
      */
-    protected Set<String> getFilePaths() {
-        Set<String> paths = new HashSet<>();
-        for (InspectionClassModel smellyClass: allClasses) {
-            paths.add(getRelativeFilePath(smellyClass));
+    protected HashMap<String, PsiFile> getFilePaths() {
+        HashMap<String, PsiFile> files = new HashMap<>();
+        String filePath;
+        for (InspectionClassModel smellyClass : allClasses) {
+            filePath = getRelativeFilePath(smellyClass);
+            if (!files.containsKey(filePath))
+                files.put(filePath, smellyClass.getPsiObject().getContainingFile());
         }
-        return paths;
+        return files;
     }
 
     /**
@@ -115,7 +155,7 @@ public class TabInfectedFiles implements TabContent  {
     /**
      * Gets class that contains a matching smell
      *
-     * @param smell The smell thats being searched for
+     * @param smell The smell that is being searched for
      * @return a list of classes with the specific smell
      */
     protected List<InspectionClassModel> getClassesBySmell(SmellType smell) {

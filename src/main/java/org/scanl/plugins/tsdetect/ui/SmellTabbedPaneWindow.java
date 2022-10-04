@@ -82,6 +82,10 @@ public class SmellTabbedPaneWindow {
         labelLoading.setVisible(false);
         labelExecution.setVisible(false);
 
+        tabDetectedSmellTypes = new TabDetectedSmellTypes();
+        tabInfectedFiles = new TabInfectedFiles();
+        tabSmells = new TabSmellDistribution();
+
         buttonAnalyzeProject.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -109,7 +113,6 @@ public class SmellTabbedPaneWindow {
                                         GridConstraints gc = new GridConstraints();
                                         gc.setFill(FILL_BOTH);
 
-                                        tabDetectedSmellTypes = new TabDetectedSmellTypes();
                                         tabDetectedSmellTypes.LoadSmellyData(executionResult.getAllClasses(),executionResult.getAllMethods());
                                         JPanel content1  = tabDetectedSmellTypes.GetContent();
                                         content1.setVisible(true);
@@ -117,7 +120,6 @@ public class SmellTabbedPaneWindow {
                                         panelDetectedSmellTypes.add(content1);
                                         panelDetectedSmellTypes.validate();
 
-                                        tabInfectedFiles = new TabInfectedFiles();
                                         tabInfectedFiles.LoadSmellyData(executionResult.getAllClasses(),executionResult.getAllMethods());
                                         JPanel content2  = tabInfectedFiles.GetContent();
                                         content2.setVisible(true);
@@ -125,7 +127,6 @@ public class SmellTabbedPaneWindow {
                                         panelInfectedFiles.add(content2);
                                         panelInfectedFiles.validate();
 
-                                        tabSmells = new TabSmellDistribution();
                                         tabSmells.LoadSmellyData(executionResult.getAllClasses(),executionResult.getAllMethods());
                                         JPanel content3  = tabSmells.GetContent();
                                         content3.setVisible(true);
