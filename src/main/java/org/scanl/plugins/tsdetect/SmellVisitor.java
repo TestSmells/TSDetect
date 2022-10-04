@@ -92,6 +92,10 @@ public class SmellVisitor extends JavaRecursiveElementVisitor {
 				getSmellyClasses().add(classModel);
 				smellyClasses.add(psiClass.getQualifiedName());
 			}
+			else{ // this is a quick (and ugly hack to) fix issue #119
+				getSmellyClasses().removeIf(obj -> obj.getName().equals(psiClass.getQualifiedName()));
+				getSmellyClasses().add(classModel);
+			}
 		}
 	}
 
