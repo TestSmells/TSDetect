@@ -150,8 +150,7 @@ public class SmellTabbedPaneWindow {
                 Window parentWindow = SwingUtilities.windowForComponent(panelInspection);
                 Frame parentFrame = (Frame)parentWindow;
 
-
-                ExportReport exportReportDialog = new ExportReport(parentFrame);
+                ExportReport exportReportDialog = new ExportReport(parentFrame, executionResult);
                 exportReportDialog.setVisible(true);
             }
             });
