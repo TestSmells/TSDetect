@@ -1,21 +1,24 @@
 package org.scanl.plugins.tsdetect.ui.controls;
 
+import com.intellij.psi.PsiElement;
+
 import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 public class CustomTreeNode extends DefaultMutableTreeNode {
 
-    /**
-     * The icon which is displayed on the JTree object. open, close, leaf icon.
-     */
-    private ImageIcon icon;
 
-    public CustomTreeNode(ImageIcon icon) {
+    private final ImageIcon icon;
+    private PsiElement psiElement;
+
+    public CustomTreeNode(ImageIcon icon, PsiElement psiElement, String displayText) {
+        super(displayText);
         this.icon = icon;
+        this.psiElement = psiElement;
     }
 
-    public CustomTreeNode(ImageIcon icon, Object userObject) {
-        super(userObject);
+    public CustomTreeNode(ImageIcon icon, String displayText) {
+        super(displayText);
         this.icon = icon;
     }
 
@@ -28,7 +31,7 @@ public class CustomTreeNode extends DefaultMutableTreeNode {
         return icon;
     }
 
-    public void setIcon(ImageIcon icon) {
-        this.icon = icon;
+    public PsiElement getPsiElement() {
+        return psiElement;
     }
 }
