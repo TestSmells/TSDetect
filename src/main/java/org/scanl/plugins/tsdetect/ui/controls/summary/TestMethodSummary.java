@@ -27,10 +27,10 @@ public class TestMethodSummary implements SummaryContent {
     }
 
     @Override
-    public void LoadData(AnalysisSummaryItem analysisSummaryItem) {
-        methodTotalTest.LoadWidget("Total test methods");
-        methodTotalSmelly.LoadWidget("Smelly methods");
-        methodSmelliest.LoadWidget("Smelliest method");
+    public void LoadData() {
+        methodTotalTest.LoadWidget(new AnalysisSummaryItem(),"Total test methods");
+        methodTotalSmelly.LoadWidget(new AnalysisSummaryItem(),"Smelly methods");
+        methodSmelliest.LoadWidget(new AnalysisSummaryItem(),"Smelliest method");
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(methodTotalTest.GetContent());

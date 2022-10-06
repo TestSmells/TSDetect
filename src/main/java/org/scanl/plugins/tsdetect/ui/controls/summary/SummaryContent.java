@@ -9,6 +9,6 @@ public interface SummaryContent {
 
     public JPanel GetContent();
 
-    public void LoadData(AnalysisSummaryItem analysisSummaryItem);
+    public void LoadData();
 
 }

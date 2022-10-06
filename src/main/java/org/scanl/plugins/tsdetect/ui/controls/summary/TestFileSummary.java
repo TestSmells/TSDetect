@@ -27,13 +27,15 @@ public class TestFileSummary implements SummaryContent {
         panelMain.setVisible(true);
         return panelMain;
     }
+    public void setDataFileSummary(){
 
+    }
     @Override
-    public void LoadData(AnalysisSummaryItem analysisSummaryItem) {
-        fileAnalyzed.LoadWidget("Test Files Analyzed");
-        fileHasSmell.LoadWidget("Files With Smells");
-        fileNoSmell.LoadWidget("Files Without Smells");
-        fileSmelliest.LoadWidget("Smelliest file");
+    public void LoadData() {
+        fileAnalyzed.LoadWidget(new AnalysisSummaryItem(), "Test Files Analyzed");
+        fileHasSmell.LoadWidget(new AnalysisSummaryItem(),"Files With Smells");
+        fileNoSmell.LoadWidget(new AnalysisSummaryItem(),"Files Without Smells");
+        fileSmelliest.LoadWidget(new AnalysisSummaryItem(),"Smelliest file");
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(fileAnalyzed.GetContent());

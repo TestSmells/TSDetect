@@ -18,11 +18,13 @@ public class TabAnalysisSummary implements TabContent  {
     TestSmellTypeSummary testSmellTypeSummary;
     JPanel content;
 
+
     public TabAnalysisSummary(){
         content = new JPanel();
         testFileSummary = new TestFileSummary();
         testMethodSummary = new TestMethodSummary();
         testSmellTypeSummary = new TestSmellTypeSummary();
+
     }
 
     @Override
@@ -32,9 +34,9 @@ public class TabAnalysisSummary implements TabContent  {
 
     @Override
     public void LoadSmellyData(List<InspectionClassModel> allClasses, List<InspectionMethodModel> allMethods) {
-        testFileSummary.LoadData(new AnalysisSummaryItem());
-        testMethodSummary.LoadData(new AnalysisSummaryItem());
-        testSmellTypeSummary.LoadData(new AnalysisSummaryItem());
+        testFileSummary.LoadData();
+        testMethodSummary.LoadData();
+        testSmellTypeSummary.LoadData();
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(testSmellTypeSummary.GetContent());

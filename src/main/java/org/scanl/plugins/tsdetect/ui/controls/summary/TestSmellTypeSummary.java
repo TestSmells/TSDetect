@@ -27,10 +27,10 @@ public class TestSmellTypeSummary implements SummaryContent {
     }
 
     @Override
-    public void LoadData(AnalysisSummaryItem analysisSummaryItem) {
-        smellTotal.LoadWidget("Total smelly instances");
-        smellDetected.LoadWidget("Detected smell types");
-        smellCommon.LoadWidget("Most common smell type");
+    public void LoadData() {
+        smellTotal.LoadWidget(new AnalysisSummaryItem(),"Total smelly instances");
+        smellDetected.LoadWidget(new AnalysisSummaryItem(),"Detected smell types");
+        smellCommon.LoadWidget(new AnalysisSummaryItem(),"Most common smell type");
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(smellTotal.GetContent());
