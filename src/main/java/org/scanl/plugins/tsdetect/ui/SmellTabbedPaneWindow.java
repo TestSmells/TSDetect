@@ -9,6 +9,7 @@ import org.scanl.plugins.tsdetect.common.Util;
 import org.scanl.plugins.tsdetect.model.ExecutionResult;
 import org.scanl.plugins.tsdetect.service.Analyzer;
 import org.scanl.plugins.tsdetect.ui.dialogs.ExportReport;
+import org.scanl.plugins.tsdetect.ui.tabs.TabAnalysisSummary;
 import org.scanl.plugins.tsdetect.ui.tabs.TabDetectedSmellTypes;
 import org.scanl.plugins.tsdetect.ui.tabs.TabInfectedFiles;
 import org.scanl.plugins.tsdetect.ui.tabs.TabSmellDistribution;
@@ -23,9 +24,11 @@ import static com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH;
 
 public class SmellTabbedPaneWindow {
 
+    private final JPanel panelAnalysisSummary;
     private final JPanel panelSmellDistribution;
     private final JPanel panelDetectedSmellTypes;
     private final JPanel panelInfectedFiles;
+    private final TabAnalysisSummary tabAnalysisSummary;
     private final TabDetectedSmellTypes tabDetectedSmellTypes;
     private final TabSmellDistribution tabSmells;
     private final TabInfectedFiles tabInfectedFiles;
@@ -41,6 +44,12 @@ public class SmellTabbedPaneWindow {
         buttonAnalyzeProject.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME"));
         buttonAnalyzeProject.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.TOOLTIP"));
         labelLoading.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "LABEL.LOADING.TEXT"));
+
+        panelAnalysisSummary = new JPanel();
+        panelAnalysisSummary.setVisible(true);
+        panelAnalysisSummary.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.SUMMARY.TAB.NAME"));
+        panelAnalysisSummary.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.SUMMARY.TAB.TOOLTIP"));
+        tabbedPane.add(panelAnalysisSummary);
 
         panelSmellDistribution = new JPanel();
         panelSmellDistribution.setVisible(true);
@@ -60,7 +69,6 @@ public class SmellTabbedPaneWindow {
         panelInfectedFiles.setToolTipText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SMELL.FILES.TAB.TOOLTIP"));
         tabbedPane.add(panelInfectedFiles);
 
-
         panelInspection.remove(tabbedPane);
         panelInspection.updateUI();
 
@@ -69,6 +77,7 @@ public class SmellTabbedPaneWindow {
         labelExecution.setVisible(false);
         buttonExport.setVisible(false);
 
+        tabAnalysisSummary = new TabAnalysisSummary();
         tabDetectedSmellTypes = new TabDetectedSmellTypes();
         tabInfectedFiles = new TabInfectedFiles();
         tabSmells = new TabSmellDistribution();
@@ -122,6 +131,13 @@ public class SmellTabbedPaneWindow {
                                         panelSmellDistribution.setLayout(new java.awt.BorderLayout());
                                         panelSmellDistribution.add(content3);
                                         panelSmellDistribution.validate();
+
+                                        tabAnalysisSummary.LoadSmellyData(executionResult.getAllClasses(), executionResult.getAllMethods());
+                                        JPanel content4 = tabAnalysisSummary.GetContent();
+                                        content4.setVisible(true);
+                                        panelAnalysisSummary.setLayout(new java.awt.BorderLayout());
+                                        panelAnalysisSummary.add(content4);
+                                        panelAnalysisSummary.validate();
 
                                         panelInspection.add(tabbedPane, gc);
                                         labelLoading.setVisible(false);
