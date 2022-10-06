@@ -1,5 +1,7 @@
 package org.scanl.plugins.tsdetect.ui.controls.summary;
 
+import org.scanl.plugins.tsdetect.model.AnalysisSummaryItem;
+
 import javax.swing.*;
 
 public class TestSmellTypeSummary implements SummaryContent {
@@ -25,7 +27,7 @@ public class TestSmellTypeSummary implements SummaryContent {
     }
 
     @Override
-    public void LoadData() {
+    public void LoadData(AnalysisSummaryItem analysisSummaryItem) {
         smellTotal.LoadWidget("Total smelly instances");
         smellDetected.LoadWidget("Detected smell types");
         smellCommon.LoadWidget("Most common smell type");

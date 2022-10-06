@@ -1,5 +1,6 @@
 package org.scanl.plugins.tsdetect.ui.tabs;
 
+import org.scanl.plugins.tsdetect.model.AnalysisSummaryItem;
 import org.scanl.plugins.tsdetect.model.InspectionClassModel;
 import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
 import org.scanl.plugins.tsdetect.ui.controls.summary.TestSmellTypeSummary;
@@ -31,9 +32,9 @@ public class TabAnalysisSummary implements TabContent  {
 
     @Override
     public void LoadSmellyData(List<InspectionClassModel> allClasses, List<InspectionMethodModel> allMethods) {
-        testFileSummary.LoadData();
-        testMethodSummary.LoadData();
-        testSmellTypeSummary.LoadData();
+        testFileSummary.LoadData(new AnalysisSummaryItem());
+        testMethodSummary.LoadData(new AnalysisSummaryItem());
+        testSmellTypeSummary.LoadData(new AnalysisSummaryItem());
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(testSmellTypeSummary.GetContent());

@@ -1,5 +1,7 @@
 package org.scanl.plugins.tsdetect.ui.controls.summary;
 
+import org.scanl.plugins.tsdetect.model.AnalysisSummaryItem;
+
 import javax.swing.*;
 
 public class TestMethodSummary implements SummaryContent {
@@ -25,7 +27,7 @@ public class TestMethodSummary implements SummaryContent {
     }
 
     @Override
-    public void LoadData() {
+    public void LoadData(AnalysisSummaryItem analysisSummaryItem) {
         methodTotalTest.LoadWidget("Total test methods");
         methodTotalSmelly.LoadWidget("Smelly methods");
         methodSmelliest.LoadWidget("Smelliest method");

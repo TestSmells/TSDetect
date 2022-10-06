@@ -1,5 +1,7 @@
 package org.scanl.plugins.tsdetect.ui.controls.summary;
 
+import org.scanl.plugins.tsdetect.model.AnalysisSummaryItem;
+
 import javax.swing.*;
 
 public class TestFileSummary implements SummaryContent {
@@ -27,7 +29,7 @@ public class TestFileSummary implements SummaryContent {
     }
 
     @Override
-    public void LoadData() {
+    public void LoadData(AnalysisSummaryItem analysisSummaryItem) {
         fileAnalyzed.LoadWidget("Test Files Analyzed");
         fileHasSmell.LoadWidget("Files With Smells");
         fileNoSmell.LoadWidget("Files Without Smells");
