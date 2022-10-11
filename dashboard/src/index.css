@@ -1,0 +1,21 @@
+.justify-content-center {
+    width: 100%;
+    text-align: center;
+}
+
+.page-title {
+    font-weight: bold;
+    margin-top: 0.5em;
+}
+
+.dashboard-navbar {
+    background-color: #1e272e;
+}
+
+h1, p {
+    color: #f0f0f0;
+}
+
+body {
+    background-color: #485460;
+}
