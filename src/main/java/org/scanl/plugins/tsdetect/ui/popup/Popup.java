@@ -10,9 +10,28 @@ public class Popup{
     private final JCheckBox decisionBox;
     private final JButton confirm;
     private boolean choice = null;
+    private final JLabel infor;
     public Popup(){
         consentForm = new JPanel();
-        if(choice != null)
+        confirm = new JButton();
+        infor = new JLabel("Do you want to share your anonymous usage data?");
+        decisionBox = new JCheckBox();
+        if(choice != null){
+            consentForm.add(infor);
+            consentForm.add(decisionBox);
+            consentForm.add(confirm);
             consentForm.setVisible(true);
+            confirm.addActionListener(new java.awt.event.ActionListener(){
+                public void actionPerformed(java.awt.event.ActionEvent evt){
+                   if(decisionBox.isSelected() == true){
+                       choice = true;
+                   }
+                   else{
+                       choice = false;
+                   }
+                   consentForm.dispose();
+                }
+            });
+        }
     }
 }
