@@ -3,7 +3,7 @@ name: deploy-dashboard
 on:
   push:
     branches:
-      - master  # Set a branch name to trigger deploy
+      - main  # Set a branch name to trigger deploy
     paths:
     - 'dashboard'
 
@@ -19,7 +19,7 @@ jobs:
         with:
           submodules: true  # Fetch Hugo themes (true OR recursive) 
           fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
-          ref: master
+          ref: main
 
       - name: Install PNPM
         uses: pnpm/action-setup@v2.0.1
@@ -36,7 +36,7 @@ jobs:
         # If you're changing the branch from main, 
         # also change the `main` in `refs/heads/main` 
         # below accordingly.
-        if: ${{ github.ref == 'refs/heads/master' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         with:
           deploy_key: ${{ secrets.PRIVATE_DEPLOYMENT_KEY }}
           publish_dir: ./build
