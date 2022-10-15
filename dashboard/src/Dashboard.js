@@ -7,7 +7,7 @@ import Home from './pages/Home';
 function Dashboard() {
     return(
         <div className="Dashboard">
-            <Navbar className="dashboard-navbar" bg="dark" variant="dark">
+            <Navbar className="dashboard-navbar">
                 <Container>
                     <Nav className="justify-content-center">
                         <Nav.Link to="/dashboard">Home</Nav.Link>

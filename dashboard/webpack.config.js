@@ -14,7 +14,7 @@ module.exports = {
   },
   devServer: { 
     // Opens in browser automatically when running in development mode
-    open: true,
+    open: ['/#/dashboard'],
     // Location of files to serve in development mode
     static: { 
         directory: path.join(__dirname, "src") 

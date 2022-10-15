@@ -9,13 +9,53 @@
 }
 
 .dashboard-navbar {
-    background-color: #1e272e;
+    background-color: #009688;
 }
 
-h1, p {
-    color: #f0f0f0;
+.filtering-dropdown, .filtering-dropdown-menu {
+    width: 100%;
+}
+
+.vertical-divider {
+    width: 2px;
+    background-color: #1e272e;
+    opacity: 0.25;
+}
+
+.header-data-item-odd {
+    text-align: center;
+    padding-top: 1.0em;
+    padding-bottom: 1.0em;
+    margin-bottom: 0.5em;
+}
+
+.header-data-item-even {
+    text-align: center;
+    padding-top: 1.0em;
+    padding-bottom: 1.0em;
+    background-color: #d2dae2;
+    margin-bottom: 0.5em;
+}
+
+.vertical-divider-column {
+    width: 1px;
+    max-width: 1px;
+}
+
+.padding-left-right {
+    padding-left: 1.0em;
+    padding-right: 1.0em;
+}
+
+h1, h2, h3, h4, p {
+    color: #3b3b3b;
 }
 
 body {
-    background-color: #485460;
+    background-color: #ffffff;
+}
+
+hr {
+    color: #1e272e;
+    font-weight: bold;
 }
