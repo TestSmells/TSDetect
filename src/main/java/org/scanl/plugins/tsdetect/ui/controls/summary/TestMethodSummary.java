@@ -28,9 +28,9 @@ public class TestMethodSummary implements SummaryContent {
 
     @Override
     public void LoadData() {
-        methodTotalTest.LoadWidget(new AnalysisSummaryItem(),"Total test methods");
-        methodTotalSmelly.LoadWidget(new AnalysisSummaryItem(),"Smelly methods");
-        methodSmelliest.LoadWidget(new AnalysisSummaryItem(),"Smelliest method");
+        methodTotalTest.LoadWidget(new AnalysisSummaryItem(),"Total test methods", "[more/less] than last analysis");
+        methodTotalSmelly.LoadWidget(new AnalysisSummaryItem(),"Smelly methods", "[more/less] than last analysis");
+        methodSmelliest.LoadWidget(new AnalysisSummaryItem(),"Smelliest method", "[more/less] than last analysis","Total Smells: ");
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(methodTotalTest.GetContent());
