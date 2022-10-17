@@ -9,7 +9,7 @@ public class TestSmellTypeSummary implements SummaryContent {
     Widget smellDetected;
     Widget smellCommon;
     private JPanel panelMain;
-    private JLabel labelTemp;
+    private JLabel summaryHeader;
     private JScrollPane paneWidgets;
     JPanel content;
 
@@ -28,6 +28,7 @@ public class TestSmellTypeSummary implements SummaryContent {
 
     @Override
     public void LoadData() {
+        summaryHeader.setText("Smell Type Summary");
         smellTotal.LoadWidget(new AnalysisSummaryItem(),"Total smelly instances", "[more/less] than last analysis");
         smellDetected.LoadWidget(new AnalysisSummaryItem(),"Detected smell types", "[more/less] than last analysis");
         smellCommon.LoadWidget(new AnalysisSummaryItem(),"Most common smell type", "[more/less] than last analysis");

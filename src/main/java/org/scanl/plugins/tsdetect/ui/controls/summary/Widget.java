@@ -20,4 +20,3 @@ public class Widget {
         return panelMain;
     }
 }
-gi

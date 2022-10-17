@@ -10,7 +10,7 @@ public class TestFileSummary implements SummaryContent {
     Widget fileNoSmell;
     Widget fileSmelliest;
     private JPanel panelMain;
-    private JLabel labelTemp;
+    private JLabel summaryHeader;
     private JScrollPane paneWidgets;
     JPanel content;
 
@@ -32,6 +32,7 @@ public class TestFileSummary implements SummaryContent {
     }
     @Override
     public void LoadData() {
+        summaryHeader.setText("File Summary");
         fileAnalyzed.LoadWidget(new AnalysisSummaryItem(), "Test Files Analyzed", "[more/less] than last analysis");
         fileHasSmell.LoadWidget(new AnalysisSummaryItem(),"Files With Smells", "[more/less] than last analysis");
         fileNoSmell.LoadWidget(new AnalysisSummaryItem(),"Files Without Smells", "[more/less] than last analysis");

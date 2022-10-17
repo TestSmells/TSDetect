@@ -9,7 +9,7 @@ public class TestMethodSummary implements SummaryContent {
     Widget methodTotalSmelly;
     Widget methodSmelliest;
     private JPanel panelMain;
-    private JLabel labelTemp;
+    private JLabel summaryHeader;
     private JScrollPane paneWidgets;
     JPanel content;
 
@@ -28,6 +28,7 @@ public class TestMethodSummary implements SummaryContent {
 
     @Override
     public void LoadData() {
+        summaryHeader.setText("Method Summary");
         methodTotalTest.LoadWidget(new AnalysisSummaryItem(),"Total test methods", "[more/less] than last analysis");
         methodTotalSmelly.LoadWidget(new AnalysisSummaryItem(),"Smelly methods", "[more/less] than last analysis");
         methodSmelliest.LoadWidget(new AnalysisSummaryItem(),"Smelliest method", "[more/less] than last analysis");
