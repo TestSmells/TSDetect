@@ -32,10 +32,10 @@ public class TestFileSummary implements SummaryContent {
     }
     @Override
     public void LoadData() {
-        fileAnalyzed.LoadWidget(new AnalysisSummaryItem(), "Test Files Analyzed");
-        fileHasSmell.LoadWidget(new AnalysisSummaryItem(),"Files With Smells");
-        fileNoSmell.LoadWidget(new AnalysisSummaryItem(),"Files Without Smells");
-        fileSmelliest.LoadWidget(new AnalysisSummaryItem(),"Smelliest file");
+        fileAnalyzed.LoadWidget(new AnalysisSummaryItem(), "Test Files Analyzed", "[more/less] than last analysis");
+        fileHasSmell.LoadWidget(new AnalysisSummaryItem(),"Files With Smells", "[more/less] than last analysis");
+        fileNoSmell.LoadWidget(new AnalysisSummaryItem(),"Files Without Smells", "[more/less] than last analysis");
+        fileSmelliest.LoadWidget(new AnalysisSummaryItem(),"Smelliest file", "[more/less] than last analysis");
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(fileAnalyzed.GetContent());

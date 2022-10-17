@@ -6,12 +6,12 @@ import javax.swing.*;
 
 public class Widget {
     private JPanel panelMain;
-    private JLabel LabelTemp1;
-    private JLabel LabelDynamicText;
-    private JLabel LabelTemp2;
+    private JLabel changeLabel;
+    private JLabel analysisData;
 
-    public void LoadWidget(AnalysisSummaryItem analysisSummaryItem, String text){
-        LabelDynamicText.setText(text);
+    public void LoadWidget(AnalysisSummaryItem analysisSummaryItem, String title, String change){
+        panelMain.setBorder(BorderFactory.createTitledBorder(title));
+        changeLabel.setText(change);
         panelMain.setVisible(true);
     }
 
@@ -20,3 +20,4 @@ public class Widget {
         return panelMain;
     }
 }
+gi
