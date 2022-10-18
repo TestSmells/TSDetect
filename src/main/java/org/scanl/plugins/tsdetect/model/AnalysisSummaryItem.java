@@ -4,12 +4,12 @@ public class AnalysisSummaryItem {
     private String primaryHeader;
     private String primaryValue;
     private String primaryChangeValue;
-    private AnalysisSummaryItem primaryChangeType;
+    private AnalysisSummaryChangeType primaryChangeType;
 
     private String secondaryHeader;
     private String secondaryValue;
     private String secondaryChangeValue;
-    private AnalysisSummaryItem secondaryChangeType;
+    private AnalysisSummaryChangeType secondaryChangeType;
 
     public String getPrimaryHeader() {
         return primaryHeader;
@@ -35,11 +35,11 @@ public class AnalysisSummaryItem {
         this.primaryChangeValue = primaryChangeValue;
     }
 
-    public AnalysisSummaryItem getPrimaryChangeType() {
+    public AnalysisSummaryChangeType getPrimaryChangeType() {
         return primaryChangeType;
     }
 
-    public void setPrimaryChangeType(AnalysisSummaryItem primaryChangeType) {
+    public void setPrimaryChangeType(AnalysisSummaryChangeType primaryChangeType) {
         this.primaryChangeType = primaryChangeType;
     }
 
@@ -67,7 +67,7 @@ public class AnalysisSummaryItem {
         this.secondaryChangeValue = secondaryChangeValue;
     }
 
-    public AnalysisSummaryItem getSecondaryChangeType() {
+    public AnalysisSummaryChangeType getSecondaryChangeType() {
         return secondaryChangeType;
     }
 

@@ -35,7 +35,8 @@ public class TestFileSummary implements SummaryContent {
     public void passFileAnalyzedData(){
         this.fileAnalyzedItem.setPrimaryHeader("Test Files Analyzed");
         this.fileAnalyzedItem.setPrimaryValue("150");
-        this.fileAnalyzedItem.setPrimaryChangeValue("Increase 10 instances");
+        this.fileAnalyzedItem.setPrimaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Decrease);
+        this.fileAnalyzedItem.setPrimaryChangeValue("10 instances");
 
 
     }
@@ -43,13 +44,16 @@ public class TestFileSummary implements SummaryContent {
     public void passFileHasSmellData(){
         this.fileHasSmellItem.setPrimaryHeader("Files With Smells");
         this.fileHasSmellItem.setPrimaryValue("10");
-        this.fileHasSmellItem.setPrimaryChangeValue("None");
+        this.fileHasSmellItem.setPrimaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Increase);
+        this.fileHasSmellItem.setPrimaryChangeValue("10 Smells");
 
 
     }
     public void passFileNoSmellData(){
-        this.fileNoSmellItem.setPrimaryHeader("File Without Smells");
-        this.fileNoSmellItem.setPrimaryValue("Lazy Test");
+        this.fileNoSmellItem.setPrimaryHeader("Files Without Smells");
+        this.fileNoSmellItem.setPrimaryValue("2");
+        this.fileNoSmellItem.setPrimaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Increase);
+        this.fileHasSmellItem.setPrimaryChangeValue("1 file");
 
 
     }
@@ -57,8 +61,10 @@ public class TestFileSummary implements SummaryContent {
         this.fileSmelliestItem.setPrimaryHeader("Smelliest File ");
         this.fileSmelliestItem.setPrimaryValue("HelloTest.java");
 
+
         this.fileSmelliestItem.setSecondaryHeader("Total Smells:");
         this.fileSmelliestItem.setSecondaryValue("22");
+        this.fileSmelliestItem.setSecondaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Decrease);
         this.fileSmelliestItem.setSecondaryChangeValue("Increase 10 Smells");
 
 

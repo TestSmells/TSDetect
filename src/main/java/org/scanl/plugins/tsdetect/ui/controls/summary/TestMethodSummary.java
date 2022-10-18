@@ -31,7 +31,8 @@ public class TestMethodSummary implements SummaryContent {
     public void passMethodTotalTestData(){
         this.methodTotalTestItem.setPrimaryHeader("Total test methods");
         this.methodTotalTestItem.setPrimaryValue("250");
-        this.methodTotalTestItem.setPrimaryChangeValue("Increase 10 methods");
+        this.methodTotalTestItem.setPrimaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Increase);
+        this.methodTotalTestItem.setPrimaryChangeValue("10 methods");
 
 
     }
@@ -39,7 +40,8 @@ public class TestMethodSummary implements SummaryContent {
     public void passMethodTotalSmellyItemData(){
         this.methodTotalSmellyItem.setPrimaryHeader("Smelly methods");
         this.methodTotalSmellyItem.setPrimaryValue("200");
-        this.methodTotalSmellyItem.setPrimaryChangeValue("None");
+        this.methodTotalSmellyItem.setPrimaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.None);
+        this.methodTotalSmellyItem.setPrimaryChangeValue(" ");
 
 
     }
@@ -49,7 +51,8 @@ public class TestMethodSummary implements SummaryContent {
 
         this.methodSmelliestItem.setSecondaryHeader("Total smells:");
         this.methodSmelliestItem.setSecondaryValue("50");
-        this.methodSmelliestItem.setSecondaryChangeValue("Increase 10 smells");
+        this.methodSmelliestItem.setSecondaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Increase);
+        this.methodSmelliestItem.setSecondaryChangeValue("10 smells");
 
     }
 

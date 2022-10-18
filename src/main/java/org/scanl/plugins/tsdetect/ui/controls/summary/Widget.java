@@ -11,7 +11,7 @@ public class Widget {
 
     public void LoadWidget(AnalysisSummaryItem analysisSummaryItem){
         panelMain.setBorder(BorderFactory.createTitledBorder(analysisSummaryItem.getPrimaryHeader()));
-       // analysisSummaryItem.getPrimaryChangeType().equals(AnalysisSummaryItem.AnalysisSummaryChangeType.Decrease){
+        //analysisSummaryItem.getPrimaryChangeType().equals(AnalysisSummaryItem.AnalysisSummaryChangeType.Decrease){
 
         //}
         changeLabel.setText(analysisSummaryItem.getPrimaryChangeValue());
