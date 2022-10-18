@@ -11,6 +11,11 @@ public class TestSmellTypeSummary implements SummaryContent {
     private JPanel panelMain;
     private JLabel summaryHeader;
     private JScrollPane paneWidgets;
+    private AnalysisSummaryItem smellTotalItem = new AnalysisSummaryItem();
+    private AnalysisSummaryItem smellDetectedItem = new AnalysisSummaryItem();
+    private AnalysisSummaryItem smellCommonItem  = new AnalysisSummaryItem();
+
+
     JPanel content;
 
     public TestSmellTypeSummary(){
@@ -26,12 +31,41 @@ public class TestSmellTypeSummary implements SummaryContent {
         return panelMain;
     }
 
+    public void passSmellTotalData(){
+        this.smellTotalItem.setPrimaryHeader("Total smelly instances");
+        this.smellTotalItem.setPrimaryValue("150");
+        this.smellTotalItem.setPrimaryChangeValue("Increase 10 instances");
+
+
+    }
+
+    public void passSmellDetectedData(){
+        this.smellDetectedItem.setPrimaryHeader("Detected smell types");
+        this.smellDetectedItem.setPrimaryValue("10");
+        this.smellDetectedItem.setPrimaryChangeValue("None");
+
+
+    }
+    public void passSmellCommonData(){
+        this.smellCommonItem.setPrimaryHeader("Most common smell type");
+        this.smellCommonItem.setPrimaryValue("Lazy Test");
+        this.smellCommonItem.setSecondaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Decrease);
+
+        this.smellCommonItem.setSecondaryHeader("Total instances:");
+        this.smellCommonItem.setSecondaryValue("50");
+        this.smellCommonItem.setSecondaryChangeValue("Increase 10 instances");
+
+    }
+
     @Override
     public void LoadData() {
+        passSmellCommonData();
+        passSmellDetectedData();
+        passSmellTotalData();
         summaryHeader.setText("Smell Type Summary");
-        smellTotal.LoadWidget(new AnalysisSummaryItem(),"Total smelly instances", "[more/less] than last analysis");
-        smellDetected.LoadWidget(new AnalysisSummaryItem(),"Detected smell types", "[more/less] than last analysis");
-        smellCommon.LoadWidget(new AnalysisSummaryItem(),"Most common smell type", "[more/less] than last analysis");
+        smellTotal.LoadWidget(smellTotalItem);
+        smellDetected.LoadWidget(smellDetectedItem);
+        smellCommon.LoadWidget(smellCommonItem);
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(smellTotal.GetContent());

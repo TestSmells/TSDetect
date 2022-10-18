@@ -71,7 +71,7 @@ public class AnalysisSummaryItem {
         return secondaryChangeType;
     }
 
-    public void setSecondaryChangeType(AnalysisSummaryItem secondaryChangeType) {
+    public void setSecondaryChangeType(AnalysisSummaryChangeType secondaryChangeType) {
         this.secondaryChangeType = secondaryChangeType;
     }
 

@@ -11,6 +11,9 @@ public class TestMethodSummary implements SummaryContent {
     private JPanel panelMain;
     private JLabel summaryHeader;
     private JScrollPane paneWidgets;
+    private AnalysisSummaryItem methodTotalTestItem = new AnalysisSummaryItem();
+    private AnalysisSummaryItem methodTotalSmellyItem = new AnalysisSummaryItem();
+    private AnalysisSummaryItem methodSmelliestItem  = new AnalysisSummaryItem();
     JPanel content;
 
     public TestMethodSummary(){
@@ -25,13 +28,40 @@ public class TestMethodSummary implements SummaryContent {
         panelMain.setVisible(true);
         return panelMain;
     }
+    public void passMethodTotalTestData(){
+        this.methodTotalTestItem.setPrimaryHeader("Total test methods");
+        this.methodTotalTestItem.setPrimaryValue("250");
+        this.methodTotalTestItem.setPrimaryChangeValue("Increase 10 methods");
+
+
+    }
+
+    public void passMethodTotalSmellyItemData(){
+        this.methodTotalSmellyItem.setPrimaryHeader("Smelly methods");
+        this.methodTotalSmellyItem.setPrimaryValue("200");
+        this.methodTotalSmellyItem.setPrimaryChangeValue("None");
+
+
+    }
+    public void passMethodSmelliestItemData(){
+        this.methodSmelliestItem.setPrimaryHeader("Smelliest method");
+        this.methodSmelliestItem.setPrimaryValue("testABC()");
+
+        this.methodSmelliestItem.setSecondaryHeader("Total smells:");
+        this.methodSmelliestItem.setSecondaryValue("50");
+        this.methodSmelliestItem.setSecondaryChangeValue("Increase 10 smells");
+
+    }
 
     @Override
     public void LoadData() {
+        passMethodTotalTestData();
+        passMethodTotalSmellyItemData();
+        passMethodSmelliestItemData();
         summaryHeader.setText("Method Summary");
-        methodTotalTest.LoadWidget(new AnalysisSummaryItem(),"Total test methods", "[more/less] than last analysis");
-        methodTotalSmelly.LoadWidget(new AnalysisSummaryItem(),"Smelly methods", "[more/less] than last analysis");
-        methodSmelliest.LoadWidget(new AnalysisSummaryItem(),"Smelliest method", "[more/less] than last analysis");
+        methodTotalTest.LoadWidget(new AnalysisSummaryItem());
+        methodTotalSmelly.LoadWidget(new AnalysisSummaryItem());
+        methodSmelliest.LoadWidget(new AnalysisSummaryItem());
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(methodTotalTest.GetContent());

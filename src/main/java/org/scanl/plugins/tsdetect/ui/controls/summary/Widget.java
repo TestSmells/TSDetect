@@ -9,9 +9,12 @@ public class Widget {
     private JLabel changeLabel;
     private JLabel analysisData;
 
-    public void LoadWidget(AnalysisSummaryItem analysisSummaryItem, String title, String change){
-        panelMain.setBorder(BorderFactory.createTitledBorder(title));
-        changeLabel.setText(change);
+    public void LoadWidget(AnalysisSummaryItem analysisSummaryItem){
+        panelMain.setBorder(BorderFactory.createTitledBorder(analysisSummaryItem.getPrimaryHeader()));
+       // analysisSummaryItem.getPrimaryChangeType().equals(AnalysisSummaryItem.AnalysisSummaryChangeType.Decrease){
+
+        //}
+        changeLabel.setText(analysisSummaryItem.getPrimaryChangeValue());
         panelMain.setVisible(true);
     }
 

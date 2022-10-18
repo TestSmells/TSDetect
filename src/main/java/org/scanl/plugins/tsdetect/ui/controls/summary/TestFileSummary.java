@@ -12,6 +12,11 @@ public class TestFileSummary implements SummaryContent {
     private JPanel panelMain;
     private JLabel summaryHeader;
     private JScrollPane paneWidgets;
+
+    private AnalysisSummaryItem fileAnalyzedItem = new AnalysisSummaryItem();
+    private AnalysisSummaryItem fileHasSmellItem = new AnalysisSummaryItem();
+    private AnalysisSummaryItem fileNoSmellItem  = new AnalysisSummaryItem();
+    private AnalysisSummaryItem fileSmelliestItem  = new AnalysisSummaryItem();
     JPanel content;
 
     public TestFileSummary(){
@@ -27,16 +32,50 @@ public class TestFileSummary implements SummaryContent {
         panelMain.setVisible(true);
         return panelMain;
     }
-    public void setDataFileSummary(){
+    public void passFileAnalyzedData(){
+        this.fileAnalyzedItem.setPrimaryHeader("Test Files Analyzed");
+        this.fileAnalyzedItem.setPrimaryValue("150");
+        this.fileAnalyzedItem.setPrimaryChangeValue("Increase 10 instances");
+
 
     }
+
+    public void passFileHasSmellData(){
+        this.fileHasSmellItem.setPrimaryHeader("Files With Smells");
+        this.fileHasSmellItem.setPrimaryValue("10");
+        this.fileHasSmellItem.setPrimaryChangeValue("None");
+
+
+    }
+    public void passFileNoSmellData(){
+        this.fileNoSmellItem.setPrimaryHeader("File Without Smells");
+        this.fileNoSmellItem.setPrimaryValue("Lazy Test");
+
+
+    }
+    public void passFileSmelliest(){
+        this.fileSmelliestItem.setPrimaryHeader("Smelliest File ");
+        this.fileSmelliestItem.setPrimaryValue("HelloTest.java");
+
+        this.fileSmelliestItem.setSecondaryHeader("Total Smells:");
+        this.fileSmelliestItem.setSecondaryValue("22");
+        this.fileSmelliestItem.setSecondaryChangeValue("Increase 10 Smells");
+
+
+   }
     @Override
     public void LoadData() {
+
+        passFileAnalyzedData();
+        passFileHasSmellData();
+        passFileNoSmellData();
+        passFileSmelliest();
         summaryHeader.setText("File Summary");
-        fileAnalyzed.LoadWidget(new AnalysisSummaryItem(), "Test Files Analyzed", "[more/less] than last analysis");
-        fileHasSmell.LoadWidget(new AnalysisSummaryItem(),"Files With Smells", "[more/less] than last analysis");
-        fileNoSmell.LoadWidget(new AnalysisSummaryItem(),"Files Without Smells", "[more/less] than last analysis");
-        fileSmelliest.LoadWidget(new AnalysisSummaryItem(),"Smelliest file", "[more/less] than last analysis");
+
+        fileAnalyzed.LoadWidget(this.fileAnalyzedItem);
+        fileHasSmell.LoadWidget(this.fileHasSmellItem);
+        fileNoSmell.LoadWidget(this.fileNoSmellItem);
+        fileSmelliest.LoadWidget(this.fileSmelliestItem);
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(fileAnalyzed.GetContent());
