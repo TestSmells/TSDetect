@@ -3,6 +3,7 @@ package org.scanl.plugins.tsdetect.ui.controls.summary;
 import org.scanl.plugins.tsdetect.model.AnalysisSummaryItem;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class TestFileSummary implements SummaryContent {
     Widget fileAnalyzed;
@@ -37,8 +38,6 @@ public class TestFileSummary implements SummaryContent {
         this.fileAnalyzedItem.setPrimaryValue("150");
         this.fileAnalyzedItem.setPrimaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Decrease);
         this.fileAnalyzedItem.setPrimaryChangeValue("10 instances");
-
-
     }
 
     public void passFileHasSmellData(){
@@ -77,6 +76,7 @@ public class TestFileSummary implements SummaryContent {
         passFileNoSmellData();
         passFileSmelliest();
         summaryHeader.setText("File Summary");
+        summaryHeader.setFont(new Font(null, Font.PLAIN,20));
 
         fileAnalyzed.LoadWidget(this.fileAnalyzedItem);
         fileHasSmell.LoadWidget(this.fileHasSmellItem);

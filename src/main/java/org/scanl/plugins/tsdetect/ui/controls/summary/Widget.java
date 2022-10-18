@@ -3,6 +3,8 @@ package org.scanl.plugins.tsdetect.ui.controls.summary;
 import org.scanl.plugins.tsdetect.model.AnalysisSummaryItem;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
 
 public class Widget {
     private JPanel panelMain;
@@ -10,10 +12,7 @@ public class Widget {
     private JLabel analysisData;
 
     public void LoadWidget(AnalysisSummaryItem analysisSummaryItem){
-        panelMain.setBorder(BorderFactory.createTitledBorder(analysisSummaryItem.getPrimaryHeader()));
-        //analysisSummaryItem.getPrimaryChangeType().equals(AnalysisSummaryItem.AnalysisSummaryChangeType.Decrease){
-
-        //}
+        panelMain.setBorder(BorderFactory.createTitledBorder(null, analysisSummaryItem.getPrimaryHeader(), TitledBorder.LEFT, TitledBorder.TOP, new Font(null, Font.PLAIN,16)));
         changeLabel.setText(analysisSummaryItem.getPrimaryChangeValue());
         panelMain.setVisible(true);
     }

@@ -3,6 +3,7 @@ package org.scanl.plugins.tsdetect.ui.controls.summary;
 import org.scanl.plugins.tsdetect.model.AnalysisSummaryItem;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class TestMethodSummary implements SummaryContent {
     Widget methodTotalTest;
@@ -33,8 +34,6 @@ public class TestMethodSummary implements SummaryContent {
         this.methodTotalTestItem.setPrimaryValue("250");
         this.methodTotalTestItem.setPrimaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Increase);
         this.methodTotalTestItem.setPrimaryChangeValue("10 methods");
-
-
     }
 
     public void passMethodTotalSmellyItemData(){
@@ -45,12 +44,14 @@ public class TestMethodSummary implements SummaryContent {
 
 
     }
+
     public void passMethodSmelliestItemData(){
         this.methodSmelliestItem.setPrimaryHeader("Smelliest method");
         this.methodSmelliestItem.setPrimaryValue("testABC()");
 
         this.methodSmelliestItem.setSecondaryHeader("Total smells:");
         this.methodSmelliestItem.setSecondaryValue("50");
+
         this.methodSmelliestItem.setSecondaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Increase);
         this.methodSmelliestItem.setSecondaryChangeValue("10 smells");
 
@@ -62,9 +63,11 @@ public class TestMethodSummary implements SummaryContent {
         passMethodTotalSmellyItemData();
         passMethodSmelliestItemData();
         summaryHeader.setText("Method Summary");
-        methodTotalTest.LoadWidget(new AnalysisSummaryItem());
-        methodTotalSmelly.LoadWidget(new AnalysisSummaryItem());
-        methodSmelliest.LoadWidget(new AnalysisSummaryItem());
+        summaryHeader.setFont(new Font(null, Font.PLAIN,20));
+
+        methodTotalTest.LoadWidget(this.methodTotalTestItem);
+        methodTotalSmelly.LoadWidget(this.methodTotalSmellyItem);
+        methodSmelliest.LoadWidget(this.methodSmelliestItem);
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(methodTotalTest.GetContent());

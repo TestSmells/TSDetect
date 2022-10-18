@@ -3,6 +3,7 @@ package org.scanl.plugins.tsdetect.ui.controls.summary;
 import org.scanl.plugins.tsdetect.model.AnalysisSummaryItem;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class TestSmellTypeSummary implements SummaryContent {
     Widget smellTotal;
@@ -65,6 +66,7 @@ public class TestSmellTypeSummary implements SummaryContent {
         passSmellDetectedData();
         passSmellTotalData();
         summaryHeader.setText("Smell Type Summary");
+        summaryHeader.setFont(new Font(null, Font.PLAIN,20));
         smellTotal.LoadWidget(smellTotalItem);
         smellDetected.LoadWidget(smellDetectedItem);
         smellCommon.LoadWidget(smellCommonItem);
