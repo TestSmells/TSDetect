@@ -36,7 +36,7 @@ public class TestSmellTypeSummary implements SummaryContent {
         this.smellTotalItem.setPrimaryHeader("Total smelly instances");
         this.smellTotalItem.setPrimaryValue("150");
         this.smellTotalItem.setPrimaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Increase);
-        this.smellTotalItem.setPrimaryChangeValue("10 instances");
+        this.smellTotalItem.setPrimaryChangeValue("10");
 
 
     }
@@ -56,7 +56,7 @@ public class TestSmellTypeSummary implements SummaryContent {
 
         this.smellCommonItem.setSecondaryHeader("Total instances:");
         this.smellCommonItem.setSecondaryValue("50");
-        this.smellCommonItem.setSecondaryChangeValue("Increase 10 instances");
+        this.smellCommonItem.setSecondaryChangeValue("10");
 
     }
 

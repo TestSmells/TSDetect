@@ -37,14 +37,16 @@ public class TestFileSummary implements SummaryContent {
         this.fileAnalyzedItem.setPrimaryHeader("Test Files Analyzed");
         this.fileAnalyzedItem.setPrimaryValue("150");
         this.fileAnalyzedItem.setPrimaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Decrease);
-        this.fileAnalyzedItem.setPrimaryChangeValue("10 instances");
+
+        this.fileAnalyzedItem.setPrimaryChangeValue("10 files");
+
     }
 
     public void passFileHasSmellData(){
         this.fileHasSmellItem.setPrimaryHeader("Files With Smells");
         this.fileHasSmellItem.setPrimaryValue("10");
         this.fileHasSmellItem.setPrimaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Increase);
-        this.fileHasSmellItem.setPrimaryChangeValue("10 Smells");
+        this.fileHasSmellItem.setPrimaryChangeValue("10 files");
 
 
     }
@@ -52,7 +54,7 @@ public class TestFileSummary implements SummaryContent {
         this.fileNoSmellItem.setPrimaryHeader("Files Without Smells");
         this.fileNoSmellItem.setPrimaryValue("2");
         this.fileNoSmellItem.setPrimaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Increase);
-        this.fileHasSmellItem.setPrimaryChangeValue("1 file");
+        this.fileHasSmellItem.setPrimaryChangeValue("1 files");
 
 
     }
@@ -64,7 +66,7 @@ public class TestFileSummary implements SummaryContent {
         this.fileSmelliestItem.setSecondaryHeader("Total Smells:");
         this.fileSmelliestItem.setSecondaryValue("22");
         this.fileSmelliestItem.setSecondaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Decrease);
-        this.fileSmelliestItem.setSecondaryChangeValue("Increase 10 Smells");
+        this.fileSmelliestItem.setSecondaryChangeValue("10");
 
 
    }

@@ -11,9 +11,24 @@ public class Widget {
     private JLabel changeLabel;
     private JLabel analysisData;
 
+    private String content;
+
+
     public void LoadWidget(AnalysisSummaryItem analysisSummaryItem){
-        panelMain.setBorder(BorderFactory.createTitledBorder(null, analysisSummaryItem.getPrimaryHeader(), TitledBorder.LEFT, TitledBorder.TOP, new Font(null, Font.PLAIN,16)));
-        changeLabel.setText(analysisSummaryItem.getPrimaryChangeValue());
+        panelMain.setBorder(BorderFactory.createTitledBorder(analysisSummaryItem.getPrimaryHeader()));
+        if(analysisSummaryItem.getPrimaryChangeType() == null){
+            changeLabel.setText(analysisSummaryItem.getPrimaryValue());
+        } else {
+            if (analysisSummaryItem.getPrimaryChangeType().equals(AnalysisSummaryItem.AnalysisSummaryChangeType.Decrease)) {
+                this.content = analysisSummaryItem.getPrimaryChangeValue() + " less than last analysis";
+            } else if (analysisSummaryItem.getPrimaryChangeType().equals(AnalysisSummaryItem.AnalysisSummaryChangeType.Increase)) {
+                this.content = analysisSummaryItem.getPrimaryChangeValue() + " more than last analysis";
+            } else {
+                this.content = analysisSummaryItem.getPrimaryChangeValue();
+            }
+
+            changeLabel.setText(analysisSummaryItem.getPrimaryValue() + '\n' + content);
+        }
         panelMain.setVisible(true);
     }
 

@@ -53,7 +53,7 @@ public class TestMethodSummary implements SummaryContent {
         this.methodSmelliestItem.setSecondaryValue("50");
 
         this.methodSmelliestItem.setSecondaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Increase);
-        this.methodSmelliestItem.setSecondaryChangeValue("10 smells");
+        this.methodSmelliestItem.setSecondaryChangeValue("10");
 
     }
 
