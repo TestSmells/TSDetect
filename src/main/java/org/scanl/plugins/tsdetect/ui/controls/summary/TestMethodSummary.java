@@ -48,7 +48,7 @@ public class TestMethodSummary implements SummaryContent {
     public void passMethodSmelliestItemData(){
         this.methodSmelliestItem.setPrimaryHeader("Smelliest method");
         this.methodSmelliestItem.setPrimaryValue("testABC()");
-        this.methodSmelliestItem.setSecondaryHeader("Total smells:");
+        this.methodSmelliestItem.setSecondaryHeader("Total smells: ");
         this.methodSmelliestItem.setSecondaryValue("50");
 
         this.methodSmelliestItem.setSecondaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Increase);
@@ -62,7 +62,7 @@ public class TestMethodSummary implements SummaryContent {
         passMethodTotalSmellyItemData();
         passMethodSmelliestItemData();
         summaryHeader.setText("Method Summary");
-        summaryHeader.setFont(new Font(null, Font.PLAIN,20));
+        summaryHeader.setFont(new Font(null, Font.PLAIN,22));
 
         methodTotalTest.LoadWidget(this.methodTotalTestItem);
         methodTotalSmelly.LoadWidget(this.methodTotalSmellyItem);

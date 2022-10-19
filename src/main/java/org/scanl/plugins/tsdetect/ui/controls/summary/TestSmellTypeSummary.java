@@ -54,7 +54,7 @@ public class TestSmellTypeSummary implements SummaryContent {
         this.smellCommonItem.setPrimaryValue("Lazy Test");
         this.smellCommonItem.setSecondaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Decrease);
 
-        this.smellCommonItem.setSecondaryHeader("Total instances:");
+        this.smellCommonItem.setSecondaryHeader("Total instances: ");
         this.smellCommonItem.setSecondaryValue("50");
         this.smellCommonItem.setSecondaryChangeValue("10");
 
@@ -66,7 +66,7 @@ public class TestSmellTypeSummary implements SummaryContent {
         passSmellDetectedData();
         passSmellTotalData();
         summaryHeader.setText("Smell Type Summary");
-        summaryHeader.setFont(new Font(null, Font.PLAIN,20));
+        summaryHeader.setFont(new Font(null, Font.PLAIN,22));
         smellTotal.LoadWidget(smellTotalItem);
         smellDetected.LoadWidget(smellDetectedItem);
         smellCommon.LoadWidget(smellCommonItem);

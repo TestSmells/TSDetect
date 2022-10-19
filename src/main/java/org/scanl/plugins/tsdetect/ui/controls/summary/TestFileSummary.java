@@ -62,7 +62,7 @@ public class TestFileSummary implements SummaryContent {
         this.fileSmelliestItem.setPrimaryValue("HelloTest.java");
 
 
-        this.fileSmelliestItem.setSecondaryHeader("Total Smells:");
+        this.fileSmelliestItem.setSecondaryHeader("Total Smells: ");
         this.fileSmelliestItem.setSecondaryValue("22");
         this.fileSmelliestItem.setSecondaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Decrease);
         this.fileSmelliestItem.setSecondaryChangeValue("10");
@@ -77,7 +77,7 @@ public class TestFileSummary implements SummaryContent {
         passFileNoSmellData();
         passFileSmelliest();
         summaryHeader.setText("File Summary");
-        summaryHeader.setFont(new Font(null, Font.PLAIN,20));
+        summaryHeader.setFont(new Font(null, Font.PLAIN,22));
 
         fileAnalyzed.LoadWidget(this.fileAnalyzedItem);
         fileHasSmell.LoadWidget(this.fileHasSmellItem);
