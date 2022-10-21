@@ -24,7 +24,7 @@ services:
       PMA_ARBITRARY: 1
     restart: always
     ports:
-      - 8081:80
+      - "8081:80"
 volumes:
   db:
     driver: local
