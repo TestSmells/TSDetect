@@ -18,8 +18,8 @@ public class Widget {
     public void LoadWidget(AnalysisSummaryItem analysisSummaryItem) {
         Font primaryLabel = new Font(null, Font.PLAIN,20);
         Font changeLabel = new Font(null, Font.PLAIN,14);
-        panelMain.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), analysisSummaryItem.getPrimaryHeader(), TitledBorder.LEFT, TitledBorder.TOP, primaryLabel));
-        PrimaryLabel.setText(analysisSummaryItem.getPrimaryValue());
+        panelMain.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder()));
+        PrimaryLabel.setText(analysisSummaryItem.getPrimaryHeader()+analysisSummaryItem.getPrimaryValue());
         PrimaryLabel.setFont(primaryLabel);
         SecondaryLabel.setFont(primaryLabel);
 

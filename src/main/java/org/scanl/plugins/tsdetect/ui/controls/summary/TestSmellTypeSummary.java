@@ -33,7 +33,7 @@ public class TestSmellTypeSummary implements SummaryContent {
     }
 
     public void passSmellTotalData(){
-        this.smellTotalItem.setPrimaryHeader("Total smelly instances");
+        this.smellTotalItem.setPrimaryHeader("Total smelly instances: ");
         this.smellTotalItem.setPrimaryValue("150");
         this.smellTotalItem.setPrimaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Increase);
         this.smellTotalItem.setPrimaryChangeValue("10");
@@ -42,7 +42,7 @@ public class TestSmellTypeSummary implements SummaryContent {
     }
 
     public void passSmellDetectedData(){
-        this.smellDetectedItem.setPrimaryHeader("Detected smell types");
+        this.smellDetectedItem.setPrimaryHeader("Detected smell types: ");
         this.smellDetectedItem.setPrimaryValue("10");
         this.smellDetectedItem.setPrimaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.None);
         this.smellDetectedItem.setPrimaryChangeValue("");
@@ -50,7 +50,7 @@ public class TestSmellTypeSummary implements SummaryContent {
 
     }
     public void passSmellCommonData(){
-        this.smellCommonItem.setPrimaryHeader("Most common smell type");
+        this.smellCommonItem.setPrimaryHeader("Most common smell type: ");
         this.smellCommonItem.setPrimaryValue("Lazy Test");
         this.smellCommonItem.setSecondaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Decrease);
 
