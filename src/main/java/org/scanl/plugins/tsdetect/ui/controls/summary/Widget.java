@@ -29,13 +29,10 @@ public class Widget {
         } else {
             if (analysisSummaryItem.getPrimaryChangeType().equals(AnalysisSummaryItem.AnalysisSummaryChangeType.Decrease)) {
                 this.content = analysisSummaryItem.getPrimaryChangeValue() + " less than last analysis";
-                PrimaryChangeData.setForeground(Color.GREEN);
             } else if (analysisSummaryItem.getPrimaryChangeType().equals(AnalysisSummaryItem.AnalysisSummaryChangeType.Increase)) {
                 this.content = analysisSummaryItem.getPrimaryChangeValue() + " more than last analysis";
-                PrimaryChangeData.setForeground(Color.RED);
             } else {
                 this.content = "No change since last analysis";
-                PrimaryChangeData.setForeground(Color.ORANGE);
             }
             PrimaryChangeData.setFont(changeLabel);
             PrimaryChangeData.setText(content);
@@ -49,13 +46,10 @@ public class Widget {
             SecondaryLabel.setText(analysisSummaryItem.getSecondaryHeader()+ analysisSummaryItem.getSecondaryValue());
             if (analysisSummaryItem.getSecondaryChangeType().equals(AnalysisSummaryItem.AnalysisSummaryChangeType.Decrease)) {
                 this.content = analysisSummaryItem.getSecondaryChangeValue() + " less than last analysis";
-                SecondaryChangeData.setForeground(Color.GREEN);
             } else if (analysisSummaryItem.getSecondaryChangeType().equals(AnalysisSummaryItem.AnalysisSummaryChangeType.Increase)) {
                 this.content = analysisSummaryItem.getSecondaryChangeValue() + " more than last analysis";
-                SecondaryChangeData.setForeground(Color.RED);
             } else {
                 this.content = "No change since last analysis";
-                SecondaryChangeData.setForeground(Color.ORANGE);
             }
             SecondaryChangeData.setText(content);
             SecondaryChangeData.setFont(changeLabel);
