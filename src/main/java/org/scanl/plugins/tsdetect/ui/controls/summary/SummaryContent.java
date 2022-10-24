@@ -9,6 +9,8 @@ public interface SummaryContent {
 
     public JPanel GetContent();
 
-    public void LoadData();
+    void LoadData();
+
+    void LoadSmellTypeData(AnalysisSummaryItem smellTotalItem,AnalysisSummaryItem smellDetectedItem, AnalysisSummaryItem smellCommonItem ,int totalMethods, int smellyMethods, String smelliestMethod, int smelliestMethodNumber);
 
 }

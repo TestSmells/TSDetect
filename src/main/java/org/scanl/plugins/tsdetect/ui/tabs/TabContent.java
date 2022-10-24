@@ -14,4 +14,5 @@ public interface TabContent {
     public void LoadSmellyData(
             List<InspectionClassModel> allClasses,
             List<InspectionMethodModel> allMethods);
+
 }

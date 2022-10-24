@@ -80,4 +80,9 @@ public class TestSmellTypeSummary implements SummaryContent {
 
         paneWidgets.setVisible(true);
     }
+
+    @Override
+    public void LoadSmellTypeData(AnalysisSummaryItem smellTotalItem, AnalysisSummaryItem smellDetectedItem, AnalysisSummaryItem smellCommonItem, int totalMethods, int smellyMethods, String smelliestMethod, int smelliestMethodNumber) {
+
+    }
 }
