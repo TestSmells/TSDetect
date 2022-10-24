@@ -30,6 +30,16 @@ public class TabAnalysisSummary implements TabContent  {
     private AnalysisSummaryItem methodTotalSmellyItem = new AnalysisSummaryItem();
     private AnalysisSummaryItem methodSmelliestItem  = new AnalysisSummaryItem();
 
+    private int totalFiles = 0;
+    private int filesSmell = 0;
+    private int noSmell = 0;
+    private String smelliestFile;
+    private int smelliestFileValue = 0;
+    private AnalysisSummaryItem fileAnalyzedItem = new AnalysisSummaryItem();
+    private AnalysisSummaryItem fileHasSmellItem = new AnalysisSummaryItem();
+    private AnalysisSummaryItem fileNoSmellItem  = new AnalysisSummaryItem();
+    private AnalysisSummaryItem fileSmelliestItem  = new AnalysisSummaryItem();
+
     JPanel content;
 
 
@@ -70,8 +80,8 @@ public class TabAnalysisSummary implements TabContent  {
                }
            }
 
-        testFileSummary.LoadData();
         testMethodSummary.LoadSmellTypeData(this.methodTotalTestItem, this.methodTotalSmellyItem, this.methodSmelliestItem,this.totalMethods, this.smellyMethods,this.smelliestMethod,this.smelliestMethodNumber);
+        testFileSummary.LoadSmellFileData(this.fileAnalyzedItem, this.fileHasSmellItem, this.fileNoSmellItem, this.fileSmelliestItem, this.totalFiles, this.filesSmell, this.noSmell, this.smelliestFile, this.smelliestFileValue);
         testSmellTypeSummary.LoadData();
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
