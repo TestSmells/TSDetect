@@ -135,4 +135,9 @@ public class TestMethodSummary implements SummaryContent {
 
     }
 
+    @Override
+    public void LoadData(AnalysisSummaryItem smellTotalItem, int smellTotalValue, AnalysisSummaryItem smellDetectedItem, int smellDetectedValue, AnalysisSummaryItem smellCommonItem, int smellCommonValue, String smelliestCommon) {
+
+    }
+
 }
