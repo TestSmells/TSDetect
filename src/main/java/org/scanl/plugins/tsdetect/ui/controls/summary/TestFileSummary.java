@@ -119,12 +119,12 @@ public class TestFileSummary implements SummaryContent {
         }
         this.fileSmelliestItem.setSecondaryValue(String.valueOf(smelliestFileValue));
 
-        if (smelliestFileValue > smelliestFileBefore) {
+        if (smelliestFileValue > this.smelliestFileBefore) {
             this.fileNoSmellItem.setSecondaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Increase);
             this.fileNoSmellItem.setSecondaryChangeValue(String.valueOf(smelliestFileValue - this.smelliestFileBefore));
-        } else if (smelliestFileValue < smelliestFileBefore) {
+        } else if (smelliestFileValue < this.smelliestFileBefore) {
             this.fileNoSmellItem.setSecondaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Decrease);
-            this.fileNoSmellItem.setSecondaryChangeValue(String.valueOf(smelliestFileBefore - smelliestFileValue));
+            this.fileNoSmellItem.setSecondaryChangeValue(String.valueOf(this.smelliestFileBefore - smelliestFileValue));
         } else {
             this.fileNoSmellItem.setPrimaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.None);
             this.fileNoSmellItem.setPrimaryChangeValue("");
