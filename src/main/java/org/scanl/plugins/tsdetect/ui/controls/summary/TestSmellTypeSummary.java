@@ -1,9 +1,12 @@
 package org.scanl.plugins.tsdetect.ui.controls.summary;
 
 import org.scanl.plugins.tsdetect.model.AnalysisSummaryItem;
+import org.scanl.plugins.tsdetect.model.InspectionClassModel;
+import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class TestSmellTypeSummary implements SummaryContent {
     Widget smellTotal;
@@ -61,7 +64,7 @@ public class TestSmellTypeSummary implements SummaryContent {
     }
 
     @Override
-    public void LoadData() {
+    public void LoadData(List<InspectionClassModel> allClasses, List<InspectionMethodModel> allMethods) {
         passSmellCommonData();
         passSmellDetectedData();
         passSmellTotalData();

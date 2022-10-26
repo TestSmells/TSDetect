@@ -34,9 +34,9 @@ public class TabAnalysisSummary implements TabContent  {
 
     @Override
     public void LoadSmellyData(List<InspectionClassModel> allClasses, List<InspectionMethodModel> allMethods) {
-        testFileSummary.LoadData();
-        testMethodSummary.LoadData();
-        testSmellTypeSummary.LoadData();
+        testFileSummary.LoadData(allClasses, allMethods);
+        testMethodSummary.LoadData(allClasses, allMethods);
+        testSmellTypeSummary.LoadData(allClasses, allMethods);
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(testSmellTypeSummary.GetContent());

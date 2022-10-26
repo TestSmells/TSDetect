@@ -1,9 +1,12 @@
 package org.scanl.plugins.tsdetect.ui.controls.summary;
 
 import org.scanl.plugins.tsdetect.model.AnalysisSummaryItem;
+import org.scanl.plugins.tsdetect.model.InspectionClassModel;
+import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class TestFileSummary implements SummaryContent {
     Widget fileAnalyzed;
@@ -70,7 +73,7 @@ public class TestFileSummary implements SummaryContent {
 
    }
     @Override
-    public void LoadData() {
+    public void LoadData(List<InspectionClassModel> allClasses, List<InspectionMethodModel> allMethods) {
 
         passFileAnalyzedData();
         passFileHasSmellData();
