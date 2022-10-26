@@ -10,12 +10,6 @@ public class AnalysisSummaryItem {
     private String secondaryValue;
     private String secondaryChangeValue;
     private AnalysisSummaryChangeType secondaryChangeType;
-    public AnalysisSummaryItem(){
-        this.primaryValue = String.valueOf(0);
-        this.primaryChangeValue = String.valueOf(0);
-        this.secondaryValue = String.valueOf(0);
-        this.secondaryChangeValue = String.valueOf(0);
-    }
 
     public String getPrimaryHeader() {
         return primaryHeader;
