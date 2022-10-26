@@ -130,9 +130,4 @@ public class TestMethodSummary implements SummaryContent {
         paneWidgets.setVisible(true);
     }
 
-    @Override
-    public void LoadSmellFileData(AnalysisSummaryItem totalFilesItem, AnalysisSummaryItem fileHasSmellItem, AnalysisSummaryItem fileNoSmellItem, AnalysisSummaryItem fileSmelliestItem, int totalFiles, int filesSmell, int noSmell, String smelliestFile, int smelliestFileValue) {
-
-    }
-
 }
