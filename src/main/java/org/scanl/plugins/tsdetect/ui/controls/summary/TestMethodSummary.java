@@ -25,13 +25,11 @@ public class TestMethodSummary implements SummaryContent {
     private AnalysisSummaryItem methodSmelliestItem  = new AnalysisSummaryItem();
     JPanel content;
     private List<InspectionMethodModel> allMethods;
-    private int totalMethods = 0;
-    private int smellyMethods = 0;
+    private int totalMethods;
+    private int smellyMethods;
     private String smelliestMethod;
     private int smelliestMethodNumber;
-    private int methodTotalBefore;
-    private int smellyMethodsBefore;
-    private int smelliestMethodNumberBefore;
+    private int before;
 
     public TestMethodSummary(){
         content = new JPanel();
@@ -45,57 +43,29 @@ public class TestMethodSummary implements SummaryContent {
         panelMain.setVisible(true);
         return panelMain;
     }
+
     public void passMethodTotalTestData(int totalMethod){
-        this.methodTotalBefore = Integer.parseInt(methodTotalTestItem.getPrimaryValue());
+        this.before = Integer.parseInt(methodTotalTestItem.getPrimaryValue());
         this.methodTotalTestItem.setPrimaryHeader("Total test methods: ");
         this.methodTotalTestItem.setPrimaryValue(String.valueOf(totalMethod));
-        if(totalMethod > methodTotalBefore){
-            this.methodTotalTestItem.setPrimaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Increase);
-            this.methodTotalTestItem.setPrimaryChangeValue(String.valueOf(totalMethod-methodTotalBefore));
-        } else if (totalMethod < methodTotalBefore){
-            this.methodTotalTestItem.setPrimaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Decrease);
-            this.methodTotalTestItem.setPrimaryChangeValue(String.valueOf(methodTotalBefore - totalMethod));
-        } else {
-            this.methodTotalTestItem.setPrimaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.None);
-            this.methodTotalTestItem.setPrimaryChangeValue("");
-        }
+        Change.setPrimaryChange(this.methodTotalTestItem, totalMethod, this.before);
+
     }
 
     public void passMethodTotalSmellyItemData(int smellyMethods){
-        this.smellyMethodsBefore = Integer.parseInt(methodTotalSmellyItem.getPrimaryValue());
+        this.before = Integer.parseInt(methodTotalSmellyItem.getPrimaryValue());
         this.methodTotalSmellyItem.setPrimaryHeader("Smelly methods: ");
         this.methodTotalSmellyItem.setPrimaryValue(String.valueOf(smellyMethods));
-        if( smellyMethods > smellyMethodsBefore){
-            this.methodTotalSmellyItem.setPrimaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Increase);
-            this.methodTotalSmellyItem.setPrimaryChangeValue(String.valueOf(smellyMethods - smellyMethodsBefore));
-        } else if (smellyMethods < smellyMethodsBefore){
-            this.methodTotalSmellyItem.setPrimaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Decrease);
-            this.methodTotalSmellyItem.setPrimaryChangeValue(String.valueOf(smellyMethodsBefore - smellyMethods));
-        } else {
-            this.methodTotalSmellyItem.setPrimaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.None);
-            this.methodTotalSmellyItem.setPrimaryChangeValue("");
-        }
-
+        Change.setPrimaryChange(this.methodTotalSmellyItem, smellyMethods, this.before);
     }
 
     public void passMethodSmelliestItemData(String smelliestMethod, int smelliestMethodNumber){
         this.methodSmelliestItem.setPrimaryHeader("Smelliest method: ");
         this.methodSmelliestItem.setPrimaryValue(smelliestMethod);
-        this.smelliestMethodNumberBefore = Integer.parseInt(methodSmelliestItem.getSecondaryValue());
+        this.before = Integer.parseInt(methodSmelliestItem.getSecondaryValue());
         this.methodSmelliestItem.setSecondaryHeader("Total smells: ");
         this.methodSmelliestItem.setSecondaryValue(String.valueOf(smelliestMethodNumber));
-
-
-        if( smelliestMethodNumber > smelliestMethodNumberBefore){
-            this.methodSmelliestItem.setSecondaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Increase);
-            this.methodSmelliestItem.setSecondaryChangeValue(String.valueOf(smelliestMethodNumber - smelliestMethodNumberBefore));
-        } else if (smelliestMethodNumber < smelliestMethodNumberBefore){
-            this.methodSmelliestItem.setSecondaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.Decrease);
-            this.methodSmelliestItem.setSecondaryChangeValue(String.valueOf(smelliestMethodNumberBefore -smelliestMethodNumber));
-        } else {
-            this.methodSmelliestItem.setSecondaryChangeType(AnalysisSummaryItem.AnalysisSummaryChangeType.None);
-            this.methodSmelliestItem.setSecondaryChangeValue("");
-        }
+        Change.setSecondaryChange(this.methodSmelliestItem, smelliestMethodNumber,this.before);
 
     }
 
