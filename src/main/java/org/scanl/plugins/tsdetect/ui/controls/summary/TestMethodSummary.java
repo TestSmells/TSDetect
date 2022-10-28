@@ -44,28 +44,28 @@ public class TestMethodSummary implements SummaryContent {
         return panelMain;
     }
 
-    public void passMethodTotalTestData(int totalMethod){
+    public void passMethodTotalTestData(){
         this.before = Integer.parseInt(methodTotalTestItem.getPrimaryValue());
         this.methodTotalTestItem.setPrimaryHeader("Total test methods: ");
-        this.methodTotalTestItem.setPrimaryValue(String.valueOf(totalMethod));
-        Change.setPrimaryChange(this.methodTotalTestItem, totalMethod, this.before);
+        this.methodTotalTestItem.setPrimaryValue(String.valueOf(this.totalMethods));
+        Change.setPrimaryChange(this.methodTotalTestItem, this.totalMethods, this.before);
 
     }
 
-    public void passMethodTotalSmellyItemData(int smellyMethods){
-        this.before = Integer.parseInt(methodTotalSmellyItem.getPrimaryValue());
+    public void passMethodTotalSmellyItemData(){
+        this.before = Integer.parseInt(this.methodTotalSmellyItem.getPrimaryValue());
         this.methodTotalSmellyItem.setPrimaryHeader("Smelly methods: ");
-        this.methodTotalSmellyItem.setPrimaryValue(String.valueOf(smellyMethods));
-        Change.setPrimaryChange(this.methodTotalSmellyItem, smellyMethods, this.before);
+        this.methodTotalSmellyItem.setPrimaryValue(String.valueOf(this.smellyMethods));
+        Change.setPrimaryChange(this.methodTotalSmellyItem, this.smellyMethods, this.before);
     }
 
-    public void passMethodSmelliestItemData(String smelliestMethod, int smelliestMethodNumber){
+    public void passMethodSmelliestItemData(){
         this.methodSmelliestItem.setPrimaryHeader("Smelliest method: ");
-        this.methodSmelliestItem.setPrimaryValue(smelliestMethod);
-        this.before = Integer.parseInt(methodSmelliestItem.getSecondaryValue());
+        this.methodSmelliestItem.setPrimaryValue(this.smelliestMethod);
+        this.before = Integer.parseInt(this.methodSmelliestItem.getSecondaryValue());
         this.methodSmelliestItem.setSecondaryHeader("Total smells: ");
-        this.methodSmelliestItem.setSecondaryValue(String.valueOf(smelliestMethodNumber));
-        Change.setSecondaryChange(this.methodSmelliestItem, smelliestMethodNumber,this.before);
+        this.methodSmelliestItem.setSecondaryValue(String.valueOf(this.smelliestMethodNumber));
+        Change.setSecondaryChange(this.methodSmelliestItem, this.smelliestMethodNumber,this.before);
 
     }
 
@@ -92,9 +92,9 @@ public class TestMethodSummary implements SummaryContent {
                 this.smelliestMethod = entry.getKey();
             }
         }
-        passMethodTotalTestData(totalMethods);
-        passMethodTotalSmellyItemData(smellyMethods);
-        passMethodSmelliestItemData(smelliestMethod, smelliestMethodNumber);
+        passMethodTotalTestData();
+        passMethodTotalSmellyItemData();
+        passMethodSmelliestItemData();
         summaryHeader.setText("Method Summary");
         summaryHeader.setFont(new Font(null, Font.PLAIN,22));
 
