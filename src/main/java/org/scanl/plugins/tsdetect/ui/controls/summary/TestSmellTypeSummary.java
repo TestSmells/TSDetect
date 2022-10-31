@@ -71,7 +71,7 @@ public class TestSmellTypeSummary implements SummaryContent {
     @Override
     public void LoadData(List<InspectionClassModel> allClasses, List<InspectionMethodModel> allMethods) {
         this.allMethods = allMethods;
-
+        this.totalSmells = 0;
         HashMap<String, Integer> smellMap = new HashMap<>();
         List<InspectionMethodModel> smellTypeMethods;
         HashSet<SmellType> uniqueSmells = new HashSet<>();
