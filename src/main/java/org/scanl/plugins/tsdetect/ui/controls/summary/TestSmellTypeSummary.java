@@ -25,6 +25,7 @@ public class TestSmellTypeSummary implements SummaryContent {
     private AnalysisSummaryItem smellCommonItem  = new AnalysisSummaryItem();
     JPanel content;
     private List<InspectionMethodModel> allMethods;
+    private List<InspectionClassModel> allClasses;
     private int totalSmells;
     private int totalSmellTypes;
     private int totalCommonSmell;
@@ -71,20 +72,28 @@ public class TestSmellTypeSummary implements SummaryContent {
     @Override
     public void LoadData(List<InspectionClassModel> allClasses, List<InspectionMethodModel> allMethods) {
         this.allMethods = allMethods;
+        this.allClasses = allClasses;
         this.totalSmells = 0;
         HashMap<String, Integer> smellMap = new HashMap<>();
+        HashMap<String, Integer> map = new HashMap<>();
+        HashSet<SmellType> totalSmell = new HashSet<>();
         List<InspectionMethodModel> smellTypeMethods;
-        HashSet<SmellType> uniqueSmells = new HashSet<>();
+        List<InspectionClassModel> smellTypeClasses;
         for(SmellType smellType: SmellType.values())
         {
             if (PluginSettings.GetSetting(smellType.toString())) {
                 smellTypeMethods =  getMethodBySmell(smellType);
+                smellTypeClasses =  getClassesBySmell(smellType);
                 for(InspectionMethodModel method: smellTypeMethods){
                     for(SmellType smell : method.getSmellTypeList()) {
-                        uniqueSmells.add(smell);
                         String currSmell = String.valueOf(smell);
                         smellMap.put(currSmell, smellMap.containsKey(currSmell) ? smellMap.get(currSmell) + 1 : 1);
+                        totalSmell.add(smell);
                     }
+                }
+                for(InspectionClassModel smellTypeClass: smellTypeClasses){
+                    String key = smellTypeClass.getName();
+                    map.put(key, map.containsKey(key) ? map.get(key) + 1 : 1);
                 }
             }
         }
@@ -93,7 +102,7 @@ public class TestSmellTypeSummary implements SummaryContent {
             this.totalSmells += count;
         }
 
-        this.totalSmellTypes = uniqueSmells.size();
+        this.totalSmellTypes = smellMap.size();
 
         Map.Entry<String, Integer> maxEntry = null;
         for (Map.Entry<String, Integer> entry : smellMap.entrySet()) {
@@ -136,5 +145,20 @@ public class TestSmellTypeSummary implements SummaryContent {
                 smellyMethods.add(m);
         }
         return smellyMethods;
+    }
+
+    /**
+     * Gets class that contains a matching smell
+     *
+     * @param smell The smell that is being searched for
+     * @return a list of classes with the specific smell
+     */
+    protected List<InspectionClassModel> getClassesBySmell(SmellType smell) {
+        List<InspectionClassModel> classes = new ArrayList<>();
+        for (InspectionClassModel smellyClass : allClasses) {
+            if (smellyClass.getSmellTypeList().contains(smell))
+                classes.add(smellyClass);
+        }
+        return classes;
     }
 }
