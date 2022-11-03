@@ -42,13 +42,13 @@ public class Util {
 
     }
 
-    public static HashSet<VirtualFile> GetTestFiles(){
+    public static HashSet<VirtualFile> GetTestFiles(String path){
         HashSet<VirtualFile> testClassesMap = new HashSet<>();
         for(Project project: ProjectManager.getInstance().getOpenProjects()){
             @NotNull Collection<VirtualFile> s = FileBasedIndex.getInstance()
                     .getContainingFiles(FileTypeIndex.NAME, JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project));
             for(VirtualFile file: s){
-                if(file.getPath().contains("test")){
+                if(file.getPath().contains(path)){
                     testClassesMap.add(file);
                 }
             }
