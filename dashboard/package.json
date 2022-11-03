@@ -5,6 +5,7 @@
   "homepage": "https://testsmells.org/dashboard",
   "main": "webpack.config.js",
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack serve --mode development",
     "build": "webpack --mode production"
