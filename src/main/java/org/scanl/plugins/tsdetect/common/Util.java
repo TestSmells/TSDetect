@@ -42,21 +42,17 @@ public class Util {
 
     }
 
-    public static HashMap<VirtualFile, PsiClass> GetTestFiles(){
-        HashMap<VirtualFile, PsiClass> testClassesMap = new HashMap<>();
-
+    public static HashSet<VirtualFile> GetTestFiles(){
+        HashSet<VirtualFile> testClassesMap = new HashSet<>();
         for(Project project: ProjectManager.getInstance().getOpenProjects()){
             @NotNull Collection<VirtualFile> s = FileBasedIndex.getInstance()
                     .getContainingFiles(FileTypeIndex.NAME, JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project));
-
             for(VirtualFile file: s){
-                PsiClass psiClass = JUnitUtil.getTestClass(PsiManager.getInstance(project).findFile(file));
-                if(psiClass != null){
-                    testClassesMap.put(file, psiClass);
+                if(file.getPath().contains("test")){
+                    testClassesMap.add(file);
                 }
             }
         }
-
         return testClassesMap;
     }
 
