@@ -59,3 +59,26 @@ VALUES ('Assertion Roulette'),
 ('Sensitive Equality'),
 ('Sleepy Test'),
 ('Unknown Test');
+
+-- Insert random data into the test_runs and test_run smells table
+DELIMITER $$
+CREATE PROCEDURE randomData(IN NumRows INT)
+BEGIN
+	DECLARE i INT;
+    SET i = 1;
+	START TRANSACTION;
+		WHILE i <= NumRows DO
+			INSERT INTO test_runs(uid, timestamp) 
+            -- uid = random number 1-10 | timestamp = random time
+            VALUES (1 + CEIL(RAND() * (10-1)), FROM_UNIXTIME(UNIX_TIMESTAMP('2020-04-30 14:53:27') + FLOOR(0 + (RAND() * 63072000))));
+            
+            INSERT INTO test_run_smells(run_id, test_smell_id, quantity) 
+            -- run_id = i | test_smell_id = random number 1-19 | quantity = random number 1-50
+            VALUES (i, (1 + CEIL(RAND() * (19-1))), (1 + CEIL(RAND() * (50-1))));
+            SET i = i + 1;
+		END WHILE;
+        COMMIT;
+END$$
+DELIMITER ;
+
+CALL randomData(50);

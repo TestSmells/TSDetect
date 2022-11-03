@@ -4,7 +4,8 @@ The TSDetect centralized relational database is hosted in a Docker container and
 
 The docker-compose file builds the MySQL image and populates the tsdetect database with the initial tables and user permissions via an SQL query: init.sql. The phpMyAdmin image is built as well and linked to the database instance. Both images are then run in separate containers.
 
-The init.sql file creates the tables as defined in the database schema TDD and creates users for the plugin and dashboard with appropriate permissions. The test_smells table is populated with all currently defined smell types and the test_runs and test_smell_runs table are populated with random data for testing. 
+The init.sql file creates the tables as defined in the database schema TDD and creates users for the plugin and dashboard with appropriate permissions. 
+The init_test.sql file is identical to the init.sql file but populates the tables with random data for testing purposes. 
 
 **Remove or comment out the last line of the SQL file to prevent random data insertion.**
 
