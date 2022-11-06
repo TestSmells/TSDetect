@@ -2,6 +2,7 @@ package org.scanl.plugins.tsdetect.config;
 
 import org.scanl.plugins.tsdetect.config.application.AppSettingsState;
 import org.scanl.plugins.tsdetect.config.project.ProjectSettingsState;
+import org.scanl.plugins.tsdetect.ui.popup.Popup;
 
 public class PluginSettings {
 
@@ -16,12 +17,51 @@ public class PluginSettings {
      */
     public static boolean GetSetting(String key) {
         var projectSettings = ProjectSettingsState.getInstance().settings;
+//        if(!projectSettings.containsKey("OPT_IN") && projectSettings.size() != 0){
+//            Popup p = new Popup();
+//            Boolean result = p.getPopup();
+//            projectSettings.put("OPT_IN", result);
+//        }
         if (projectSettings.containsKey(key)) return projectSettings.get(key);
 
         var appSettings = AppSettingsState.getInstance().settings;
+//        if(!appSettings.containsKey("OPT_IN") && appSettings.size() != 0){
+//            Popup p = new Popup();
+//            Boolean result = p.getPopup();
+//            appSettings.put("OPT_IN", result);
+//        }
         if (appSettings.containsKey(key)) return appSettings.get(key);
 
-        return DefaultSettings.getInstance().settings.get(key);
+        var defaultSettings = DefaultSettings.getInstance().settings;
+//        if(!defaultSettings.containsKey("OPT_IN")){
+//            Popup p = new Popup();
+//            Boolean result = p.getPopup();
+//            defaultSettings.put("OPT_IN", result);
+//        }
+        return defaultSettings.get(key);
+    }
+    public static void PopupCheck(){
+        var projectSettings = ProjectSettingsState.getInstance().settings;
+//        if(!projectSettings.containsKey("OPT_IN") && projectSettings.size() != 0){
+//            Popup p = new Popup();
+//            System.out.println("Project settings popup");
+//            Boolean result = p.getPopup();
+//            projectSettings.put("OPT_IN", result);
+//        }
+        var appSettings = AppSettingsState.getInstance().settings;
+        if(!appSettings.containsKey("OPT_IN") && appSettings.size() != 0){
+            Popup p = new Popup();
+            System.out.println("App settings popup");
+            Boolean result = p.getPopup();
+            appSettings.put("OPT_IN", result);
+        }
+        var defaultSettings = DefaultSettings.getInstance().settings;
+//        if(!defaultSettings.containsKey("OPT_IN")){
+//            Popup p = new Popup();
+//            System.out.println("Default settings popup");
+//            Boolean result = p.getPopup();
+//            defaultSettings.put("OPT_IN", result);
+//        }
     }
 
 }

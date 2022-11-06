@@ -6,6 +6,7 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import org.jetbrains.annotations.NotNull;
+import org.scanl.plugins.tsdetect.config.PluginSettings;
 
 /**
  * Creates the Tabbed Pane Window
@@ -17,5 +18,6 @@ public class TabbedPaneWindowFactory implements ToolWindowFactory {
 		ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
 		Content content = contentFactory.createContent(myToolWindow.getContent(), "", false);
 		toolWindow.getContentManager().addContent(content);
+		PluginSettings.PopupCheck();
 	}
 }
