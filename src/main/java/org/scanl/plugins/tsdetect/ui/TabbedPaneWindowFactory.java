@@ -18,6 +18,7 @@ public class TabbedPaneWindowFactory implements ToolWindowFactory {
 		ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
 		Content content = contentFactory.createContent(myToolWindow.getContent(), "", false);
 		toolWindow.getContentManager().addContent(content);
+		//Method loaded here to ensure the user is prompted before the tool is run, without showing the popup multiple times
 		PluginSettings.PopupCheck();
 	}
 }
