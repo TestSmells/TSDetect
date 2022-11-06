@@ -37,6 +37,7 @@ repositories {
 	mavenLocal()
 }
 
+// Server Application Dependencies
 dependencies {
 	implementation 'mysql:mysql-connector-java:8.0.31'
 
@@ -59,16 +60,24 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
+// Docker Image Configuration
+tasks.named("bootBuildImage") {
+	imageName = "tsdetect-server:${project.version}"
+}
+
+// Gradle Artifact(s) Configuration
 group = 'org.testsmells'
 version = '1.0.0'
 sourceCompatibility = '11'
 
+// Rename JAR during the build task
 bootJar {
 	archiveFileName = 'tsdetect-server.jar'
 }
 
 import org.jooq.meta.jaxb.*
 
+// Jooq Plugin Configuration
 jooq {
 	configurations {
 		main {
