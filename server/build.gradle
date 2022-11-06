@@ -1,0 +1,107 @@
+
+buildscript {
+	configurations['classpath'].resolutionStrategy.eachDependency {
+		if (requested.group == 'org.jooq') {
+			useVersion '3.16.4'
+		}
+	}
+
+	repositories {
+		mavenCentral()
+		mavenLocal()
+	}
+
+	dependencies {
+		classpath 'mysql:mysql-connector-java:8.0.31'
+		classpath 'org.jooq:jooq-codegen'
+	}
+}
+
+plugins {
+	id 'nu.studer.jooq' version '7.1.1'
+	id 'org.springframework.boot' version '2.7.5'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'java'
+}
+
+// Override jooq version that is referenced by Spring Boot
+ext['jooq.version'] = jooq.version.get()
+
+ext {
+	mysqlConnectorVersion = '8.0.31'
+	jooqVersion = '3.16.3'
+}
+
+repositories {
+	mavenCentral()
+	mavenLocal()
+}
+
+dependencies {
+	implementation 'mysql:mysql-connector-java:8.0.31'
+
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-jetty'
+	implementation 'org.springframework.boot:spring-boot-starter-jooq'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	implementation('org.springframework.boot:spring-boot-starter-web') {
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+	}
+
+	jooqGenerator 'mysql:mysql-connector-java:8.0.31'
+	jooqGenerator "jakarta.xml.bind:jakarta.xml.bind-api:3.0.1"
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+group = 'org.testsmells'
+version = '1.0.0'
+sourceCompatibility = '11'
+
+bootJar {
+	archiveFileName = 'tsdetect-server.jar'
+}
+
+import org.jooq.meta.jaxb.*
+
+jooq {
+	configurations {
+		main {
+			generationTool {
+				logging = Logging.WARN
+				jdbc {
+					driver = 'com.mysql.cj.jdbc.Driver'
+					url = 'jdbc:mysql://localhost:3308/tsdetect'
+					user = 'root'
+					password = 'password'
+				}
+				generator {
+					name = 'org.jooq.codegen.DefaultGenerator'
+					database {
+						name = 'org.jooq.meta.mysql.MySQLDatabase'
+						inputSchema = 'tsdetect'
+						includes = '.*'
+						excludes = ''
+					}
+					generate {
+						daos = true
+						pojos = true
+					}
+					target {
+						packageName = 'org.testsmells.server'
+						directory = 'src/main/generated'
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+
