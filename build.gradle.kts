@@ -31,7 +31,6 @@ dependencies {
     implementation ("org.apache.logging.log4j:log4j-core:2.17.2")
     implementation ("org.swinglabs.swingx:swingx-all:1.6.5-1")
     implementation ("org.bidib.org.oxbow:swingbits:1.2.2")
-
 }
 
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
@@ -100,6 +99,25 @@ tasks {
         })
     }
 
+    //currently headless mode overrides the runIde task
+    //replace *absolute_path* with your absolute path to a Java project containiing test files
+    //Use the absolute path of TSDetect for testing
+    //add more arguments of absolute paths to Java projects (or TSDetect twice) to run headless mode on multiple projects
+    runIde {
+        args("tsdetect", "*absolute path to java project*")
+        jvmArgs("-Djava.awt.headless=true")
+    }
+
+    task("runHeadless") {
+        group = "intellij"
+        dependsOn("runIde")
+        //mainClass.set("org.scanl.plugins.tsdetect.config.TSDetectCommandLine")
+        //classpath = java.sourceSets["main"].runtimeClasspath
+
+        //args("tsdetect", "/Users/cameronriu/Documents/RIT/Fall 2022/SWEN-561/TSDetect")
+        //jvmArgs("-Djava.awt.headless=true")
+    }
+
     // Configure UI tests plugin
     // Read more: https://github.com/JetBrains/intellij-ui-test-robot
     runIdeForUiTests {
@@ -123,4 +141,5 @@ tasks {
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
         channels.set(listOf(properties("pluginVersion").split('-').getOrElse(1) { "default" }.split('.').first()))
     }
+
 }
