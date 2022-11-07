@@ -74,44 +74,33 @@ public class TestSmellTypeSummary implements SummaryContent {
         this.allMethods = allMethods;
         this.allClasses = allClasses;
         this.totalSmells = 0;
-        HashMap<String, Integer> smellMap = new HashMap<>();
-        HashMap<String, Integer> map = new HashMap<>();
-        HashSet<SmellType> totalSmell = new HashSet<>();
+        this.totalSmellTypes = 0;
+
+        HashMap<SmellType, List<InspectionMethodModel>> smellyClasses = new HashMap<>();
         List<InspectionMethodModel> smellTypeMethods;
-        List<InspectionClassModel> smellTypeClasses;
         for(SmellType smellType: SmellType.values())
         {
             if (PluginSettings.GetSetting(smellType.toString())) {
                 smellTypeMethods =  getMethodBySmell(smellType);
-                smellTypeClasses =  getClassesBySmell(smellType);
-                for(InspectionMethodModel method: smellTypeMethods){
-                    for(SmellType smell : method.getSmellTypeList()) {
-                        String currSmell = String.valueOf(smell);
-                        smellMap.put(currSmell, smellMap.containsKey(currSmell) ? smellMap.get(currSmell) + 1 : 1);
-                        totalSmell.add(smell);
-                    }
-                }
-                for(InspectionClassModel smellTypeClass: smellTypeClasses){
-                    String key = smellTypeClass.getName();
-                    map.put(key, map.containsKey(key) ? map.get(key) + 1 : 1);
-                }
+                smellyClasses.put(smellType, smellTypeMethods);
             }
         }
 
-        for (int count : smellMap.values()) {
-            this.totalSmells += count;
-        }
-
-        this.totalSmellTypes = smellMap.size();
-
-        Map.Entry<String, Integer> maxEntry = null;
-        for (Map.Entry<String, Integer> entry : smellMap.entrySet()) {
-            if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0) {
+        int max = 0;
+        Map.Entry<SmellType, List<InspectionMethodModel>> maxEntry = null;
+        for (Map.Entry<SmellType, List<InspectionMethodModel>> entry : smellyClasses.entrySet()) {
+            int currMax = entry.getValue().size();
+            this.totalSmells += currMax;
+            if (currMax > max) {
+                max = currMax;
                 maxEntry = entry;
             }
+            if (currMax != 0) {
+                this.totalSmellTypes++;
+            }
         }
-        this.mostCommonSmell = maxEntry.getKey();
-        this.totalCommonSmell = maxEntry.getValue();
+        this.mostCommonSmell = String.valueOf(maxEntry.getKey());
+        this.totalCommonSmell = maxEntry.getValue().size();
 
         passSmellCommonData();
         passSmellDetectedData();
