@@ -21,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.text.MessageFormat;
 
 import static com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH;
+import static org.scanl.plugins.tsdetect.common.Util.GetTestFiles;
 
 public class SmellTabbedPaneWindow {
 
@@ -39,6 +40,9 @@ public class SmellTabbedPaneWindow {
     private JTabbedPane tabbedPane;
     private JLabel labelExecution;
     private JButton buttonExport;
+
+    private int totalTestFiles;
+
 
     public SmellTabbedPaneWindow() {
         buttonAnalyzeProject.setName(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME"));
@@ -132,6 +136,7 @@ public class SmellTabbedPaneWindow {
                                         panelSmellDistribution.add(content3);
                                         panelSmellDistribution.validate();
 
+                                        tabAnalysisSummary.setTotalTestFiles(totalTestFiles);
                                         tabAnalysisSummary.LoadSmellyData(executionResult.getAllClasses(), executionResult.getAllMethods());
                                         JPanel content4 = tabAnalysisSummary.GetContent();
                                         content4.setVisible(true);
@@ -173,6 +178,7 @@ public class SmellTabbedPaneWindow {
         System.out.println("Running...");
         Project project = ProjectManager.getInstance().getOpenProjects()[0];
         executionResult = Analyzer.getInstance().DetectTestSmells(project);
+        totalTestFiles = GetTestFiles().size();
         System.out.println("Running Completed");
     }
 

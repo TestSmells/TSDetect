@@ -18,6 +18,8 @@ public class TabAnalysisSummary implements TabContent  {
     TestSmellTypeSummary testSmellTypeSummary;
     JPanel content;
 
+    int totalTestFiles;
+
 
     public TabAnalysisSummary(){
         content = new JPanel();
@@ -34,6 +36,7 @@ public class TabAnalysisSummary implements TabContent  {
 
     @Override
     public void LoadSmellyData(List<InspectionClassModel> allClasses, List<InspectionMethodModel> allMethods) {
+        testFileSummary.setTotalTestFiles(this.totalTestFiles);
         testFileSummary.LoadData(allClasses, allMethods);
         testMethodSummary.LoadData(allClasses, allMethods);
         testSmellTypeSummary.LoadData(allClasses, allMethods);
@@ -44,5 +47,9 @@ public class TabAnalysisSummary implements TabContent  {
         content.add(testMethodSummary.GetContent());
         panelSummary.getViewport().add(content);
         panelSummary.validate();
+    }
+
+    public void setTotalTestFiles(int totalTestFiles){
+        this.totalTestFiles = totalTestFiles;
     }
 }

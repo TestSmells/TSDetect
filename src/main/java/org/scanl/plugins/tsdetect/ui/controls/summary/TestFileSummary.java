@@ -1,6 +1,5 @@
 package org.scanl.plugins.tsdetect.ui.controls.summary;
 
-import com.intellij.psi.PsiFile;
 import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.*;
 
@@ -12,8 +11,6 @@ import java.util.Map;
 import java.util.Collections;
 import java.util.HashMap;
 
-import static org.scanl.plugins.tsdetect.common.Util.GetTestFiles;
-
 public class TestFileSummary implements SummaryContent {
     Widget fileAnalyzed;
     Widget fileHasSmell;
@@ -22,7 +19,7 @@ public class TestFileSummary implements SummaryContent {
     private JPanel panelMain;
     private JLabel summaryHeader;
     private JScrollPane paneWidgets;
-    private int totalFiles;
+    private int totalTestFiles;
     private int analyzedFiles;
     private int before;
     private List<InspectionClassModel> allClasses;
@@ -51,8 +48,8 @@ public class TestFileSummary implements SummaryContent {
     public void passFileAnalyzedData(){
         this.before = Integer.parseInt(this.fileAnalyzedItem.getPrimaryValue());
         this.fileAnalyzedItem.setPrimaryHeader("Test Files Analyzed: ");
-        this.fileAnalyzedItem.setPrimaryValue(String.valueOf(this.totalFiles));
-        Change.setPrimaryChange(this.fileAnalyzedItem, this.totalFiles, this.before);
+        this.fileAnalyzedItem.setPrimaryValue(String.valueOf(this.totalTestFiles));
+        Change.setPrimaryChange(this.fileAnalyzedItem, this.totalTestFiles, this.before);
 
     }
 
@@ -64,7 +61,7 @@ public class TestFileSummary implements SummaryContent {
 
     }
     public void passFileNoSmellData(){
-        int value = this.totalFiles-this.analyzedFiles;
+        int value = this.totalTestFiles -this.analyzedFiles;
         this.before = Integer.parseInt(fileNoSmellItem.getPrimaryValue());
         this.fileNoSmellItem.setPrimaryHeader("Files Without Smells: ");
         this.fileNoSmellItem.setPrimaryValue(String.valueOf(value));
@@ -86,7 +83,6 @@ public class TestFileSummary implements SummaryContent {
     @Override
     public void LoadData(List<InspectionClassModel> allClasses, List<InspectionMethodModel> allMethods) {
         this.allClasses = allClasses;
-        this.totalFiles = GetTestFiles().size();
         HashMap<String, Integer> map = new HashMap<>();
         List<InspectionClassModel> smellTypeClasses;
         for(SmellType smellType: SmellType.values())
@@ -146,4 +142,7 @@ public class TestFileSummary implements SummaryContent {
         return classes;
     }
 
+    public void setTotalTestFiles(int totalTestFiles) {
+        this.totalTestFiles = totalTestFiles;
+    }
 }
