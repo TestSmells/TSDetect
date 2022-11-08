@@ -12,8 +12,6 @@ import java.util.Map;
 import java.util.Collections;
 import java.util.HashMap;
 
-import static org.scanl.plugins.tsdetect.common.Util.GetTestFiles;
-
 public class TestFileSummary implements SummaryContent {
     Widget fileAnalyzed;
     Widget fileHasSmell;
@@ -86,7 +84,7 @@ public class TestFileSummary implements SummaryContent {
     @Override
     public void LoadData(List<InspectionClassModel> allClasses, List<InspectionMethodModel> allMethods) {
         this.allClasses = allClasses;
-        this.totalFiles = GetTestFiles().size();
+        this.totalFiles = this.allClasses.size();
         HashMap<String, Integer> map = new HashMap<>();
         List<InspectionClassModel> smellTypeClasses;
         for(SmellType smellType: SmellType.values())
