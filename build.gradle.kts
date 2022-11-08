@@ -99,23 +99,12 @@ tasks {
         })
     }
 
-    //currently headless mode overrides the runIde task
-    //replace *absolute_path* with your absolute path to a Java project containiing test files
-    //Use the absolute path of TSDetect for testing
-    //add more arguments of absolute paths to Java projects (or TSDetect twice) to run headless mode on multiple projects
     runIde {
-        args("tsdetect", "*absolute path to java project*")
-        jvmArgs("-Djava.awt.headless=true")
-    }
-
-    task("runHeadless") {
-        group = "intellij"
-        dependsOn("runIde")
-        //mainClass.set("org.scanl.plugins.tsdetect.config.TSDetectCommandLine")
-        //classpath = java.sourceSets["main"].runtimeClasspath
-
-        //args("tsdetect", "/Users/cameronriu/Documents/RIT/Fall 2022/SWEN-561/TSDetect")
-        //jvmArgs("-Djava.awt.headless=true")
+        //project property paths is set in the command line script
+        if(project.hasProperty("paths")) {
+            args("tsdetect", project.properties.get("paths"))
+            jvmArgs("-Djava.awt.headless=true")
+        }
     }
 
     // Configure UI tests plugin

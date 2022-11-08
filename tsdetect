@@ -1,0 +1,11 @@
+#!/bin/bash
+# Mac/Linux script to run TSDetect in headless mode from the command line
+# RUN
+#    ./tsdetect /relative_path_to_project/
+# OR
+#    sh tsdetect /relative_path_to_project/
+
+#EXAMPLE    sh tsdetect ../TSDetect
+
+./gradlew --stop
+./gradlew -Dorg.gradle.jvmargs="-Djava.awt.headless=true" runIde --console=plain -Ppaths="$(readlink -f "$1")"

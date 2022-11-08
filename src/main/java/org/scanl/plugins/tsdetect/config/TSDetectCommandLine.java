@@ -75,9 +75,11 @@ public class TSDetectCommandLine implements ApplicationStarter {
     }
 
     private void RunAnalysis(String arg) {
-        String projectName = arg.split("/")[arg.split("/").length-1];
+        //Regex is super fun
+        String projectName = arg.split("[/\\\\]")[arg.split("[/\\\\]").length-1];
 
         System.out.println("Running TSDetect on " + projectName + "...");
+        System.out.println(arg);
         Project project = ProjectUtil.openOrImport(Path.of(arg), null , false);
         ExecutionResult executionResult = Analyzer.getInstance().DetectTestSmells(project);
         ProjectManager.getInstance().closeAndDispose(project);
