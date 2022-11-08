@@ -126,6 +126,16 @@ public class TestFileSummary implements SummaryContent {
         paneWidgets.setVisible(true);
     }
 
+    @Override
+    public void WriteDataToFile() {
+
+    }
+
+    @Override
+    public void ReadDataFromFile() {
+
+    }
+
     /**
      * Gets class that contains a matching smell
      *
