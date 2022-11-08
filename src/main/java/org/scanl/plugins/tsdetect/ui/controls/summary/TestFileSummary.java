@@ -86,7 +86,7 @@ public class TestFileSummary implements SummaryContent {
     @Override
     public void LoadData(List<InspectionClassModel> allClasses, List<InspectionMethodModel> allMethods) {
         this.allClasses = allClasses;
-        this.totalFiles = GetTestFiles("/tests/").size();
+        this.totalFiles = GetTestFiles().size();
         HashMap<String, Integer> map = new HashMap<>();
         List<InspectionClassModel> smellTypeClasses;
         for(SmellType smellType: SmellType.values())
