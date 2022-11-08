@@ -121,6 +121,16 @@ public class TestSmellTypeSummary implements SummaryContent {
         paneWidgets.setVisible(true);
     }
 
+    @Override
+    public void WriteDataToFile() {
+
+    }
+
+    @Override
+    public void ReadDataFromFile() {
+
+    }
+
     /**
      * Gets the methods for a matching smell
      *
