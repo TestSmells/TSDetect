@@ -109,7 +109,6 @@ public class TestFileSummary implements SummaryContent {
         passFileNoSmellData();
         passFileSmelliest();
         summaryHeader.setText("File Summary");
-        summaryHeader.setFont(new Font(null, Font.PLAIN,22));
 
         fileAnalyzed.LoadWidget(this.fileAnalyzedItem);
         fileHasSmell.LoadWidget(this.fileHasSmellItem);

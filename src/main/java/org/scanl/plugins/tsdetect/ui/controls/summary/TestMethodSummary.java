@@ -96,7 +96,7 @@ public class TestMethodSummary implements SummaryContent {
         passMethodTotalSmellyItemData();
         passMethodSmelliestItemData();
         summaryHeader.setText("Method Summary");
-        summaryHeader.setFont(new Font(null, Font.PLAIN,22));
+
 
         methodTotalTest.LoadWidget(this.methodTotalTestItem);
         methodTotalSmelly.LoadWidget(this.methodTotalSmellyItem);

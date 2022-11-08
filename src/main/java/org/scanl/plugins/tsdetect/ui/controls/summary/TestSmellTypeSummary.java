@@ -106,7 +106,6 @@ public class TestSmellTypeSummary implements SummaryContent {
         passSmellDetectedData();
         passSmellTotalData();
         summaryHeader.setText("Smell Type Summary");
-        summaryHeader.setFont(new Font(null, Font.PLAIN,22));
         smellTotal.LoadWidget(smellTotalItem);
         smellDetected.LoadWidget(smellDetectedItem);
         smellCommon.LoadWidget(smellCommonItem);
