@@ -22,8 +22,7 @@ public class PluginSettings {
         var appSettings = AppSettingsState.getInstance().settings;
         if (appSettings.containsKey(key)) return appSettings.get(key);
 
-        var defaultSettings = DefaultSettings.getInstance().settings;
-        return defaultSettings.get(key);
+        return DefaultSettings.getInstance().settings.get(key);
     }
     /**
      * Helper method to check if the user has agreed or not to sharing their data
