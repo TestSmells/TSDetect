@@ -11,11 +11,8 @@ public class Popup{
             case JOptionPane.NO_OPTION:
                 return false;
             case JOptionPane.CLOSED_OPTION:
-                break;
+                return null;
         }
-        return false;
-    }
-    public static void main(String args[]){
-        getPopup();
+        return null;
     }
 }

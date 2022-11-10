@@ -35,7 +35,8 @@ public class PluginSettings {
         var appSettings = AppSettingsState.getInstance().settings;
         if(!appSettings.containsKey("OPT_IN") && appSettings.size() != 0){
             Boolean result = Popup.getPopup();
-            appSettings.put("OPT_IN", result);
+            if(result != null)
+                appSettings.put("OPT_IN", result);
         }
     }
 
