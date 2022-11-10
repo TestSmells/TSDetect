@@ -4,7 +4,7 @@ import javax.swing.*;
 
 public class Popup{
     public static Boolean getPopup(){
-        int choice = JOptionPane.showConfirmDialog(null, "Do you consent to sending anonymous test smell data for research purposes?");
+        int choice = JOptionPane.showConfirmDialog(null, "Do you consent to sending anonymous test smell data for research purposes? (You can change this decision later in the TSDetect settings)");
         switch(choice){
             case JOptionPane.YES_OPTION:
                 return true;

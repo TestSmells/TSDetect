@@ -32,28 +32,12 @@ public class PluginSettings {
      * This is due to the TSDetectPlugin.xml only loading the Application level settings
      * at the time of this comment being written.
     * */
-    public static void PopupCheck(){
-        var projectSettings = ProjectSettingsState.getInstance().settings;
-//        if(!projectSettings.containsKey("OPT_IN") && projectSettings.size() != 0){
-//            Popup p = new Popup();
-//            System.out.println("Project settings popup");
-//            Boolean result = p.getPopup();
-//            projectSettings.put("OPT_IN", result);
-//        }
+    public static void popupCheck(){
         var appSettings = AppSettingsState.getInstance().settings;
         if(!appSettings.containsKey("OPT_IN") && appSettings.size() != 0){
-            Popup p = new Popup();
-            System.out.println("App settings popup");
-            Boolean result = p.getPopup();
+            Boolean result = Popup.getPopup();
             appSettings.put("OPT_IN", result);
         }
-        var defaultSettings = DefaultSettings.getInstance().settings;
-//        if(!defaultSettings.containsKey("OPT_IN")){
-//            Popup p = new Popup();
-//            System.out.println("Default settings popup");
-//            Boolean result = p.getPopup();
-//            defaultSettings.put("OPT_IN", result);
-//        }
     }
 
 }
