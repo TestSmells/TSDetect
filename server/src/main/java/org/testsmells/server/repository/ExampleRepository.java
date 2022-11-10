@@ -6,7 +6,6 @@ import org.jooq.ResultQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.testsmells.server.tables.pojos.TestSmells;
-import org.testsmells.server.util.DatasourceUtil;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -19,8 +18,9 @@ public class ExampleRepository {
 
     public List<TestSmells> getSmellTypes() throws SQLException {
         final String queryString = "SELECT * FROM tsdetect.test_smells";
-        ResultQuery<Record> query = dsl.resultQuery(queryString);
-        return query.fetchInto(TestSmells.class);
+        try (ResultQuery<Record> query = dsl.resultQuery(queryString)) {
+            return query.fetchInto(TestSmells.class);
+        }
     }
 
 }
