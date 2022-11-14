@@ -4,6 +4,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.uiDesigner.core.GridConstraints;
+import org.scanl.plugins.tsdetect.common.CreateXml;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.common.Util;
 import org.scanl.plugins.tsdetect.model.ExecutionResult;
@@ -22,6 +23,7 @@ import java.text.MessageFormat;
 
 import static com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH;
 import static org.scanl.plugins.tsdetect.common.Util.GetTestFiles;
+import static org.scanl.plugins.tsdetect.common.Util.xmlExist;
 
 public class SmellTabbedPaneWindow {
 
@@ -177,6 +179,9 @@ public class SmellTabbedPaneWindow {
     private void RunAnalysis() {
         System.out.println("Running...");
         Project project = ProjectManager.getInstance().getOpenProjects()[0];
+        if(!xmlExist()){
+            CreateXml.createXml();
+        }
         executionResult = Analyzer.getInstance().DetectTestSmells(project);
         totalTestFiles = GetTestFiles().size();
         System.out.println("Running Completed");

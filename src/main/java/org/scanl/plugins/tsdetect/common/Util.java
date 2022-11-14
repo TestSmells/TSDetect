@@ -18,7 +18,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 import java.util.*;
-import java.util.List;
+
 
 public class Util {
 
@@ -60,6 +60,19 @@ public class Util {
         return testClassesMap;
     }
 
+    public static boolean xmlExist(){
+        for(Project project: ProjectManager.getInstance().getOpenProjects()){
+            @NotNull Collection<VirtualFile> s = FileBasedIndex.getInstance()
+                    .getContainingFiles(FileTypeIndex.NAME, JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project));
+            for(VirtualFile file: s){
+                if(file.getPath().contains("Summary.xml")){
+                    System.out.println("Summary.xml exists");
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     public enum TreeNodeIcon{
         FILE,
         CLASS,
