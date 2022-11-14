@@ -59,8 +59,7 @@ public abstract class SmellInspection extends AbstractBaseJavaLocalInspectionToo
 	 * @return A boolean indicating whether the inspection should be ran.
 	 */
 	protected boolean shouldTestElement(PsiElement element) {
-		//current workaround to get headless to run, will investigate the issue and fix before merge
-
+		//TODO current workaround to get headless to run, will investigate the issue and fix before merge
 		//if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
 
 		PsiClass psiClass = element instanceof PsiClass ? (PsiClass) element : PsiTreeUtil.getParentOfType(element, PsiClass.class);

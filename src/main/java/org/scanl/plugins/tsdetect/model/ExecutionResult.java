@@ -1,10 +1,20 @@
 package org.scanl.plugins.tsdetect.model;
 
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectUtil;
+import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ExecutionResult {
@@ -56,11 +66,60 @@ public class ExecutionResult {
     }
 
     private void ReportCSV(){
-        for (InspectionClassModel inspectionClass : allClasses) {
-            //inspectionClass.
-
-        }
+        Project project = ProjectManager.getInstance().getOpenProjects()[0];
+        writeCSV(project.getName(), project.getBasePath());
     }
     private void ReportPieChart(){}
+
+    public void writeCSV(String projectName, String projectPath) {
+        int infectedClasses;
+        int infectedMethods;
+        //print the results
+        try {
+            FileWriter csv = new FileWriter(new File(projectPath, projectName + "-" + new Date() + ".csv"));
+            csv.write(projectName + "\n");
+            csv.write("Smell Type,Infected Classes,Infected Methods\n");
+
+            //get smell type
+            for (SmellType smellType : SmellType.values()) {
+                String smellName = PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + smellType.toString() + ".NAME.DISPLAY");
+                infectedClasses = 0;
+                infectedMethods = 0;
+                //get infected classes
+                for (InspectionClassModel smellyClass : getClassesBySmell(smellType, allClasses)) {
+                    infectedClasses++;
+                    //get infected methods
+                    for (InspectionMethodModel method : getMethodBySmell(smellType, allMethods)) {
+                        if (method.getClassName().getName().equals(smellyClass.getName())) {
+                            infectedMethods++;
+                        }
+                    }
+                }
+                csv.write(smellName + "," + infectedClasses + "," + infectedMethods + "\n");
+            }
+            csv.close();
+            System.out.println("\nCSV of results generated at " + projectPath);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+    }
+
+    protected List<InspectionMethodModel> getMethodBySmell(SmellType smell, List<InspectionMethodModel> allMethods) {
+        List<InspectionMethodModel> smellyMethods = new ArrayList<>();
+        for (InspectionMethodModel m : allMethods) {
+            if (m.getSmellTypeList().contains(smell))
+                smellyMethods.add(m);
+        }
+        return smellyMethods;
+    }
+
+    protected List<InspectionClassModel> getClassesBySmell(SmellType smell, List<InspectionClassModel> allClasses) {
+        List<InspectionClassModel> classes = new ArrayList<>();
+        for (InspectionClassModel smellyClass : allClasses) {
+            if (smellyClass.getSmellTypeList().contains(smell))
+                classes.add(smellyClass);
+        }
+        return classes;
+    }
 
 }
