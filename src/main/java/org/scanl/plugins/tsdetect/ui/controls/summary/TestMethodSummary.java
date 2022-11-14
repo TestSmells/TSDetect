@@ -5,11 +5,12 @@ import org.scanl.plugins.tsdetect.model.InspectionClassModel;
 import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
 import org.scanl.plugins.tsdetect.model.SmellType;
 import org.scanl.plugins.tsdetect.config.PluginSettings;
+import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import javax.swing.*;
-import java.awt.*;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +47,7 @@ public class TestMethodSummary implements SummaryContent {
 
     public void passMethodTotalTestData(){
         this.before = Integer.parseInt(methodTotalTestItem.getPrimaryValue());
-        this.methodTotalTestItem.setPrimaryHeader("Total test methods: ");
+        this.methodTotalTestItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.METHOD.TOTAL"));
         this.methodTotalTestItem.setPrimaryValue(String.valueOf(this.totalMethods));
         Change.setPrimaryChange(this.methodTotalTestItem, this.totalMethods, this.before);
 
@@ -54,16 +55,16 @@ public class TestMethodSummary implements SummaryContent {
 
     public void passMethodTotalSmellyItemData(){
         this.before = Integer.parseInt(this.methodTotalSmellyItem.getPrimaryValue());
-        this.methodTotalSmellyItem.setPrimaryHeader("Smelly methods: ");
+        this.methodTotalSmellyItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.METHOD.SMELLY"));
         this.methodTotalSmellyItem.setPrimaryValue(String.valueOf(this.smellyMethods));
         Change.setPrimaryChange(this.methodTotalSmellyItem, this.smellyMethods, this.before);
     }
 
     public void passMethodSmelliestItemData(){
-        this.methodSmelliestItem.setPrimaryHeader("Smelliest method: ");
+        this.methodSmelliestItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.METHOD.SMELLIEST"));
         this.methodSmelliestItem.setPrimaryValue(this.smelliestMethod);
         this.before = Integer.parseInt(this.methodSmelliestItem.getSecondaryValue());
-        this.methodSmelliestItem.setSecondaryHeader("Total smells: ");
+        this.methodSmelliestItem.setSecondaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.METHOD.TOTAL.SMELLS"));
         this.methodSmelliestItem.setSecondaryValue(String.valueOf(this.smelliestMethodNumber));
         Change.setSecondaryChange(this.methodSmelliestItem, this.smelliestMethodNumber,this.before);
 
@@ -95,9 +96,7 @@ public class TestMethodSummary implements SummaryContent {
         passMethodTotalTestData();
         passMethodTotalSmellyItemData();
         passMethodSmelliestItemData();
-        summaryHeader.setText("Method Summary");
-
-
+        summaryHeader.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.METHOD"));
         methodTotalTest.LoadWidget(this.methodTotalTestItem);
         methodTotalSmelly.LoadWidget(this.methodTotalSmellyItem);
         methodSmelliest.LoadWidget(this.methodSmelliestItem);

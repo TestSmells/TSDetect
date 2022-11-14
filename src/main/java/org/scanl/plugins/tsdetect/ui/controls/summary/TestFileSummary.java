@@ -1,10 +1,10 @@
 package org.scanl.plugins.tsdetect.ui.controls.summary;
 
+import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.*;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +47,7 @@ public class TestFileSummary implements SummaryContent {
     }
     public void passFileAnalyzedData(){
         this.before = Integer.parseInt(this.fileAnalyzedItem.getPrimaryValue());
-        this.fileAnalyzedItem.setPrimaryHeader("Test Files Analyzed: ");
+        this.fileAnalyzedItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.FILE.TOTAL"));
         this.fileAnalyzedItem.setPrimaryValue(String.valueOf(this.totalTestFiles));
         Change.setPrimaryChange(this.fileAnalyzedItem, this.totalTestFiles, this.before);
 
@@ -55,26 +55,25 @@ public class TestFileSummary implements SummaryContent {
 
     public void passFileHasSmellData(){
         this.before = Integer.parseInt(fileHasSmellItem.getPrimaryValue());
-        this.fileHasSmellItem.setPrimaryHeader("Files With Smells: ");
+        this.fileHasSmellItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.FILE.SMELLS"));
         this.fileHasSmellItem.setPrimaryValue(String.valueOf(this.analyzedFiles));
         Change.setPrimaryChange(this.fileHasSmellItem, this.analyzedFiles, this.before);
 
     }
     public void passFileNoSmellData(){
-        int value = this.totalTestFiles -this.analyzedFiles;
+        int value = this.totalTestFiles - this.analyzedFiles;
         this.before = Integer.parseInt(fileNoSmellItem.getPrimaryValue());
-        this.fileNoSmellItem.setPrimaryHeader("Files Without Smells: ");
+        this.fileNoSmellItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.FILE.NO.SMELLS"));
         this.fileNoSmellItem.setPrimaryValue(String.valueOf(value));
         Change.setPrimaryChange(this.fileNoSmellItem, value, this.before);
 
 
     }
     public void passFileSmelliest(){
-        this.fileSmelliestItem.setPrimaryHeader("Smelliest File: ");
+        this.fileSmelliestItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.FILE.SMELLIEST"));
         this.fileSmelliestItem.setPrimaryValue(this.smelliestFile);
-
         this.before = Integer.parseInt(fileSmelliestItem.getSecondaryValue());
-        this.fileSmelliestItem.setSecondaryHeader("Total Smells: ");
+        this.fileSmelliestItem.setSecondaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.TOTAL.SMELLS"));
         this.fileSmelliestItem.setSecondaryValue(String.valueOf(this.totalSmells));
         Change.setSecondaryChange(this.fileSmelliestItem, totalSmells, this.before);
 
@@ -108,7 +107,7 @@ public class TestFileSummary implements SummaryContent {
         passFileHasSmellData();
         passFileNoSmellData();
         passFileSmelliest();
-        summaryHeader.setText("File Summary");
+        summaryHeader.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.FILE"));
 
         fileAnalyzed.LoadWidget(this.fileAnalyzedItem);
         fileHasSmell.LoadWidget(this.fileHasSmellItem);

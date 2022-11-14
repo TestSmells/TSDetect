@@ -5,13 +5,12 @@ import org.scanl.plugins.tsdetect.model.AnalysisSummaryItem;
 import org.scanl.plugins.tsdetect.model.InspectionClassModel;
 import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
 import org.scanl.plugins.tsdetect.model.SmellType;
+import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.Map;
-import java.util.HashSet;
 
 public class TestSmellTypeSummary implements SummaryContent {
     Widget smellTotal;
@@ -47,23 +46,23 @@ public class TestSmellTypeSummary implements SummaryContent {
 
     public void passSmellTotalData(){
         this.before = Integer.parseInt(smellTotalItem.getPrimaryValue());
-        this.smellTotalItem.setPrimaryHeader("Total smelly instances: ");
+        this.smellTotalItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.SMELL.INSTANCE"));
         this.smellTotalItem.setPrimaryValue(String.valueOf(this.totalSmells));
         Change.setPrimaryChange(this.smellTotalItem, this.totalSmells, this.before);
     }
 
     public void passSmellDetectedData(){
         this.before = Integer.parseInt(smellDetectedItem.getPrimaryValue());
-        this.smellDetectedItem.setPrimaryHeader("Detected smell types: ");
+        this.smellDetectedItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.SMELL.DETECTED"));
         this.smellDetectedItem.setPrimaryValue(String.valueOf(this.totalSmellTypes));
         Change.setPrimaryChange(this.smellDetectedItem, this.totalSmellTypes, this.before);
     }
 
     public void passSmellCommonData(){
-        this.smellCommonItem.setPrimaryHeader("Most common smell type: ");
-        this.smellCommonItem.setPrimaryValue(this.mostCommonSmell);
+        this.smellCommonItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.SMELL.COMMON"));
+        this.smellCommonItem.setPrimaryValue(PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + this.mostCommonSmell + ".NAME.DISPLAY"));
         this.before = Integer.parseInt(smellCommonItem.getSecondaryValue());
-        this.smellCommonItem.setSecondaryHeader("Total instances: ");
+        this.smellCommonItem.setSecondaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.SMELL.COMMON.INSTANCE"));
         this.smellCommonItem.setSecondaryValue(String.valueOf(this.totalCommonSmell));
         Change.setSecondaryChange(this.smellCommonItem, this.totalCommonSmell, this.before);
 
@@ -105,7 +104,7 @@ public class TestSmellTypeSummary implements SummaryContent {
         passSmellCommonData();
         passSmellDetectedData();
         passSmellTotalData();
-        summaryHeader.setText("Smell Type Summary");
+        summaryHeader.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.SMELL.TYPE"));
         smellTotal.LoadWidget(smellTotalItem);
         smellDetected.LoadWidget(smellDetectedItem);
         smellCommon.LoadWidget(smellCommonItem);
