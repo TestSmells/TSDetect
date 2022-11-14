@@ -3,6 +3,7 @@ package org.scanl.plugins.tsdetect.ui.tabs;
 import com.intellij.util.PsiNavigateUtil;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.common.Util;
+import org.scanl.plugins.tsdetect.model.AnonymousData;
 import org.scanl.plugins.tsdetect.model.InspectionClassModel;
 import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
 import org.scanl.plugins.tsdetect.model.SmellType;
@@ -18,6 +19,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TabDetectedSmellTypes implements TabContent {
@@ -71,11 +73,17 @@ public class TabDetectedSmellTypes implements TabContent {
         DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
         root.removeAllChildren();
 
+        AnonymousData anonymousData = new AnonymousData();
+        anonymousData.addData("userID", "0");
+        anonymousData.addData("timestamp", new Date().toString());
+
         for (SmellType smellType : SmellType.values()) {
+            int numOfSmells = 0;
             String smellName = PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + smellType.toString() + ".NAME.DISPLAY");
             CustomTreeNode smellTypeNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.SMELL), smellName);
             for (InspectionClassModel smellyClass : getClassesBySmell(smellType)) {
                 CustomTreeNode classNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.CLASS), smellyClass.getPsiObject(), smellyClass.getName());
+                numOfSmells++;
                 for (InspectionMethodModel method : getMethodBySmell(smellType)) {
                     if (method.getClassName().getName().equals(smellyClass.getName())) {
                         CustomTreeNode methodNode = new CustomTreeNode(Util.GetTreeNodeIcon(Util.TreeNodeIcon.METHOD), method.getPsiObject(), method.getName());
@@ -85,8 +93,11 @@ public class TabDetectedSmellTypes implements TabContent {
                 smellTypeNode.add(classNode);
             }
             root.add(smellTypeNode);
+            //add smell data
+            anonymousData.addData(smellName, String.valueOf(numOfSmells));
         }
-
+        //send the data before or after it is rendered??
+        anonymousData.sendData();
         treeSmells.setCellRenderer(new CustomTreeCellRenderer());
         treeSmells.setRootVisible(false);
         model.reload(root);
