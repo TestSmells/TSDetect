@@ -41,127 +41,51 @@ import org.w3c.dom.Element;
 
 
 public class CreateXml {
+    static String content;
 
     public static void createXml(Project project) {
+
 
         WriteCommandAction.runWriteCommandAction(project, () -> {
             boolean xmlExist = FilenameIndex.getFilesByName(project, "AnalysisSummary.xml", GlobalSearchScope.projectScope(project)).length > 0;
             if (!xmlExist) {
+                setContent();
                 PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(project);
 
-                XmlFile xmlFile = (XmlFile) psiFileFactory.createFileFromText("AnalysisSummary.xml", XMLLanguage.INSTANCE, "Hello World!!!");
+                XmlFile xmlFile = (XmlFile) psiFileFactory.createFileFromText("AnalysisSummary.xml", XMLLanguage.INSTANCE, content);
                 EditorFactory editorFactory = EditorFactory.getInstance();
 
                 PsiDirectory psiDirectory = PsiDirectoryFactory.getInstance(project).createDirectory(project.getBaseDir());
                 psiDirectory.add(xmlFile);
             }
         });
-
-
-//                    PsiFile file =  FilenameIndex.getFilesByName(project, "Test123.xml", GlobalSearchScope.projectScope(project))[0];
-//                    PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
-//                    Editor xmlEditor = editorFactory.createEditor(Objects.requireNonNull(psiDocumentManager.getDocument(file)));
-//                    FileEditorManager.getInstance(project).openFile(file.getVirtualFile(), true);
-//                    FileDocumentManager.getInstance().saveAllDocuments();
-
-
-//
-//            DocumentBuilderFactory factory = DocumentBuilderFactory
-//                    .newInstance();
-//            DocumentBuilder builder = factory.newDocumentBuilder();
-//            Document document = builder.newDocument();
-//            document.setXmlStandalone(true);
-//
-//            Element analysisSummary = document.createElement("AnalysisSummary");
-//            document.appendChild(analysisSummary);
-//
-//            Element testFileSummary = document.createElement("TestFileSummary");
-//            analysisSummary.appendChild(testFileSummary);
-//            setTestFileSummary(document, testFileSummary);
-//
-//            Element testMethodSummary = document.createElement("TestMethodSummary");
-//            analysisSummary.appendChild(testMethodSummary);
-//            setTestMethodSummary(document, testMethodSummary);
-//
-//            Element testSmellTypeSummary = document.createElement("TestSmellTypeSummary");
-//            analysisSummary.appendChild(testSmellTypeSummary);
-//            setTestSmellTypeSummary(document, testSmellTypeSummary);
-//
-//
-//            TransformerFactory tff = TransformerFactory.newInstance();
-//
-//            Transformer tf = tff.newTransformer();
-//
-//            tf.setOutputProperty(OutputKeys.INDENT, "yes");
-//
-//
-//            tf.transform(new DOMSource(document), new StreamResult(new File(
-//                    "Summary.xml")));
-//            System.out.println("Create Summary.xml");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            System.out.println("fail to create Summary.xml");
-//        }
-
     }
+    public static void setContent(){
+        String tab1 = "\t";
+        String tab2 = "\t\t";
 
-    public static void setTestFileSummary(Document document, Element testFileSummary) {
-        Element testFilesAnalyzed = document.createElement("TestFilesAnalyzed");
-        testFilesAnalyzed.setTextContent("0");
-        testFileSummary.appendChild(testFilesAnalyzed);
 
-        Element filesWithSmells = document.createElement("FilesWithSmells");
-        filesWithSmells.setTextContent("0");
-        testFileSummary.appendChild(filesWithSmells);
-
-        Element filesWithoutSmell = document.createElement("FilesWithoutSmells");
-        filesWithoutSmell.setTextContent("0");
-        testFileSummary.appendChild(filesWithoutSmell);
-
-        Element smelliestFile = document.createElement("SmelliestFile");
-        smelliestFile.setTextContent("xyzTest.java");
-        testFileSummary.appendChild(smelliestFile);
-
-        Element totalSmells = document.createElement("TotalSmells");
-        totalSmells.setTextContent("0");
-        testFileSummary.appendChild(totalSmells);
+        content = "<?xml version=\"1.0 \"?>\n"
+                   + "<AnalysisSummary lastRunDate='2022-11-07' lastRunTime='15:38'>\n"
+                        + tab1+ "<TestFileSummary>\n"
+                            + tab2 +"<TestFilesAnalyzed>0</TestFilesAnalyzed>\n"
+                            + tab2 + "<FilesWithSmells>0</FilesWithSmells>\n"
+                            + tab2 + "<FilesWithoutSmells>0</FilesWithoutSmells>\n"
+                            + tab2 + "<SmelliestFile>xyzTest.java</SmelliestFile>\n"
+                            + tab2 + "<TotalSmells>0</TotalSmells>\n"
+                        + tab1 + "</TestFileSummary>\n"
+                        + tab1 + "<TestMethodSummary>\n"
+                            + tab2 + "<TotalTestMethods>0</TotalTestMethods>\n"
+                            + tab2 + "<SmellyMethods>0</SmellyMethods>\n"
+                            + tab2 + "<SmelliestMethod>test_ABC</SmelliestMethod>\n"
+                            + tab2 + "<TotalSmells>0</TotalSmells>\n"
+                        + tab1 + "</TestMethodSummary>\n"
+                        + tab1 +"<TestSmellTypeSummary>\n"
+                            + tab2 + "<SmellyInstances>0</SmellyInstances>\n"
+                            + tab2 + "<DetectedSmellTypes>0</DetectedSmellTypes>\n"
+                            + tab2 + "<MostCommonSmellType>MAGIC_NUMBER</MostCommonSmellType>\n"
+                            + tab2 +"<TotalInstances>0</TotalInstances>\n"
+                        + tab1 +"</TestSmellTypeSummary>\n"
+                    + "</AnalysisSummary>";
     }
-
-    public static void setTestMethodSummary(Document document, Element testMethodSummary) {
-        Element totalTestMethods = document.createElement("TotalTestMethods");
-        totalTestMethods.setTextContent("0");
-        testMethodSummary.appendChild(totalTestMethods);
-
-        Element smellyMethods = document.createElement("SmellyMethods");
-        smellyMethods.setTextContent("0");
-        testMethodSummary.appendChild(smellyMethods);
-
-        Element SmelliestMethod = document.createElement("SmelliestMethod");
-        SmelliestMethod.setTextContent("test_ABC");
-        testMethodSummary.appendChild(SmelliestMethod);
-
-        Element totalSmells = document.createElement("TotalSmells");
-        totalSmells.setTextContent("0");
-        testMethodSummary.appendChild(totalSmells);
-
     }
-
-    public static void setTestSmellTypeSummary(Document document, Element testSmellTypeSummary) {
-        Element smellyInstances = document.createElement("SmellyInstances");
-        smellyInstances.setTextContent("0");
-        testSmellTypeSummary.appendChild(smellyInstances);
-
-        Element detectedSmellTypes = document.createElement("DetectedSmellTypes");
-        detectedSmellTypes.setTextContent("0");
-        testSmellTypeSummary.appendChild(detectedSmellTypes);
-
-        Element mostCommonSmellType = document.createElement("MostCommonSmellType");
-        mostCommonSmellType.setTextContent("MAGIC_NUMBER");
-        testSmellTypeSummary.appendChild(mostCommonSmellType);
-
-        Element totalInstances = document.createElement("TotalInstances");
-        totalInstances.setTextContent("0");
-        testSmellTypeSummary.appendChild(totalInstances);
-
-    }
-}
