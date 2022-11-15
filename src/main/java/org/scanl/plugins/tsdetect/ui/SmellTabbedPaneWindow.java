@@ -180,7 +180,7 @@ public class SmellTabbedPaneWindow {
         System.out.println("Running...");
         Project project = ProjectManager.getInstance().getOpenProjects()[0];
         if(!xmlExist()){
-            CreateXml.createXml();
+            CreateXml.createXml(project);
         }
         executionResult = Analyzer.getInstance().DetectTestSmells(project);
         totalTestFiles = GetTestFiles().size();
