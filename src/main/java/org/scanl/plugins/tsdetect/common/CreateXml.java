@@ -45,7 +45,6 @@ public class CreateXml {
 
     public static void createXml(Project project) {
 
-
         WriteCommandAction.runWriteCommandAction(project, () -> {
             boolean xmlExist = FilenameIndex.getFilesByName(project, "AnalysisSummary.xml", GlobalSearchScope.projectScope(project)).length > 0;
             if (!xmlExist) {
@@ -63,8 +62,6 @@ public class CreateXml {
     public static void setContent(){
         String tab1 = "\t";
         String tab2 = "\t\t";
-
-
         content = "<?xml version=\"1.0 \"?>\n"
                    + "<AnalysisSummary lastRunDate='2022-11-07' lastRunTime='15:38'>\n"
                         + tab1+ "<TestFileSummary>\n"
@@ -88,4 +85,4 @@ public class CreateXml {
                         + tab1 +"</TestSmellTypeSummary>\n"
                     + "</AnalysisSummary>";
     }
-    }
+}
