@@ -108,6 +108,7 @@ public class ExecutionResult {
                     .createNotification("CSV of results generated at " + project.getBasePath(), NotificationType.INFORMATION)
                     .notify(project);
         } catch (IOException e) {
+            System.out.println("Unable to generate CSV due to: " + e.getMessage());
             NotificationGroupManager.getInstance()
                     .getNotificationGroup("TSDetect")
                     .createNotification("Unable to generate CSV due to: " + e.getMessage(), NotificationType.ERROR)
