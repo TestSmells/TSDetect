@@ -11,8 +11,8 @@ public class Popup{
             case JOptionPane.NO_OPTION:
                 return false;
             case JOptionPane.CLOSED_OPTION:
-                return null;
+                return false;
         }
-        return null;
+        return false;
     }
 }
