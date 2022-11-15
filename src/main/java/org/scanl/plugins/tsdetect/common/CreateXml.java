@@ -15,8 +15,10 @@ import javax.xml.transform.stream.StreamResult;
 
 import com.intellij.lang.Language;
 import com.intellij.lang.xml.XMLLanguage;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -37,20 +39,24 @@ import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+
 public class CreateXml {
 
     public static void createXml(Project project) {
-//        try {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(project);
 
-                    XmlFile xmlFile = (XmlFile) psiFileFactory.createFileFromText("Test123.xml", XMLLanguage.INSTANCE, "Hello World!!!");
-                    EditorFactory editorFactory = EditorFactory.getInstance();
+        WriteCommandAction.runWriteCommandAction(project, () -> {
+            boolean xmlExist = FilenameIndex.getFilesByName(project, "AnalysisSummary.xml", GlobalSearchScope.projectScope(project)).length > 0;
+            if (!xmlExist) {
+                PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(project);
 
-                    PsiDirectory psiDirectory = PsiDirectoryFactory.getInstance(project).createDirectory(project.getBaseDir());
-                    psiDirectory.add(xmlFile);
+                XmlFile xmlFile = (XmlFile) psiFileFactory.createFileFromText("AnalysisSummary.xml", XMLLanguage.INSTANCE, "Hello World!!!");
+                EditorFactory editorFactory = EditorFactory.getInstance();
+
+                PsiDirectory psiDirectory = PsiDirectoryFactory.getInstance(project).createDirectory(project.getBaseDir());
+                psiDirectory.add(xmlFile);
+            }
+        });
+
 
 //                    PsiFile file =  FilenameIndex.getFilesByName(project, "Test123.xml", GlobalSearchScope.projectScope(project))[0];
 //                    PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
@@ -58,7 +64,6 @@ public class CreateXml {
 //                    FileEditorManager.getInstance(project).openFile(file.getVirtualFile(), true);
 //                    FileDocumentManager.getInstance().saveAllDocuments();
 
-                }});
 
 //
 //            DocumentBuilderFactory factory = DocumentBuilderFactory

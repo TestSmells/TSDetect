@@ -23,7 +23,6 @@ import java.text.MessageFormat;
 
 import static com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH;
 import static org.scanl.plugins.tsdetect.common.Util.GetTestFiles;
-import static org.scanl.plugins.tsdetect.common.Util.xmlExist;
 
 public class SmellTabbedPaneWindow {
 
@@ -88,6 +87,9 @@ public class SmellTabbedPaneWindow {
         tabInfectedFiles = new TabInfectedFiles();
         tabSmells = new TabSmellDistribution();
         buttonExport.setVisible(false);
+
+        Project project = ProjectManager.getInstance().getOpenProjects()[0];
+        CreateXml.createXml(project);
 
         buttonAnalyzeProject.addActionListener(new ActionListener() {
             @Override
@@ -179,9 +181,6 @@ public class SmellTabbedPaneWindow {
     private void RunAnalysis() {
         System.out.println("Running...");
         Project project = ProjectManager.getInstance().getOpenProjects()[0];
-        if(!xmlExist()){
-            CreateXml.createXml(project);
-        }
         executionResult = Analyzer.getInstance().DetectTestSmells(project);
         totalTestFiles = GetTestFiles().size();
         System.out.println("Running Completed");
