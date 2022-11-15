@@ -1,5 +1,7 @@
 package org.scanl.plugins.tsdetect.model;
 
+import com.intellij.notification.NotificationGroupManager;
+import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectUtil;
@@ -67,17 +69,17 @@ public class ExecutionResult {
 
     private void ReportCSV(){
         Project project = ProjectManager.getInstance().getOpenProjects()[0];
-        writeCSV(project.getName(), project.getBasePath());
+        writeCSV(project);
     }
     private void ReportPieChart(){}
 
-    public void writeCSV(String projectName, String projectPath) {
+    public void writeCSV(Project project) {
         int infectedClasses;
         int infectedMethods;
         //print the results
         try {
-            FileWriter csv = new FileWriter(new File(projectPath, projectName + "-" + new Date() + ".csv"));
-            csv.write(projectName + "\n");
+            FileWriter csv = new FileWriter(new File(project.getBasePath(), project.getName() + "-" + new Date() + ".csv"));
+            csv.write(project.getName() + "\n");
             csv.write("Smell Type,Infected Classes,Infected Methods\n");
 
             //get smell type
@@ -98,9 +100,18 @@ public class ExecutionResult {
                 csv.write(smellName + "," + infectedClasses + "," + infectedMethods + "\n");
             }
             csv.close();
-            System.out.println("\nCSV of results generated at " + projectPath);
+            //notify headless via print
+            System.out.println("\nCSV of results generated at " + project.getBasePath());
+            //notify "Run Plugin" by intellij notification
+            NotificationGroupManager.getInstance()
+                    .getNotificationGroup("TSDetect")
+                    .createNotification("CSV of results generated at " + project.getBasePath(), NotificationType.INFORMATION)
+                    .notify(project);
         } catch (IOException e) {
-            System.out.println(e);
+            NotificationGroupManager.getInstance()
+                    .getNotificationGroup("TSDetect")
+                    .createNotification("Unable to generate CSV due to: " + e.getMessage(), NotificationType.ERROR)
+                    .notify(project);
         }
     }
 

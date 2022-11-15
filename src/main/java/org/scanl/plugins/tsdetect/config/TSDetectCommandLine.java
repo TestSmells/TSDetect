@@ -40,7 +40,7 @@ public class TSDetectCommandLine implements ApplicationStarter {
         Project project = ProjectUtil.openOrImport(Path.of(arg), null , false);
         ExecutionResult executionResult = Analyzer.getInstance().DetectTestSmells(project);
         ProjectManager.getInstance().closeAndDispose(project);
-        executionResult.writeCSV(projectName, arg);
+        executionResult.writeCSV(project);
     }
 
     @Override
