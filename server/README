@@ -17,6 +17,59 @@
 
 ## Build Application
 
-### Build Spring Boot JAR
+### Intellij Build
 
-Under the 
+#### Option 1
+
+From the Gradle submenu located in the top right traverse to the lifecycle folder:
+<br>
+`Tasks -> build`
+<br>
+Select the `build` task, right click and select `Run "server [build]"`
+
+#### Option 2
+
+Create a new `Gradle` run configuration in the top right dropdown menu with the following task:
+```
+build
+```
+Run the configuration by selecting the play button
+
+### CLI Build
+
+Within the `server` directory, run the following command:
+```bash
+./gradlew build
+```
+---
+
+## Running Application
+
+### Intellij Run
+
+#### Option 1
+
+From the Gradle submenu located in the top right traverse to the lifecycle folder:
+<br>
+`Tasks -> application`
+<br>
+Select the `bootRun` task, right click and select `Run "Run Server"`
+
+#### Option 2
+
+Create a new `Gradle` run configuration in the top right dropdown menu with the following task:
+```
+bootRun
+```
+Run the configuration by selecting the play button
+
+#### Option 3
+
+Right click the `ServerApplication` class and select `Run`
+
+### CLI Run
+
+Within the `server` directory, run the following command:
+```
+./gradlew bootRun
+```
