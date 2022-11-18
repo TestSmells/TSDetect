@@ -65,24 +65,24 @@ public class AnonymousData {
         //save the data locally
         if (tryNum > 5) {
             localSave(jsonString);
-        }
+        } else {
+            try {
+                CloseableHttpClient httpClient = HttpClients.createDefault();
+                HttpPost post = new HttpPost("http://localhost:8080");
+                post.setHeader("Content-Type", "application/json");
+                post.setHeader("Connection", "close");
+                post.setEntity(new StringEntity(jsonString, "application/json", "UTF-8"));
 
-        try {
-            CloseableHttpClient httpClient = HttpClients.createDefault();
-            HttpPost post = new HttpPost("http://localhost:8080");
-            post.setHeader("Content-Type", "application/json");
-            post.setHeader("Connection", "close");
-            post.setEntity(new StringEntity(jsonString, "application/json", "UTF-8"));
-
-            HttpResponse httpResponse = httpClient.execute(post);
-            if (!httpResponse.getStatusLine().toString().contains("200")) {
-                System.out.println("FAIL");
-                postRequest(jsonString, tryNum++);
-            } else {
-                System.out.println("SUCCESS");
+                HttpResponse httpResponse = httpClient.execute(post);
+                if (!httpResponse.getStatusLine().toString().contains("200")) {
+                    System.out.println("FAIL");
+                    postRequest(jsonString, tryNum+1);
+                } else {
+                    System.out.println("SUCCESS");
+                }
+            } catch (HttpException e) {
+                System.out.println(e);
             }
-        } catch (HttpException e) {
-            System.out.println(e);
         }
     }
 
