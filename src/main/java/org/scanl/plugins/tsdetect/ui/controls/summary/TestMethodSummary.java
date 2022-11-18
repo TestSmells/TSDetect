@@ -1,5 +1,6 @@
 package org.scanl.plugins.tsdetect.ui.controls.summary;
 
+import org.scanl.plugins.tsdetect.common.Xml;
 import org.scanl.plugins.tsdetect.model.AnalysisSummaryItem;
 import org.scanl.plugins.tsdetect.model.InspectionClassModel;
 import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
@@ -46,7 +47,7 @@ public class TestMethodSummary implements SummaryContent {
     }
 
     public void passMethodTotalTestData(){
-        this.before = Integer.parseInt(methodTotalTestItem.getPrimaryValue());
+        this.before = Integer.parseInt(Xml.getTotalTestMethods());
         this.methodTotalTestItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.METHOD.TOTAL"));
         this.methodTotalTestItem.setPrimaryValue(String.valueOf(this.totalMethods));
         Change.setPrimaryChange(this.methodTotalTestItem, this.totalMethods, this.before);
@@ -54,7 +55,7 @@ public class TestMethodSummary implements SummaryContent {
     }
 
     public void passMethodTotalSmellyItemData(){
-        this.before = Integer.parseInt(this.methodTotalSmellyItem.getPrimaryValue());
+        this.before = Integer.parseInt(Xml.getSmellyMethods());
         this.methodTotalSmellyItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.METHOD.SMELLY"));
         this.methodTotalSmellyItem.setPrimaryValue(String.valueOf(this.smellyMethods));
         Change.setPrimaryChange(this.methodTotalSmellyItem, this.smellyMethods, this.before);
@@ -63,7 +64,7 @@ public class TestMethodSummary implements SummaryContent {
     public void passMethodSmelliestItemData(){
         this.methodSmelliestItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.METHOD.SMELLIEST"));
         this.methodSmelliestItem.setPrimaryValue(this.smelliestMethod);
-        this.before = Integer.parseInt(this.methodSmelliestItem.getSecondaryValue());
+        this.before = Integer.parseInt(Xml.getMethodTotalSmells());
         this.methodSmelliestItem.setSecondaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.METHOD.TOTAL.SMELLS"));
         this.methodSmelliestItem.setSecondaryValue(String.valueOf(this.smelliestMethodNumber));
         Change.setSecondaryChange(this.methodSmelliestItem, this.smelliestMethodNumber,this.before);

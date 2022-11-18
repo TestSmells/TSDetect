@@ -7,6 +7,7 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import org.scanl.plugins.tsdetect.common.CreateXml;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.common.Util;
+import org.scanl.plugins.tsdetect.common.Xml;
 import org.scanl.plugins.tsdetect.model.ExecutionResult;
 import org.scanl.plugins.tsdetect.service.Analyzer;
 import org.scanl.plugins.tsdetect.ui.dialogs.ExportReport;
@@ -183,6 +184,7 @@ public class SmellTabbedPaneWindow {
         Project project = ProjectManager.getInstance().getOpenProjects()[0];
         executionResult = Analyzer.getInstance().DetectTestSmells(project);
         totalTestFiles = GetTestFiles().size();
+        Xml.geXml();
         System.out.println("Running Completed");
     }
 

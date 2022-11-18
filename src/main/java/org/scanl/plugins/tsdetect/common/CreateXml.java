@@ -10,10 +10,12 @@ import com.intellij.psi.impl.file.PsiDirectoryFactory;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.xml.XmlFile;
+import io.grpc.Attributes;
 
 
 public class CreateXml {
     static String content;
+    static XmlFile xmlFile;
     public static void createXml(Project project) {
 
         WriteCommandAction.runWriteCommandAction(project, () -> {
@@ -21,14 +23,24 @@ public class CreateXml {
             if (!xmlExist) {
                 setContent();
                 PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(project);
-
                 XmlFile xmlFile = (XmlFile) psiFileFactory.createFileFromText("AnalysisSummary.xml", XMLLanguage.INSTANCE, content);
-                EditorFactory editorFactory = EditorFactory.getInstance();
-
+                setXmlFile(xmlFile);
                 PsiDirectory psiDirectory = PsiDirectoryFactory.getInstance(project).createDirectory(project.getBaseDir());
                 psiDirectory.add(xmlFile);
+
+            }else {
+                xmlFile = (XmlFile) FilenameIndex.getFilesByName(project, "AnalysisSummary.xml", GlobalSearchScope.projectScope(project))[0];
+                setXmlFile(xmlFile);
             }
+
         });
+    }
+
+    public static void setXmlFile(XmlFile file){
+        xmlFile = file;
+    }
+    public static XmlFile getXmlFile(){
+        return xmlFile;
     }
     public static void setContent(){
         String tab1 = "\t";

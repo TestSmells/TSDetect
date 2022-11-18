@@ -1,5 +1,6 @@
 package org.scanl.plugins.tsdetect.ui.controls.summary;
 
+import org.scanl.plugins.tsdetect.common.Xml;
 import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.AnalysisSummaryItem;
 import org.scanl.plugins.tsdetect.model.InspectionClassModel;
@@ -45,14 +46,14 @@ public class TestSmellTypeSummary implements SummaryContent {
     }
 
     public void passSmellTotalData(){
-        this.before = Integer.parseInt(smellTotalItem.getPrimaryValue());
+        this.before = Integer.parseInt(Xml.getSmellyInstances());
         this.smellTotalItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.SMELL.INSTANCE"));
         this.smellTotalItem.setPrimaryValue(String.valueOf(this.totalSmells));
         Change.setPrimaryChange(this.smellTotalItem, this.totalSmells, this.before);
     }
 
     public void passSmellDetectedData(){
-        this.before = Integer.parseInt(smellDetectedItem.getPrimaryValue());
+        this.before = Integer.parseInt(Xml.getDetectedSmellTypes());
         this.smellDetectedItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.SMELL.DETECTED"));
         this.smellDetectedItem.setPrimaryValue(String.valueOf(this.totalSmellTypes));
         Change.setPrimaryChange(this.smellDetectedItem, this.totalSmellTypes, this.before);
@@ -61,7 +62,7 @@ public class TestSmellTypeSummary implements SummaryContent {
     public void passSmellCommonData(){
         this.smellCommonItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.SMELL.COMMON"));
         this.smellCommonItem.setPrimaryValue(PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + this.mostCommonSmell + ".NAME.DISPLAY"));
-        this.before = Integer.parseInt(smellCommonItem.getSecondaryValue());
+        this.before = Integer.parseInt(Xml.getTotalInstances());
         this.smellCommonItem.setSecondaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.SMELL.COMMON.INSTANCE"));
         this.smellCommonItem.setSecondaryValue(String.valueOf(this.totalCommonSmell));
         Change.setSecondaryChange(this.smellCommonItem, this.totalCommonSmell, this.before);
