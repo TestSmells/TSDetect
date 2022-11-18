@@ -96,11 +96,10 @@ public class TabDetectedSmellTypes implements TabContent {
             //add smell data
             anonymousData.addData(smellName, String.valueOf(numOfSmells));
         }
-        //send the data before or after it is rendered??
-        anonymousData.sendData();
         treeSmells.setCellRenderer(new CustomTreeCellRenderer());
         treeSmells.setRootVisible(false);
         model.reload(root);
+        anonymousData.sendData();
     }
 
     /**

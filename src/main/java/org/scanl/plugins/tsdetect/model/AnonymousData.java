@@ -1,16 +1,15 @@
 package org.scanl.plugins.tsdetect.model;
 
+import com.intellij.openapi.project.ProjectManager;
 import net.minidev.json.JSONObject;
-import org.scanl.plugins.tsdetect.config.application.AppSettingsState;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.HashMap;
-import java.util.Objects;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import java.io.*;
+import java.util.*;
 
 public class AnonymousData {
     private HashMap<String, String> data;
@@ -33,40 +32,70 @@ public class AnonymousData {
         //AppSettingsState settings = new AppSettingsState();
         //if (Objects.requireNonNull(settings.getState()).settings.get("OPT-IN")) {
             try {
-                URL url = new URL("http://localhost:8080");
-                URLConnection conn = url.openConnection();
-                conn.setDoOutput(true);
-                conn.setRequestProperty("Content-Type", "application/json");
-                conn.setRequestProperty("Connection", "close");
+                //get unsent data file
+                File dataFile = new File(ProjectManager.getInstance().getOpenProjects()[0].getBasePath() + "/unsentAnonymousData.json");
+                if (dataFile.exists()) {
+                    Scanner scanner = new Scanner(dataFile);
 
-                postRequest(conn, 1);
+                    //if file is not empty, store each line
+                    List<String> oldData = new ArrayList<>();
+                    while(scanner.hasNextLine()) {
+                        oldData.add(scanner.nextLine());
+                    }
+
+                    //delete old data file
+                    dataFile.delete();
+
+                    //send old data
+                    for (String jsonString : oldData) {
+                        postRequest(jsonString, 1);
+                    }
+                }
+                //send current data
+                JSONObject jsonWrap = new JSONObject(this.getHashMap());
+                postRequest(jsonWrap.toJSONString(), 1);
             } catch (Exception e) {
                 System.out.println(e);
             }
         //}
-
     }
 
-    public void postRequest(URLConnection conn, int tryNum) throws IOException {
+    public void postRequest(String jsonString, int tryNum) throws IOException {
         //do not attempt to send the data more than 5 times
+        //save the data locally
         if (tryNum > 5) {
-            return;
+            localSave(jsonString);
         }
 
-        JSONObject jsonWrap = new JSONObject(this.getHashMap());
-        try (DataOutputStream dos = new DataOutputStream(conn.getOutputStream())) {
-            dos.writeBytes(jsonWrap.toString());
-        }
+        try {
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+            HttpPost post = new HttpPost("http://localhost:8080");
+            post.setHeader("Content-Type", "application/json");
+            post.setHeader("Connection", "close");
+            post.setEntity(new StringEntity(jsonString, "application/json", "UTF-8"));
 
-        //placeholder retry logic for now
-        try (BufferedReader bf = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
-            String line;
-            while ((line = bf.readLine()) != null) {
-                System.out.println(line);
-                if (line.contains("statusCode") && !line.contains("200")) {
-                    postRequest(conn, tryNum++);
-                }
+            HttpResponse httpResponse = httpClient.execute(post);
+            if (!httpResponse.getStatusLine().toString().contains("200")) {
+                System.out.println("FAIL");
+                postRequest(jsonString, tryNum++);
+            } else {
+                System.out.println("SUCCESS");
             }
+        } catch (HttpException e) {
+            System.out.println(e);
+        }
+    }
+
+    public void localSave(String jsonString) {
+        //saves data that was unable to be sent after 5 tries
+        try {
+            FileWriter unsentDataFile = new FileWriter(new File(ProjectManager.getInstance().getOpenProjects()[0].getBasePath(), "unsentAnonymousData.json"), true);
+            BufferedWriter bw = new BufferedWriter(unsentDataFile);
+            bw.write(jsonString);
+            bw.newLine();
+            bw.close();
+        } catch (IOException e) {
+            System.out.println(e);
         }
     }
 }
