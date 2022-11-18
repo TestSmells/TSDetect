@@ -18,7 +18,7 @@ public class Xml {
     static String SmellyInstances;
     static String DetectedSmellTypes;
     static String TotalInstances;
-    public static void geXml() {
+    public static void getXml() {
 
         XmlFile file = CreateXml.getXmlFile();
         XmlDocument document = file.getDocument();
