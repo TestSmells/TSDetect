@@ -59,45 +59,6 @@ as either "PASS", "FAIL", or "PASS W/ NOTES". A section will be provided for not
 <br>
 
 ### Step 4
-- Stop 'Run Plugin', killing your instance of the plugin.
-- Open the TSDetect Plugin application in Intellij, and set the Run configuration to <kbd>Run Plugin</kbd>
-- Run the Plugin.
-- If prompted to select a project, select TSDetect.
-- **Verify that a popup is displayed that reads \"Do you consent to sending test smell data for research purposes?\"**
-  <br>
-- <br>Result: PASS W/ NOTES
-  <br>NOTES: Popup contains additional text reading " (you can change this decision later in the TSDetect settings)"
-  <br>
-  <br>
-
-### Step 5
-
-- Click the button labeled "Cancel"
-- **Verify that the popup closes**
-  <br>
-  <br>Result: PASS
-  <br>NOTES:
-  <br>
-  <br>
-
-### Step 6
-
-- In the instance of Intellij, Navigate to the Applications settings menu. <kbd>(File > Settings... > Tools > TSDetect: Application Settings)</kbd>
-- **Verify that the last item in the list of options reads "Opt in to data collection"**
-  <br>
-  <br>Result: PASS
-  <br>NOTES:
-  <br>
-  <br>
-
-- **Verify that the "Opt in to data collection" item's check box is not filled in**
-  <br>
-  <br>Result: PASS
-  <br>NOTES:
-  <br>
-  <br>
-
-### Step 7
 - Click the checkbox next to the "Opt in to data collection" item in the application settings menu.
 - **Verify that the "Opt in to data collection" item's check box is now filled in**
 <br>
@@ -106,30 +67,30 @@ as either "PASS", "FAIL", or "PASS W/ NOTES". A section will be provided for not
 <br>
 <br>
 
-### Step 8
-- close the settings window.
+### Step 5
+- Click "OK" to close the settings window.
 - In the instance of Intellij, Navigate to the Applications settings menu. <kbd>(File > Settings... > Tools > TSDetect: Application Settings)</kbd>
 - **Verify that the "Opt in to data collection" item's check box is still filled in**
 <br>
-<br>Result: FAILED
+<br>Result: PASS
 <br>NOTES: Check box is empty
 <br>
 <br>
 
-### Step 9
+### Step 6
 - Stop 'Run Plugin', killing your instance of the plugin.
 - Open the TSDetect Plugin application in Intellij, and set the Run configuration to <kbd>Run Plugin</kbd>
 - Run the Plugin.
 - If prompted to select a project, select TSDetect.
 - **Verify that a popup is NOT displayed that reads \"Do you consent to sending test smell data for research purposes?\"**
   <br>
-- <br>Result: FAILED
+- <br>Result: PASS
   <br>NOTES: Popup still displayed
   <br>
   <br>
 
 
-### Step 10
+### Step 7
 - Stop 'Run Plugin', killing your instance of the plugin.
 - Navigate to <kbd>..\TSDetect\build\idea-sandbox\config\options</kbd> and open <kbd>TSDetectPlugin.xml in an xml editor</kbd>
 - delete the entry in the map with the key "OPT_IN" and save the file.
@@ -145,7 +106,7 @@ as either "PASS", "FAIL", or "PASS W/ NOTES". A section will be provided for not
 
 
 
-### Step 11
+### Step 8
 
 - Click the button labeled "Yes" 
 - **Verify that the popup closes**
@@ -155,7 +116,7 @@ as either "PASS", "FAIL", or "PASS W/ NOTES". A section will be provided for not
 <br>
 <br>
 
-### Step 12
+### Step 9
 
 - In the instance of Intellij, Navigate to the Applications settings menu. <kbd>(File > Settings... > Tools > TSDetect: Application Settings)</kbd>
 - **Verify that the last item in the list of options reads "Opt in to data collection"**
@@ -172,7 +133,7 @@ as either "PASS", "FAIL", or "PASS W/ NOTES". A section will be provided for not
 <br>
 <br>
 
-### Step 13
+### Step 10
 - Click the checkbox next to the "Opt in to data collection" item in the application settings menu.
 - **Verify that the "Opt in to data collection" item's check box is NOT filled in**
 <br>
@@ -181,7 +142,7 @@ as either "PASS", "FAIL", or "PASS W/ NOTES". A section will be provided for not
 <br>
 <br>
 
-### Step 14
+### Step 11
 - Click "OK" to close the settings window.
 - In the instance of Intellij, Navigate to the Applications settings menu. <kbd>(File > Settings... > Tools > TSDetect: Application Settings)</kbd>
 - **Verify that the "Opt in to data collection" item's check box is still NOT filled in**
@@ -191,7 +152,7 @@ as either "PASS", "FAIL", or "PASS W/ NOTES". A section will be provided for not
 <br>
 <br>
 
-### Step 15
+### Step 12
 - Stop 'Run Plugin', killing your instance of the plugin.
 - Open the TSDetect Plugin application in Intellij, and set the Run configuration to <kbd>Run Plugin</kbd>
 - Run the Plugin.
@@ -203,7 +164,7 @@ as either "PASS", "FAIL", or "PASS W/ NOTES". A section will be provided for not
   <br>
   <br>
 
-### Step 16
+### Step 13
 - In the instance of Intellij, Navigate to the Applications settings menu. <kbd>(File > Settings... > Tools > TSDetect: Application Settings)</kbd>
 - **Verify that the "Opt in to data collection" item's check box is still NOT filled in**
 <br>
@@ -212,7 +173,7 @@ as either "PASS", "FAIL", or "PASS W/ NOTES". A section will be provided for not
 <br>
 <br>
 
-### Step 17
+### Step 14
 - Stop 'Run Plugin', killing your instance of the plugin.
 - Navigate to <kbd>..\TSDetect\build\idea-sandbox\config\options</kbd> and open <kbd>TSDetectPlugin.xml in an xml editor</kbd>
 - delete the entry in the map with the key "OPT_IN" and save the file.
@@ -227,7 +188,7 @@ as either "PASS", "FAIL", or "PASS W/ NOTES". A section will be provided for not
   <br>
 
 
-### Step 18
+### Step 15
 
 - Click the button labeled "No"
 - **Verify that the popup closes**
@@ -237,7 +198,7 @@ as either "PASS", "FAIL", or "PASS W/ NOTES". A section will be provided for not
 <br>
 <br>
 
-### Step 19
+### Step 16
 
 - In the instance of Intellij, Navigate to the Applications settings menu. <kbd>(File > Settings... > Tools > TSDetect: Application Settings)</kbd>
 - **Verify that the last item in the list of options reads "Opt in to data collection"**
@@ -254,7 +215,7 @@ as either "PASS", "FAIL", or "PASS W/ NOTES". A section will be provided for not
 <br>
 <br>
 
-### Step 20
+### Step 17
 - Click the checkbox next to the "Opt in to data collection" item in the application settings menu.
 - **Verify that the "Opt in to data collection" item's check box is filled in**
 <br>
@@ -263,7 +224,7 @@ as either "PASS", "FAIL", or "PASS W/ NOTES". A section will be provided for not
 <br>
 <br>
 
-### Step 21
+### Step 18
 - Click "OK" to close the settings window.
 - In the instance of Intellij, Navigate to the Applications settings menu. <kbd>(File > Settings... > Tools > TSDetect: Application Settings)</kbd>
 - **Verify that the "Opt in to data collection" item's check box is still filled in**
@@ -273,7 +234,7 @@ as either "PASS", "FAIL", or "PASS W/ NOTES". A section will be provided for not
 <br>
 <br>
 
-### Step 22
+### Step 19
 - Stop 'Run Plugin', killing your instance of the plugin.
 - Open the TSDetect Plugin application in Intellij, and set the Run configuration to <kbd>Run Plugin</kbd>
 - Run the Plugin.
@@ -285,8 +246,7 @@ as either "PASS", "FAIL", or "PASS W/ NOTES". A section will be provided for not
   <br>
   <br>
 
-### Step 23
-- close the settings window.
+### Step 20
 - In the instance of Intellij, Navigate to the Applications settings menu. <kbd>(File > Settings... > Tools > TSDetect: Application Settings)</kbd>
 - **Verify that the "Opt in to data collection" item's check box is still filled in**
 <br>
@@ -296,6 +256,6 @@ as either "PASS", "FAIL", or "PASS W/ NOTES". A section will be provided for not
 <br>
 
 ### Results
-**Number of Test Steps:** 23<br>
-**Number of Steps Passed:** 21<br>
+**Number of Test Steps:** 20<br>
+**Number of Steps Passed:** 20<br>
 **Notes: Some requirements updates are necessary to match increased scope of this item**
