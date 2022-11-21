@@ -11,10 +11,12 @@ import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.xml.XmlFile;
 import io.grpc.Attributes;
+import org.scanl.plugins.tsdetect.ui.controls.summary.TestFileSummary;
 
 
 public class CreateXml {
     static String content;
+    static String updatedContent;
     static XmlFile xmlFile;
     public static void createXml(Project project) {
 
@@ -28,11 +30,10 @@ public class CreateXml {
                 PsiDirectory psiDirectory = PsiDirectoryFactory.getInstance(project).createDirectory(project.getBaseDir());
                 psiDirectory.add(xmlFile);
 
-            }else {
+            } else {
                 xmlFile = (XmlFile) FilenameIndex.getFilesByName(project, "AnalysisSummary.xml", GlobalSearchScope.projectScope(project))[0];
                 setXmlFile(xmlFile);
             }
-
         });
     }
 
@@ -68,4 +69,33 @@ public class CreateXml {
                         + tab1 +"</TestSmellTypeSummary>\n"
                     + "</AnalysisSummary>";
     }
+
+    public static void setUpdatedContent(){
+        String tab1 = "\t";
+        String tab2 = "\t\t";
+        updatedContent = "<?xml version=\"1.0 \"?>\n"
+                + "<AnalysisSummary lastRunDate='2022-11-07' lastRunTime='15:38'>\n"
+                + tab1+ "<TestFileSummary>\n"
+                + tab2 +"<TestFilesAnalyzed>"+ Xml.getTestFilesAnalyzed() +"</TestFilesAnalyzed>\n"
+                + tab2 + "<FilesWithSmells>"+ Xml.getFilesWithSmells() +"</FilesWithSmells>\n"
+                + tab2 + "<FilesWithoutSmells>"+ Xml.getFilesWithoutSmells() +"</FilesWithoutSmells>\n"
+                + tab2 + "<SmelliestFile></SmelliestFile>\n"
+                + tab2 + "<TotalSmells>"+ Xml.getFileTotalSmells() +"</TotalSmells>\n"
+                + tab1 + "</TestFileSummary>\n"
+                + tab1 + "<TestMethodSummary>\n"
+                + tab2 + "<TotalTestMethods>"+ Xml.getTotalTestMethods() +"</TotalTestMethods>\n"
+                + tab2 + "<SmellyMethods>"+ Xml.getSmellyMethods() +"</SmellyMethods>\n"
+                + tab2 + "<SmelliestMethod></SmelliestMethod>\n"
+                + tab2 + "<TotalSmells>"+ Xml.getMethodTotalSmells() +"</TotalSmells>\n"
+                + tab1 + "</TestMethodSummary>\n"
+                + tab1 +"<TestSmellTypeSummary>\n"
+                + tab2 + "<SmellyInstances>"+ Xml.getSmellyInstances() +"</SmellyInstances>\n"
+                + tab2 + "<DetectedSmellTypes>"+ Xml.getDetectedSmellTypes() +"</DetectedSmellTypes>\n"
+                + tab2 + "<MostCommonSmellType></MostCommonSmellType>\n"
+                + tab2 +"<TotalInstances>"+ Xml.getTotalInstances() +"</TotalInstances>\n"
+                + tab1 +"</TestSmellTypeSummary>\n"
+                + "</AnalysisSummary>";
+    }
+
+
 }

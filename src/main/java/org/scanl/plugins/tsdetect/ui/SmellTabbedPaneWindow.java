@@ -163,7 +163,6 @@ public class SmellTabbedPaneWindow {
                             }
 
                         })).start();
-
             }
         });
 
