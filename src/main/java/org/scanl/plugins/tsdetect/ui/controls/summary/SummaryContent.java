@@ -13,7 +13,4 @@ public interface SummaryContent {
     public JPanel GetContent();
 
     void LoadData(List<InspectionClassModel> allClasses, List<InspectionMethodModel> allMethods);
-
-    void WriteDataToFile();
-    void ReadDataFromFile();
 }

@@ -67,6 +67,7 @@ public class TestMethodSummary implements SummaryContent {
     public void passMethodSmelliestItemData(){
         this.methodSmelliestItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.METHOD.SMELLIEST"));
         this.methodSmelliestItem.setPrimaryValue(this.smelliestMethod);
+        CreateXml.setSmelliestMethod(this.smelliestMethod);
         this.before = Integer.parseInt(Xml.getMethodTotalSmells());
         this.methodSmelliestItem.setSecondaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.METHOD.TOTAL.SMELLS"));
         this.methodSmelliestItem.setSecondaryValue(String.valueOf(this.smelliestMethodNumber));
@@ -114,16 +115,6 @@ public class TestMethodSummary implements SummaryContent {
         paneWidgets.validate();
 
         paneWidgets.setVisible(true);
-    }
-
-    @Override
-    public void WriteDataToFile() {
-
-    }
-
-    @Override
-    public void ReadDataFromFile() {
-
     }
 
     /**

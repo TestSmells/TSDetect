@@ -65,6 +65,7 @@ public class TestSmellTypeSummary implements SummaryContent {
     public void passSmellCommonData(){
         this.smellCommonItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.SMELL.COMMON"));
         this.smellCommonItem.setPrimaryValue(PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + this.mostCommonSmell + ".NAME.DISPLAY"));
+        CreateXml.setMostCommonSmellType(this.mostCommonSmell);
         this.before = Integer.parseInt(Xml.getTotalInstances());
         this.smellCommonItem.setSecondaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.SMELL.COMMON.INSTANCE"));
         this.smellCommonItem.setSecondaryValue(String.valueOf(this.totalCommonSmell));
@@ -123,17 +124,6 @@ public class TestSmellTypeSummary implements SummaryContent {
 
         paneWidgets.setVisible(true);
     }
-
-    @Override
-    public void WriteDataToFile() {
-
-    }
-
-    @Override
-    public void ReadDataFromFile() {
-
-    }
-
     /**
      * Gets the methods for a matching smell
      *

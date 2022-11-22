@@ -78,6 +78,7 @@ public class TestFileSummary implements SummaryContent {
 
         this.fileSmelliestItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.FILE.SMELLIEST"));
         this.fileSmelliestItem.setPrimaryValue(this.smelliestFile);
+        CreateXml.setSmelliestFile(this.smelliestFile);
         this.before = Integer.parseInt(Xml.getFileTotalSmells());
         this.fileSmelliestItem.setSecondaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.TOTAL.SMELLS"));
         this.fileSmelliestItem.setSecondaryValue(String.valueOf(this.totalSmells));
@@ -131,17 +132,6 @@ public class TestFileSummary implements SummaryContent {
 
         paneWidgets.setVisible(true);
     }
-
-    @Override
-    public void WriteDataToFile() {
-
-    }
-
-    @Override
-    public void ReadDataFromFile() {
-
-    }
-
     /**
      * Gets class that contains a matching smell
      *

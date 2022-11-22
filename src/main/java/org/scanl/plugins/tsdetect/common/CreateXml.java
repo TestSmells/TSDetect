@@ -32,6 +32,10 @@ public class CreateXml {
     static String SmellyInstances;
     static String DetectedSmellTypes;
     static String TotalInstances;
+    static String SmelliestFile;
+    static String SmelliestMethod;
+    static String MostCommonSmellType;
+
     public static void createXml(Project project) {
 
         WriteCommandAction.runWriteCommandAction(project, () -> {
@@ -106,23 +110,23 @@ public class CreateXml {
         updatedContent = "<?xml version=\"1.0 \"?>\n"
                 + "<AnalysisSummary lastRunDate='2022-11-07' lastRunTime='15:38'>\n"
                 + tab1+ "<TestFileSummary>\n"
-                + tab2 +"<TestFilesAnalyzed>"+ "10000"+"</TestFilesAnalyzed>\n"
-                + tab2 + "<FilesWithSmells>"+ "0"+"</FilesWithSmells>\n"
-                + tab2 + "<FilesWithoutSmells>" +"0" +"</FilesWithoutSmells>\n"
-                + tab2 + "<SmelliestFile>HelloWorld!</SmelliestFile>\n"
-                + tab2 + "<TotalSmells>"+"0"+"</TotalSmells>\n"
+                + tab2 +"<TestFilesAnalyzed>"+ TestFilesAnalyzed +"</TestFilesAnalyzed>\n"
+                + tab2 + "<FilesWithSmells>"+ FilesWithSmells +"</FilesWithSmells>\n"
+                + tab2 + "<FilesWithoutSmells>" +FilesWithoutSmells +"</FilesWithoutSmells>\n"
+                + tab2 + "<SmelliestFile>"+SmelliestFile +"</SmelliestFile>\n"
+                + tab2 + "<TotalSmells>"+ FileTotalSmells +"</TotalSmells>\n"
                 + tab1 + "</TestFileSummary>\n"
                 + tab1 + "<TestMethodSummary>\n"
-                + tab2 + "<TotalTestMethods>"+ Xml.getTotalTestMethods() +"</TotalTestMethods>\n"
-                + tab2 + "<SmellyMethods>"+ Xml.getSmellyMethods() +"</SmellyMethods>\n"
-                + tab2 + "<SmelliestMethod>HelloWorld!</SmelliestMethod>\n"
-                + tab2 + "<TotalSmells>"+ Xml.getMethodTotalSmells() +"</TotalSmells>\n"
+                + tab2 + "<TotalTestMethods>"+ TotalTestMethods +"</TotalTestMethods>\n"
+                + tab2 + "<SmellyMethods>"+ SmellyMethods +"</SmellyMethods>\n"
+                + tab2 + "<SmelliestMethod>"+ SmelliestMethod +"</SmelliestMethod>\n"
+                + tab2 + "<TotalSmells>"+ MethodTotalSmells +"</TotalSmells>\n"
                 + tab1 + "</TestMethodSummary>\n"
                 + tab1 +"<TestSmellTypeSummary>\n"
-                + tab2 + "<SmellyInstances>"+ Xml.getSmellyInstances() +"</SmellyInstances>\n"
-                + tab2 + "<DetectedSmellTypes>"+ Xml.getDetectedSmellTypes() +"</DetectedSmellTypes>\n"
-                + tab2 + "<MostCommonSmellType>ABC</MostCommonSmellType>\n"
-                + tab2 +"<TotalInstances>"+ Xml.getTotalInstances() +"</TotalInstances>\n"
+                + tab2 + "<SmellyInstances>"+ SmellyInstances +"</SmellyInstances>\n"
+                + tab2 + "<DetectedSmellTypes>"+ DetectedSmellTypes +"</DetectedSmellTypes>\n"
+                + tab2 + "<MostCommonSmellType>"+ MostCommonSmellType +"</MostCommonSmellType>\n"
+                + tab2 +"<TotalInstances>"+ TotalInstances +"</TotalInstances>\n"
                 + tab1 +"</TestSmellTypeSummary>\n"
                 + "</AnalysisSummary>";
     }
@@ -163,5 +167,14 @@ public class CreateXml {
     }
     public static void setTotalInstances(String NewTotalInstances){
         TotalInstances = NewTotalInstances;
+    }
+    public static void setSmelliestFile(String NewSmelliestFile){
+        SmelliestFile = NewSmelliestFile;
+    }
+    public static void setSmelliestMethod(String NewSmelliestMethod){
+        SmelliestMethod = NewSmelliestMethod;
+    }
+    public static void setMostCommonSmellType(String NewMostCommonSmellType){
+        MostCommonSmellType = NewMostCommonSmellType;
     }
 }
