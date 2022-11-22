@@ -3,8 +3,6 @@ package org.scanl.plugins.tsdetect.ui.tabs;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import org.scanl.plugins.tsdetect.common.CreateXml;
-import org.scanl.plugins.tsdetect.common.Xml;
-import org.scanl.plugins.tsdetect.model.AnalysisSummaryItem;
 import org.scanl.plugins.tsdetect.model.InspectionClassModel;
 import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
 import org.scanl.plugins.tsdetect.ui.controls.summary.TestSmellTypeSummary;
@@ -45,10 +43,10 @@ public class TabAnalysisSummary implements TabContent  {
         testMethodSummary.LoadData(allClasses, allMethods);
         testSmellTypeSummary.LoadData(allClasses, allMethods);
 
-        Xml.setXml();
         Project project = ProjectManager.getInstance().getOpenProjects()[0];
-
+        CreateXml.setDateTime();
         CreateXml.reCreateXml(project);
+
 
 
 

@@ -1,40 +1,38 @@
 package org.scanl.plugins.tsdetect.common;
 
 import com.intellij.lang.xml.XMLLanguage;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.impl.file.PsiDirectoryFactory;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.xml.XmlDocument;
 import com.intellij.psi.xml.XmlFile;
-import io.grpc.Attributes;
-import org.scanl.plugins.tsdetect.ui.controls.summary.TestFileSummary;
-
-import java.io.IOException;
+import com.intellij.psi.xml.XmlTag;
+import java.time.format.DateTimeFormatter;
 
 
 public class CreateXml {
     static String content;
-    static String updatedContent;
     static XmlFile xmlFile;
-    static String TestFilesAnalyzed;
-    static String FilesWithSmells;
-    static String FilesWithoutSmells;
-    static String FileTotalSmells;
-    static String TotalTestMethods;
-    static String SmellyMethods;
-    static String MethodTotalSmells;
-    static String SmellyInstances;
-    static String DetectedSmellTypes;
-    static String TotalInstances;
-    static String SmelliestFile;
-    static String SmelliestMethod;
-    static String MostCommonSmellType;
+    static String TestFilesAnalyzed = "0";
+    static String FilesWithSmells = "0";
+    static String FilesWithoutSmells = "0";
+    static String FileTotalSmells = "0";
+    static String TotalTestMethods = "0";
+    static String SmellyMethods = "0";
+    static String MethodTotalSmells = "0";
+    static String SmellyInstances = "0";
+    static String DetectedSmellTypes = "0";
+    static String TotalInstances = "0";
+    static String SmelliestFile = "NULL";
+    static String SmelliestMethod = "NULL";
+    static String MostCommonSmellType = "NULL";
+    static String date = "yyyy-mm-dd";
+    static String time = "hh:mm";
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
     public static void createXml(Project project) {
 
@@ -43,14 +41,12 @@ public class CreateXml {
             if (!xmlExist) {
                 setContent();
                 PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(project);
-                XmlFile xmlFile = (XmlFile) psiFileFactory.createFileFromText("AnalysisSummary.xml", XMLLanguage.INSTANCE, content);
-                setXmlFile(xmlFile);
+                xmlFile = (XmlFile) psiFileFactory.createFileFromText("AnalysisSummary.xml", XMLLanguage.INSTANCE, content);
                 PsiDirectory psiDirectory = PsiDirectoryFactory.getInstance(project).createDirectory(project.getBaseDir());
                 psiDirectory.add(xmlFile);
 
             } else {
                 xmlFile = (XmlFile) FilenameIndex.getFilesByName(project, "AnalysisSummary.xml", GlobalSearchScope.projectScope(project))[0];
-                setXmlFile(xmlFile);
             }
         });
     }
@@ -60,55 +56,52 @@ public class CreateXml {
             if (xmlExist) {
                 xmlFile.delete();
                 System.out.println("--delete--");
-                setUpdatedContent();
+                setContent();
                 PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(project);
-                XmlFile xmlFile = (XmlFile) psiFileFactory.createFileFromText("AnalysisSummary.xml", XMLLanguage.INSTANCE, updatedContent);
-                setXmlFile(xmlFile);
+                xmlFile = (XmlFile) psiFileFactory.createFileFromText("AnalysisSummary.xml", XMLLanguage.INSTANCE, content);
                 PsiDirectory psiDirectory = PsiDirectoryFactory.getInstance(project).createDirectory(project.getBaseDir());
                 psiDirectory.add(xmlFile);
             }
         });
 
     }
+    public static void getXml() {
+        XmlDocument document = xmlFile.getDocument();
+        if (document != null) {
+            XmlTag rootTag = document.getRootTag();
+            if (rootTag != null) {
+                XmlTag TestFileSummary = rootTag.findFirstSubTag("TestFileSummary");
+                if (TestFileSummary != null) {
+                    TestFilesAnalyzed = TestFileSummary.findSubTags("TestFilesAnalyzed")[0].getValue().getTrimmedText();
+                    FilesWithSmells = TestFileSummary.findSubTags("FilesWithSmells")[0].getValue().getTrimmedText();
+                    FilesWithoutSmells = TestFileSummary.findSubTags("FilesWithoutSmells")[0].getValue().getTrimmedText();
+                    FileTotalSmells = TestFileSummary.findSubTags("TotalSmells")[0].getValue().getTrimmedText();
 
-    public static void setXmlFile(XmlFile file){
-        xmlFile = file;
-    }
-    public static XmlFile getXmlFile(){
-        return xmlFile;
+                }
+
+                XmlTag TestMethodSummary = rootTag.findFirstSubTag("TestMethodSummary");
+                if (TestMethodSummary != null) {
+                    TotalTestMethods = TestMethodSummary.findSubTags("TotalTestMethods")[0].getValue().getTrimmedText();
+                    SmellyMethods = TestMethodSummary.findSubTags("SmellyMethods")[0].getValue().getTrimmedText();
+                    MethodTotalSmells = TestMethodSummary.findSubTags("TotalSmells")[0].getValue().getTrimmedText();
+
+                }
+
+                XmlTag TestSmellTypeSummary = rootTag.findFirstSubTag("TestSmellTypeSummary");
+                if (TestSmellTypeSummary != null) {
+                    SmellyInstances = TestSmellTypeSummary.findSubTags("SmellyInstances")[0].getValue().getTrimmedText();
+                    DetectedSmellTypes = TestSmellTypeSummary.findSubTags("DetectedSmellTypes")[0].getValue().getTrimmedText();
+                    TotalInstances = TestSmellTypeSummary.findSubTags("TotalInstances")[0].getValue().getTrimmedText();
+
+                }
+            }
+        }
     }
     public static void setContent(){
         String tab1 = "\t";
         String tab2 = "\t\t";
         content = "<?xml version=\"1.0 \"?>\n"
-                   + "<AnalysisSummary lastRunDate='2022-11-07' lastRunTime='15:38'>\n"
-                        + tab1+ "<TestFileSummary>\n"
-                            + tab2 +"<TestFilesAnalyzed>0</TestFilesAnalyzed>\n"
-                            + tab2 + "<FilesWithSmells>0</FilesWithSmells>\n"
-                            + tab2 + "<FilesWithoutSmells>0</FilesWithoutSmells>\n"
-                            + tab2 + "<SmelliestFile>xyzTest.java</SmelliestFile>\n"
-                            + tab2 + "<TotalSmells>0</TotalSmells>\n"
-                        + tab1 + "</TestFileSummary>\n"
-                        + tab1 + "<TestMethodSummary>\n"
-                            + tab2 + "<TotalTestMethods>0</TotalTestMethods>\n"
-                            + tab2 + "<SmellyMethods>0</SmellyMethods>\n"
-                            + tab2 + "<SmelliestMethod>test_ABC</SmelliestMethod>\n"
-                            + tab2 + "<TotalSmells>0</TotalSmells>\n"
-                        + tab1 + "</TestMethodSummary>\n"
-                        + tab1 +"<TestSmellTypeSummary>\n"
-                            + tab2 + "<SmellyInstances>0</SmellyInstances>\n"
-                            + tab2 + "<DetectedSmellTypes>0</DetectedSmellTypes>\n"
-                            + tab2 + "<MostCommonSmellType>MAGIC_NUMBER</MostCommonSmellType>\n"
-                            + tab2 +"<TotalInstances>0</TotalInstances>\n"
-                        + tab1 +"</TestSmellTypeSummary>\n"
-                    + "</AnalysisSummary>";
-    }
-
-    public static void setUpdatedContent(){
-        String tab1 = "\t";
-        String tab2 = "\t\t";
-        updatedContent = "<?xml version=\"1.0 \"?>\n"
-                + "<AnalysisSummary lastRunDate='2022-11-07' lastRunTime='15:38'>\n"
+                + "<AnalysisSummary lastRunDate='" + date+ "' lastRunTime='"+ time +"'>\n"
                 + tab1+ "<TestFileSummary>\n"
                 + tab2 +"<TestFilesAnalyzed>"+ TestFilesAnalyzed +"</TestFilesAnalyzed>\n"
                 + tab2 + "<FilesWithSmells>"+ FilesWithSmells +"</FilesWithSmells>\n"
@@ -177,4 +170,50 @@ public class CreateXml {
     public static void setMostCommonSmellType(String NewMostCommonSmellType){
         MostCommonSmellType = NewMostCommonSmellType;
     }
+    public static void setDateTime(){
+        date = String.valueOf(java.time.LocalDate.now());
+        time = java.time.LocalTime.now().format(formatter);
+    }
+    /** File **/
+    public static String getTestFilesAnalyzed() {
+        return TestFilesAnalyzed;
+    }
+
+    public static String getFilesWithSmells() {
+        return FilesWithSmells;
+    }
+
+    public static String getFilesWithoutSmells() {
+        return FilesWithoutSmells;
+    }
+
+    public static String getFileTotalSmells() {
+        return FileTotalSmells;
+    }
+
+    /** Method **/
+    public static String getTotalTestMethods() {
+        return TotalTestMethods;
+    }
+
+    public static String getSmellyMethods() {
+        return SmellyMethods;
+    }
+
+    public static String getMethodTotalSmells() {
+        return MethodTotalSmells;
+    }
+    /** SmellType **/
+    public static String getSmellyInstances() {
+        return SmellyInstances;
+    }
+
+    public static String getDetectedSmellTypes() {
+        return DetectedSmellTypes;
+    }
+
+    public static String getTotalInstances() {
+        return TotalInstances;
+    }
+
 }

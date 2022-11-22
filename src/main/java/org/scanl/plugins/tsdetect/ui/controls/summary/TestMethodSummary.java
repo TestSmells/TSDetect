@@ -1,7 +1,6 @@
 package org.scanl.plugins.tsdetect.ui.controls.summary;
 
 import org.scanl.plugins.tsdetect.common.CreateXml;
-import org.scanl.plugins.tsdetect.common.Xml;
 import org.scanl.plugins.tsdetect.model.AnalysisSummaryItem;
 import org.scanl.plugins.tsdetect.model.InspectionClassModel;
 import org.scanl.plugins.tsdetect.model.InspectionMethodModel;
@@ -48,7 +47,7 @@ public class TestMethodSummary implements SummaryContent {
     }
 
     public void passMethodTotalTestData(){
-        this.before = Integer.parseInt(Xml.getTotalTestMethods());
+        this.before = Integer.parseInt(CreateXml.getTotalTestMethods());
         this.methodTotalTestItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.METHOD.TOTAL"));
         this.methodTotalTestItem.setPrimaryValue(String.valueOf(this.totalMethods));
         CreateXml.setTotalTestMethods(String.valueOf(this.totalMethods));
@@ -57,7 +56,7 @@ public class TestMethodSummary implements SummaryContent {
     }
 
     public void passMethodTotalSmellyItemData(){
-        this.before = Integer.parseInt(Xml.getSmellyMethods());
+        this.before = Integer.parseInt(CreateXml.getSmellyMethods());
         this.methodTotalSmellyItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.METHOD.SMELLY"));
         this.methodTotalSmellyItem.setPrimaryValue(String.valueOf(this.smellyMethods));
         CreateXml.setSmellyMethods(String.valueOf(this.smellyMethods));
@@ -68,7 +67,7 @@ public class TestMethodSummary implements SummaryContent {
         this.methodSmelliestItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.METHOD.SMELLIEST"));
         this.methodSmelliestItem.setPrimaryValue(this.smelliestMethod);
         CreateXml.setSmelliestMethod(this.smelliestMethod);
-        this.before = Integer.parseInt(Xml.getMethodTotalSmells());
+        this.before = Integer.parseInt(CreateXml.getMethodTotalSmells());
         this.methodSmelliestItem.setSecondaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.METHOD.TOTAL.SMELLS"));
         this.methodSmelliestItem.setSecondaryValue(String.valueOf(this.smelliestMethodNumber));
         CreateXml.setMethodTotalSmells(String.valueOf(this.smelliestMethodNumber));

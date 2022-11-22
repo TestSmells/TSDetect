@@ -2,7 +2,6 @@ package org.scanl.plugins.tsdetect.ui.controls.summary;
 
 import org.scanl.plugins.tsdetect.common.CreateXml;
 import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
-import org.scanl.plugins.tsdetect.common.Xml;
 import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.*;
 
@@ -48,7 +47,7 @@ public class TestFileSummary implements SummaryContent {
         return panelMain;
     }
     public void passFileAnalyzedData(){
-        this.before = Integer.parseInt(Xml.getTestFilesAnalyzed());
+        this.before = Integer.parseInt(CreateXml.getTestFilesAnalyzed());
         this.fileAnalyzedItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.FILE.TOTAL"));
         this.fileAnalyzedItem.setPrimaryValue(String.valueOf(this.totalTestFiles));
         CreateXml.setTestFilesAnalyzed(String.valueOf(this.totalTestFiles));
@@ -57,7 +56,7 @@ public class TestFileSummary implements SummaryContent {
     }
 
     public void passFileHasSmellData(){
-        this.before = Integer.parseInt(Xml.getFilesWithSmells());
+        this.before = Integer.parseInt(CreateXml.getFilesWithSmells());
         this.fileHasSmellItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.FILE.SMELLS"));
         this.fileHasSmellItem.setPrimaryValue(String.valueOf(this.analyzedFiles));
         CreateXml.setFilesWithSmells(String.valueOf(this.analyzedFiles));
@@ -65,7 +64,7 @@ public class TestFileSummary implements SummaryContent {
 
     }
     public void passFileNoSmellData(){
-        this.before = Integer.parseInt(Xml.getFilesWithoutSmells());
+        this.before = Integer.parseInt(CreateXml.getFilesWithoutSmells());
         int value = this.totalTestFiles - this.analyzedFiles;
         this.fileNoSmellItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.FILE.NO.SMELLS"));
         this.fileNoSmellItem.setPrimaryValue(String.valueOf(value));
@@ -79,7 +78,7 @@ public class TestFileSummary implements SummaryContent {
         this.fileSmelliestItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.FILE.SMELLIEST"));
         this.fileSmelliestItem.setPrimaryValue(this.smelliestFile);
         CreateXml.setSmelliestFile(this.smelliestFile);
-        this.before = Integer.parseInt(Xml.getFileTotalSmells());
+        this.before = Integer.parseInt(CreateXml.getFileTotalSmells());
         this.fileSmelliestItem.setSecondaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.TOTAL.SMELLS"));
         this.fileSmelliestItem.setSecondaryValue(String.valueOf(this.totalSmells));
         CreateXml.setFileTotalSmells(String.valueOf(this.totalSmells));

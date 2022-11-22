@@ -1,7 +1,6 @@
 package org.scanl.plugins.tsdetect.ui.controls.summary;
 
 import org.scanl.plugins.tsdetect.common.CreateXml;
-import org.scanl.plugins.tsdetect.common.Xml;
 import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.AnalysisSummaryItem;
 import org.scanl.plugins.tsdetect.model.InspectionClassModel;
@@ -47,7 +46,7 @@ public class TestSmellTypeSummary implements SummaryContent {
     }
 
     public void passSmellTotalData(){
-        this.before = Integer.parseInt(Xml.getSmellyInstances());
+        this.before = Integer.parseInt(CreateXml.getSmellyInstances());
         this.smellTotalItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.SMELL.INSTANCE"));
         this.smellTotalItem.setPrimaryValue(String.valueOf(this.totalSmells));
         CreateXml.setSmellyInstances(String.valueOf(this.totalSmells));
@@ -55,7 +54,7 @@ public class TestSmellTypeSummary implements SummaryContent {
     }
 
     public void passSmellDetectedData(){
-        this.before = Integer.parseInt(Xml.getDetectedSmellTypes());
+        this.before = Integer.parseInt(CreateXml.getDetectedSmellTypes());
         this.smellDetectedItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.SMELL.DETECTED"));
         this.smellDetectedItem.setPrimaryValue(String.valueOf(this.totalSmellTypes));
         CreateXml.setDetectedSmellTypes(String.valueOf(this.totalSmellTypes));
@@ -66,7 +65,7 @@ public class TestSmellTypeSummary implements SummaryContent {
         this.smellCommonItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.SMELL.COMMON"));
         this.smellCommonItem.setPrimaryValue(PluginResourceBundle.message(PluginResourceBundle.Type.INSPECTION, "INSPECTION.SMELL." + this.mostCommonSmell + ".NAME.DISPLAY"));
         CreateXml.setMostCommonSmellType(this.mostCommonSmell);
-        this.before = Integer.parseInt(Xml.getTotalInstances());
+        this.before = Integer.parseInt(CreateXml.getTotalInstances());
         this.smellCommonItem.setSecondaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.SMELL.COMMON.INSTANCE"));
         this.smellCommonItem.setSecondaryValue(String.valueOf(this.totalCommonSmell));
         CreateXml.setTotalInstances(String.valueOf(this.totalCommonSmell));
