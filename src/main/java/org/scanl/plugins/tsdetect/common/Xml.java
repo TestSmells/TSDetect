@@ -32,8 +32,8 @@ public class Xml {
             if (rootTag != null) {
                 XmlTag TestFileSummary = rootTag.findFirstSubTag("TestFileSummary");
                 if (TestFileSummary != null) {
-                    TestFilesAnalyzed  = TestFileSummary.findSubTags("TestFilesAnalyzed")[0].getValue().getTrimmedText();
-                    FilesWithSmells  = TestFileSummary.findSubTags("FilesWithSmells")[0].getValue().getTrimmedText();
+                    TestFilesAnalyzed = TestFileSummary.findSubTags("TestFilesAnalyzed")[0].getValue().getTrimmedText();
+                    FilesWithSmells = TestFileSummary.findSubTags("FilesWithSmells")[0].getValue().getTrimmedText();
                     FilesWithoutSmells = TestFileSummary.findSubTags("FilesWithoutSmells")[0].getValue().getTrimmedText();
                     FileTotalSmells = TestFileSummary.findSubTags("TotalSmells")[0].getValue().getTrimmedText();
 
@@ -41,7 +41,7 @@ public class Xml {
 
                 XmlTag TestMethodSummary = rootTag.findFirstSubTag("TestMethodSummary");
                 if (TestMethodSummary != null) {
-                    TotalTestMethods  = TestMethodSummary.findSubTags("TotalTestMethods")[0].getValue().getTrimmedText();
+                    TotalTestMethods = TestMethodSummary.findSubTags("TotalTestMethods")[0].getValue().getTrimmedText();
                     SmellyMethods = TestMethodSummary.findSubTags("SmellyMethods")[0].getValue().getTrimmedText();
                     MethodTotalSmells = TestMethodSummary.findSubTags("TotalSmells")[0].getValue().getTrimmedText();
 
@@ -93,76 +93,54 @@ public class Xml {
         }
     }
 
-    /** File **/
-    public static String getTestFilesAnalyzed(){
+    /**
+     * File
+     **/
+    public static String getTestFilesAnalyzed() {
         return TestFilesAnalyzed;
     }
-    public static String getFilesWithSmells(){
+
+    public static String getFilesWithSmells() {
         return FilesWithSmells;
     }
-    public static String getFilesWithoutSmells(){
+
+    public static String getFilesWithoutSmells() {
         return FilesWithoutSmells;
     }
-    public static String getFileTotalSmells(){
+
+    public static String getFileTotalSmells() {
         return FileTotalSmells;
     }
-    /** Method**/
-    public static String getTotalTestMethods(){
+
+    /**
+     * Method
+     **/
+    public static String getTotalTestMethods() {
         return TotalTestMethods;
     }
-    public static String getSmellyMethods(){
+
+    public static String getSmellyMethods() {
         return SmellyMethods;
     }
-    public static String getMethodTotalSmells(){
+
+    public static String getMethodTotalSmells() {
         return MethodTotalSmells;
     }
-    /** SmellType **/
-    public static String getSmellyInstances(){
+
+    /**
+     * SmellType
+     **/
+    public static String getSmellyInstances() {
         return SmellyInstances;
     }
 
-    public static String getDetectedSmellTypes(){
+    public static String getDetectedSmellTypes() {
         return DetectedSmellTypes;
     }
-    public static String getTotalInstances(){
+
+    public static String getTotalInstances() {
         return TotalInstances;
     }
 
 
-    /** File **/
-    public static void setTestFilesAnalyzed(String NewTestFilesAnalyzed){
-        TestFilesAnalyzed = NewTestFilesAnalyzed;
-    }
-    public static void setFilesWithSmells(String NewFilesWithSmells){
-         FilesWithSmells = NewFilesWithSmells;
-    }
-    public static void setFilesWithoutSmells(String NewFilesWithoutSmells){
-        FilesWithoutSmells = NewFilesWithoutSmells;
-    }
-    public static void setFileTotalSmells(String NewFileTotalSmells){
-        FileTotalSmells = NewFileTotalSmells;
-    }
-
-    /** Method**/
-    public static void setTotalTestMethods(String NewTotalTestMethods){
-        TotalTestMethods = NewTotalTestMethods;
-    }
-    public static void setSmellyMethods(String NewSmellyMethods){
-        SmellyMethods = NewSmellyMethods;
-    }
-    public static void setMethodTotalSmells(String NewMethodTotalSmells){
-        MethodTotalSmells = NewMethodTotalSmells;
-    }
-
-    /** SmellType **/
-    public static void setSmellyInstances(String NewSmellyInstances){
-        SmellyInstances = NewSmellyInstances;
-    }
-
-    public static void setDetectedSmellTypes(String NewDetectedSmellTypes){
-        DetectedSmellTypes = NewDetectedSmellTypes;
-    }
-    public static void setTotalInstances(String NewTotalInstances){
-        TotalInstances = NewTotalInstances;
-    }
 }

@@ -1,5 +1,6 @@
 package org.scanl.plugins.tsdetect.ui.controls.summary;
 
+import org.scanl.plugins.tsdetect.common.CreateXml;
 import org.scanl.plugins.tsdetect.common.Xml;
 import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.AnalysisSummaryItem;
@@ -49,7 +50,7 @@ public class TestSmellTypeSummary implements SummaryContent {
         this.before = Integer.parseInt(Xml.getSmellyInstances());
         this.smellTotalItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.SMELL.INSTANCE"));
         this.smellTotalItem.setPrimaryValue(String.valueOf(this.totalSmells));
-        Xml.setSmellyInstances(String.valueOf(this.totalSmells));
+        CreateXml.setSmellyInstances(String.valueOf(this.totalSmells));
         Change.setPrimaryChange(this.smellTotalItem, this.totalSmells, this.before);
     }
 
@@ -57,7 +58,7 @@ public class TestSmellTypeSummary implements SummaryContent {
         this.before = Integer.parseInt(Xml.getDetectedSmellTypes());
         this.smellDetectedItem.setPrimaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.SMELL.DETECTED"));
         this.smellDetectedItem.setPrimaryValue(String.valueOf(this.totalSmellTypes));
-        Xml.setDetectedSmellTypes(String.valueOf(this.totalSmellTypes));
+        CreateXml.setDetectedSmellTypes(String.valueOf(this.totalSmellTypes));
         Change.setPrimaryChange(this.smellDetectedItem, this.totalSmellTypes, this.before);
     }
 
@@ -67,7 +68,7 @@ public class TestSmellTypeSummary implements SummaryContent {
         this.before = Integer.parseInt(Xml.getTotalInstances());
         this.smellCommonItem.setSecondaryHeader(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "SUMMARY.HEADER.SMELL.COMMON.INSTANCE"));
         this.smellCommonItem.setSecondaryValue(String.valueOf(this.totalCommonSmell));
-        Xml.setTotalInstances(String.valueOf(this.totalCommonSmell));
+        CreateXml.setTotalInstances(String.valueOf(this.totalCommonSmell));
         Change.setSecondaryChange(this.smellCommonItem, this.totalCommonSmell, this.before);
 
     }
