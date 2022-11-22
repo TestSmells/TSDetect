@@ -89,8 +89,7 @@ public class SmellTabbedPaneWindow {
         tabSmells = new TabSmellDistribution();
         buttonExport.setVisible(false);
 
-        Project project = ProjectManager.getInstance().getOpenProjects()[0];
-        CreateXml.createXml(project);
+
 
         buttonAnalyzeProject.addActionListener(new ActionListener() {
             @Override
@@ -105,13 +104,16 @@ public class SmellTabbedPaneWindow {
                 panelInspection.remove(tabbedPane);
                 panelInspection.updateUI();
 
+                Project project = ProjectManager.getInstance().getOpenProjects()[0];
+                CreateXml.createXml(project);
+
                 new Thread(() ->
                         ApplicationManager.getApplication().runReadAction(new Runnable() {
                             @Override
                             public void run() {
                                 RunAnalysis();
 
-                                SwingUtilities.invokeLater(new Runnable() {
+                                ApplicationManager.getApplication().invokeLater(new Runnable() {
                                     @Override
                                     public void run() {
                                         buttonAnalyzeProject.setText(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "BUTTON.ANALYSIS.NAME"));
@@ -185,6 +187,8 @@ public class SmellTabbedPaneWindow {
         totalTestFiles = GetTestFiles().size();
         Xml.getXml();
         System.out.println("Running Completed");
+
+
     }
 
     public JPanel getContent() {
