@@ -16,12 +16,12 @@ import static org.testsmells.server.repository.Constants.*;
 
 @Repository
 public class DBInputTool {
-    private final DSLContext dashboardDsl;
-    private final HikariDataSource dashboardDatasource;
-    public DBInputTool(@Qualifier("dsl-dashboard") DSLContext dashboardDsl,
-                       @Qualifier("ds-dashboard") HikariDataSource dashboardDatasource) {
-        this.dashboardDsl = dashboardDsl;
-        this.dashboardDatasource = dashboardDatasource;
+    private final DSLContext pluginDsl;
+    private final HikariDataSource pluginDatasource;
+    public DBInputTool(@Qualifier("dsl-dashboard") DSLContext pluginDsl,
+                       @Qualifier("ds-dashboard") HikariDataSource pluginDatasource) {
+        this.pluginDsl = pluginDsl;
+        this.pluginDatasource = pluginDatasource;
     }
 
     /**
@@ -57,7 +57,7 @@ public class DBInputTool {
 
         // Open a connection
         //System.out.println("open a connection");
-        try (Connection conn = dashboardDatasource.getConnection();
+        try (Connection conn = pluginDatasource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(ADD_TEST_RUN_QUERY)) { //add uid and date run to the test_run table
             stmt.setString(1, uid);
             stmt.setTimestamp(2, dateRun);
@@ -90,7 +90,7 @@ public class DBInputTool {
 
         // Open a connection
         //System.out.println("open a connection");
-        try(Connection conn = dashboardDatasource.getConnection();
+        try(Connection conn = pluginDatasource.getConnection();
             PreparedStatement stmt = conn.prepareStatement(GET_RUN_ID)){ //get the run id generated when this run was added to test_runs
             stmt.setString(1, UID);
             stmt.setTimestamp(2, date);
@@ -108,7 +108,7 @@ public class DBInputTool {
         for(String smell : smells.keySet()){
 
             //establish connection
-            try(Connection conn = dashboardDatasource.getConnection();
+            try(Connection conn = pluginDatasource.getConnection();
                 //get the ID number for the smell being added from the test_smells table
                 PreparedStatement stmt = conn.prepareStatement(GET_TEST_SMELL_ID_FROM_NAME)){
                 stmt.setString(1, smell);
@@ -125,7 +125,7 @@ public class DBInputTool {
 
                 // Open a connection
                 //System.out.println("open a connection");
-                try (Connection conn = dashboardDatasource.getConnection();
+                try (Connection conn = pluginDatasource.getConnection();
                      //add run ID, smell ID, and number of smells to the test_run_smells table
                      PreparedStatement stmt = conn.prepareStatement(ADD_TEST_RUN_SMELLS_QUERY)) {
                     stmt.setInt(1, runID);
