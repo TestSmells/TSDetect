@@ -74,7 +74,6 @@ public class TabDetectedSmellTypes implements TabContent {
         root.removeAllChildren();
 
         AnonymousData anonymousData = new AnonymousData();
-        anonymousData.addData("userID", "testID");
         anonymousData.addData("timestamp", new Date().toString());
 
         for (SmellType smellType : SmellType.values()) {

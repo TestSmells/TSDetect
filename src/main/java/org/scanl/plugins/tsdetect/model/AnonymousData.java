@@ -5,7 +5,7 @@ import net.minidev.json.JSONObject;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import java.io.*;
@@ -71,7 +71,9 @@ public class AnonymousData {
                 HttpPost post = new HttpPost("http://localhost:8080");
                 post.setHeader("Content-Type", "application/json");
                 post.setHeader("Connection", "close");
-                post.setEntity(new StringEntity(jsonString, "application/json", "UTF-8"));
+                BasicHttpEntity httpEntity = new BasicHttpEntity();
+                httpEntity.setContent(new ByteArrayInputStream(jsonString.getBytes()));
+                post.setEntity(httpEntity);
 
                 HttpResponse httpResponse = httpClient.execute(post);
                 if (!httpResponse.getStatusLine().toString().contains("200")) {
