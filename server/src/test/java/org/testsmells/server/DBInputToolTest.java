@@ -28,9 +28,10 @@ class DBInputToolTest {
         ds = new HikariDataSource(config);
     }
 
+    private final DBInputTool inputTool = new DBInputTool(DSL.using(ds, SQLDialect.MYSQL), ds);
+
     @Test
     void insertData() {
-        DBInputTool inputTool = new DBInputTool(DSL.using(ds, SQLDialect.MYSQL), ds);
         smells.put(Constants.ASSERTION_ROULETTE, 5);
         assertTrue(inputTool.inputData("test", new Timestamp(1672592400), smells));
     }
