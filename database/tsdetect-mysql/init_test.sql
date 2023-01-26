@@ -69,17 +69,17 @@ VALUES ('Assertion Roulette'),
 ('Sleepy Test'),
 ('Unknown Test');
 
-INSERT INTO test_runs(uid, timestamp) VALUES (11, UTC_TIMESTAMP);
+INSERT INTO test_runs(uid, timestamp) VALUES ('user1', UTC_TIMESTAMP);
 INSERT INTO test_run_smells(run_id, test_smell_id, quantity) VALUES (1, 1, 25);
 
-INSERT INTO test_runs(uid, timestamp) VALUES (12, UTC_TIMESTAMP);
+INSERT INTO test_runs(uid, timestamp) VALUES ('user2', UTC_TIMESTAMP);
 INSERT INTO test_run_smells(run_id, test_smell_id, quantity) VALUES (2, 4, 30);
 
-INSERT INTO test_runs(uid, timestamp) VALUES (13, UTC_TIMESTAMP);
+INSERT INTO test_runs(uid, timestamp) VALUES ('user3', UTC_TIMESTAMP);
 INSERT INTO test_run_smells(run_id, test_smell_id, quantity) VALUES (3, 8, 35);
 
-INSERT INTO test_runs(uid, timestamp) VALUES (14, UTC_TIMESTAMP);
+INSERT INTO test_runs(uid, timestamp) VALUES ('user4', UTC_TIMESTAMP);
 INSERT INTO test_run_smells(run_id, test_smell_id, quantity) VALUES (4, 12, 40);
 
-INSERT INTO test_runs(uid, timestamp) VALUES (15, UTC_TIMESTAMP);
+INSERT INTO test_runs(uid, timestamp) VALUES ('user5', UTC_TIMESTAMP);
 INSERT INTO test_run_smells(run_id, test_smell_id, quantity) VALUES (5, 16, 45);

@@ -38,10 +38,11 @@ public class DBInputTool {
      *                 assumed that if this succeeded, then all other steps also succeeded
      */
     public boolean inputData(String uid, Timestamp dateRun, HashMap<String, Integer> smells) {
+        //MySQL rounds timestamps to the nearest second, Java uses milliseconds
+        Timestamp rounded = new Timestamp(1000*(dateRun.getTime()/1000));
+        inputTestRun(uid,rounded);
 
-        inputTestRun(uid,dateRun);
-
-        return inputRunSmells(uid, dateRun, smells);
+        return inputRunSmells(uid, rounded, smells);
     }
 
     /**
