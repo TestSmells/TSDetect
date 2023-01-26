@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import static org.testsmells.server.repository.Constants.*;
 
@@ -40,12 +43,25 @@ public class DBInputTool {
         Timestamp rounded = new Timestamp(1000*(dateRun.getTime()/1000));
         HashMap<String, Integer> results = new HashMap<String, Integer>();
 
-        //add the uid to the test runs table
-        results.put(uid, inputTestRun(uid,rounded));
+        //check for a positive smell count
+        boolean positiveSmellCount = false;
+        for (int smellCount : smells.values()) {
+            if (smellCount > 0) {
+                positiveSmellCount = true;
+                break;
+            }
+        }
 
-        //add the smells to the test run smells table
-        results.putAll(inputRunSmells(uid, rounded, smells));
+        if (positiveSmellCount) {
+            //add the uid to the test runs table
+            results.put(uid, inputTestRun(uid, rounded));
 
+            //add the smells to the test run smells table
+            results.putAll(inputRunSmells(uid, rounded, smells));
+
+        } else {
+            results.put(uid, 0);
+        }
         return results;
     }
 

@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.testsmells.server.repository.Constants;
 import org.testsmells.server.repository.DBInputTool;
@@ -42,34 +43,37 @@ class DBInputToolTest {
 
     private DBInputTool inputTool;
     private HashMap<String, Integer> smells;
+    private HashMap<String, Integer> expected;
     private Timestamp timestamp;
 
     @BeforeEach
     protected void setUp() {
         inputTool = new DBInputTool(DSL.using(ds, SQLDialect.MYSQL), ds);
         smells = new HashMap<>();
+        expected = new HashMap<>();
         timestamp = new Timestamp(System.currentTimeMillis());
     }
 
     @Test
     void singleSmell() {
-        System.out.println("SINGLE SMELL TYPE TEST");
         smells.put(Constants.ASSERTION_ROULETTE, 1);
-        assertTrue(inputTool.inputData("singleSmell", timestamp, smells));
+        expected = new HashMap<>(smells);
+        expected.put("singleSmell", 1);
+        assertEquals(expected, inputTool.inputData("singleSmell", timestamp, smells));
     }
 
     @Test
     void multipleSmells() {
-        System.out.println("MULTIPLE SMELL TYPES TEST");
         smells.put(Constants.ASSERTION_ROULETTE, 1);
         smells.put(Constants.DEFAULT_TEST, 2);
         smells.put(Constants.EXCEPTION_HANDLING, 3);
-        assertTrue(inputTool.inputData("multipleSmells", timestamp, smells));
+        expected = new HashMap<>(smells);
+        expected.put("multipleSmells", 1);
+        assertEquals(expected, inputTool.inputData("multipleSmells", timestamp, smells));
     }
 
     @Test
     void allSmells() {
-        System.out.println("ALL SMELL TYPES TEST");
         smells.put(Constants.ASSERTION_ROULETTE, 1);
         smells.put(Constants.CONDITIONAL_TEST_LOGIC, 2);
         smells.put(Constants.CONSTRUCTOR_INITIALIZATION, 3);
@@ -89,40 +93,44 @@ class DBInputToolTest {
         smells.put(Constants.SENSITIVE_EQUALITY, 17);
         smells.put(Constants.SLEEPY_TEST, 18);
         smells.put(Constants.UNKNOWN_TEST, 19);
-        assertTrue(inputTool.inputData("allSmells", timestamp, smells));
+        expected = new HashMap<>(smells);
+        expected.put("allSmells", 1);
+        assertEquals(expected, inputTool.inputData("allSmells", timestamp, smells));
     }
 
     @Test
     void noSmells() {
-        System.out.println("NO SMELL TYPES TEST");
-        assertFalse(inputTool.inputData("noSmells", timestamp, smells));
+        expected = new HashMap<>(smells);
+        expected.put("noSmells", 0);
+        assertEquals(expected, inputTool.inputData("noSmells", timestamp, smells));
     }
 
     @Test
     void duplicateSmells() {
-        System.out.println("DUPLICATE SMELL TYPES TEST");
         smells.put(Constants.ASSERTION_ROULETTE, 1);
         smells.put(Constants.ASSERTION_ROULETTE, 2);
-        assertFalse(inputTool.inputData("duplicateSmells", timestamp, smells));
+        expected = new HashMap<>(smells);
+        expected.put("duplicateSmells", 1);
+        assertEquals(expected, inputTool.inputData("duplicateSmells", timestamp, smells));
     }
 
     @Test
     void smellCountZero() {
-        System.out.println("ZERO SMELL COUNT TEST");
         smells.put(Constants.ASSERTION_ROULETTE, 0);
-        assertFalse(inputTool.inputData("smellCountZero", timestamp, smells));
+        expected.put("smellCountZero", 0);
+        assertEquals(expected, inputTool.inputData("smellCountZero", timestamp, smells));
     }
 
     @Test
     void smellCountMax() {
-        System.out.println("MAX SMELL COUNT TEST");
         smells.put(Constants.ASSERTION_ROULETTE, 2147483647);
-        assertTrue(inputTool.inputData("smellCountMax", timestamp, smells));
+        expected = new HashMap<>(smells);
+        expected.put("smellCountMax", 1);
+        assertEquals(expected, inputTool.inputData("smellCountMax", timestamp, smells));
     }
 
     @Test
     void smellCountOverflow() {
-        System.out.println("OVERFLOW SMELL COUNT TEST");
         //Java and MySQL have the same max int size, preventing a smell count overflow
         //smells.put(Constants.ASSERTION_ROULETTE, 2147483648);
         assertTrue(true);
@@ -130,45 +138,62 @@ class DBInputToolTest {
 
     @Test
     void smellCountNegative() {
-        System.out.println("NEGATIVE SMELL COUNT TEST");
         smells.put(Constants.ASSERTION_ROULETTE, -1);
-        assertFalse(inputTool.inputData("negativeSmellCount", timestamp, smells));
+        expected.put("negativeSmellCount", 0);
+        assertEquals(expected, inputTool.inputData("negativeSmellCount", timestamp, smells));
     }
 
     @Test
     void uidEmpty() {
-        System.out.println("UID EMPTY TEST");
         smells.put(Constants.ASSERTION_ROULETTE, 1);
-        assertFalse(inputTool.inputData("", timestamp, smells));
+        expected.put("", 0);
+        assertEquals(expected, inputTool.inputData("", timestamp, smells));
     }
 
     @Test
     void uidMaxLength() {
-        System.out.println("UID MAX TEST");
         smells.put(Constants.ASSERTION_ROULETTE, 1);
-        assertTrue(inputTool.inputData("01234567890123456789012345678901234567890123456789", timestamp, smells));
+        expected = new HashMap<>(smells);
+        expected.put("01234567890123456789012345678901234567890123456789", 1);
+        assertEquals(expected, inputTool.inputData("01234567890123456789012345678901234567890123456789", timestamp, smells));
     }
 
     @Test
     void uidOverflowLength() {
-        System.out.println("UID OVERFLOW TEST");
         smells.put(Constants.ASSERTION_ROULETTE, 1);
-        assertFalse(inputTool.inputData("012345678901234567890123456789012345678901234567890", timestamp, smells));
+        expected.put("012345678901234567890123456789012345678901234567890", 0);
+        assertEquals(expected, inputTool.inputData("012345678901234567890123456789012345678901234567890", timestamp, smells));
     }
 
     @Test
-    void timestampOverflow() {
-        System.out.println("OVERFLOW TIMESTAMP TEST");
+    //MySQL min timestamp is 1000-01-01 00:00:00 or -30610206238
+    void timestampMin() {
         smells.put(Constants.ASSERTION_ROULETTE, 1);
-        //Java and MySQL have the same max int size, preventing a timestamp overflow
-        //assertFalse(inputTool.inputData("timeStampOverFlow", new Timestamp(2147483648), smells));
-        assertTrue(true);
+        expected = new HashMap<>(smells);
+        expected.put("timestampMin", 1);
+        assertEquals(expected, inputTool.inputData("timestampMin", new Timestamp(-30610206238L), smells));
     }
 
     @Test
-    void timestampNegative() {
-        System.out.println("NEGATIVE TIMESTAMP TEST");
+    //MySQL max timestamp is 9999-12-31 23:59:59 or 253402318799
+    void timestampMax() {
         smells.put(Constants.ASSERTION_ROULETTE, 1);
-        assertFalse(inputTool.inputData("timeStampNegative", new Timestamp(-1), smells));
+        expected = new HashMap<>(smells);
+        expected.put("timestampMaxLength", 1);
+        assertEquals(expected, inputTool.inputData("timestampMaxLength", new Timestamp(253402318799L), smells));
+    }
+
+    @Test
+    void timestampUnderMin() {
+        smells.put(Constants.ASSERTION_ROULETTE, 1);
+        expected.put("timestampUnderMin", 0);
+        assertEquals(expected, inputTool.inputData("timestampUnderMin", new Timestamp(Long.MIN_VALUE), smells));
+    }
+
+    @Test
+    void timestampOverMax() {
+        smells.put(Constants.ASSERTION_ROULETTE, 1);
+        expected.put("timestampOverMax", 0);
+        assertEquals(expected, inputTool.inputData("timestampOverMax", new Timestamp(Long.MAX_VALUE), smells));
     }
 }
