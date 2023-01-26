@@ -2,18 +2,15 @@ package org.testsmells.server.repository;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.jooq.DSLContext;
-import org.jooq.Record;
-import org.jooq.ResultQuery;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-import org.testsmells.server.tables.pojos.TestSmells;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import static org.testsmells.server.repository.Constants.*;
+
 
 @Repository
 public class DBOutputTool {
