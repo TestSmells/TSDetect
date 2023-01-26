@@ -31,7 +31,7 @@ class DBInputToolTest {
 
     static {
         config.setJdbcUrl("jdbc:mysql://localhost:3308/tsdetect");
-        config.setUsername("root");
+        config.setUsername("plugin");
         config.setPassword("password");
         config.setDriverClassName("com.mysql.cj.jdbc.Driver");
         config.addDataSourceProperty("cachePrepStmts", "true");

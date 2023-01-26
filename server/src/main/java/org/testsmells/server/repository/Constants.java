@@ -31,11 +31,11 @@ public class Constants {
     public static final String GET_TEST_SMELL_ID_FROM_NAME = "SELECT * FROM test_smells WHERE name LIKE ?";
     public static final String GET_RUN_ID = "SELECT * FROM test_runs WHERE uid = ? AND timestamp = ?";
     public static final String GET_RUN_IDS_FROM_DATE = "SELECT run_id FROM test_runs WHERE test_runs.timestamp >= ?;";
-    public static final String GET_SMELLS_AND_QUANTITIES_FROM_RUN = "SELECT test_smells.name, test_run_smells.quantityFROM test_run_smells" +
+    public static final String GET_SMELLS_AND_QUANTITIES_FROM_RUN = "SELECT test_smells.name, test_run_smells.quantity FROM test_run_smells " +
             "INNER JOIN test_smells ON test_run_smells.test_smell_id = test_smells.test_smell_id WHERE test_run_smells." +
             "run_id = ?";
 
-    public static final String GET_SINGLE_SMELL_AND_QUANTITY = "SELECT test_smells.name, test_run_smells.quantityFROM test_run_smells" +
+    public static final String GET_SINGLE_SMELL_AND_QUANTITY = "SELECT test_smells.name, test_run_smells.quantity FROM test_run_smells " +
             "INNER JOIN test_smells ON test_run_smells.test_smell_id = test_smells.test_smell_id WHERE test_run_smells." +
             "run_id = ? AND test_smells.name = ?";
 
