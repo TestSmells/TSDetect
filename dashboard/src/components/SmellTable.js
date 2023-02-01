@@ -1,33 +1,47 @@
-import React from "react"
-import { Table } from "react-bootstrap";
+import React, {Component} from "react"
+import { Table, Spinner } from "react-bootstrap";
+import getData from "../util/getData";
 
-function SmellTable() {
-    // TODO: populate table with actual values which will be passed down as prop and map
-    // the avalues to <tr> tags in the <tbody>
-    return(
-        <Table bordered>
-            <thead>
+export default class SmellTable extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            loaded: false,
+            data: [],
+        }
+    }
+
+    render() {
+        const {loaded, data} = this.state;
+        if (!loaded) return <Spinner animation="border" variant="success" />
+
+        return (
+            <Table bordered>
+                <thead>
                 <tr>
                     <th>Smell Type</th>
-                    <th>Number of Occurences</th>
+                    <th>Number of Occurrences</th>
                 </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Assertion Roulette</td>
-                    <td>100</td>
-                </tr>
-                <tr>
-                    <td>Slow Test</td>
-                    <td>100</td>
-                </tr>
-                <tr>
-                    <td>Lazy Test</td>
-                    <td>100</td>
-                </tr>
-            </tbody>
-        </Table>
-    )
-}
+                </thead>
+                <tbody>
+                {data.map((smell) =>
+                    <tr key={smell.testSmellId}>
+                        <td key={smell.name}>{smell.name}</td>
+                        <td key={smell.testSmellId}>{smell.testSmellId}</td>
+                    </tr>
+                )}
+                </tbody>
+            </Table>
+        )
+    }
 
-export default SmellTable;
+    componentDidMount() {
+        getData('/test-smells')
+            .then((json) => {
+                this.setState({
+                    data: json,
+                    loaded: true
+                })
+            })
+    }
+}
