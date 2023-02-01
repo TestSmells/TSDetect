@@ -18,6 +18,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -74,7 +75,9 @@ public class TabDetectedSmellTypes implements TabContent {
         root.removeAllChildren();
 
         AnonymousData anonymousData = new AnonymousData();
-        anonymousData.addData("timestamp", new Date().toString());
+        //testID for now until we sort it out
+        anonymousData.addData("uuid", "testID");
+        anonymousData.addData("timestamp", new Timestamp(System.currentTimeMillis()).toString());
 
         for (SmellType smellType : SmellType.values()) {
             int numOfSmells = 0;

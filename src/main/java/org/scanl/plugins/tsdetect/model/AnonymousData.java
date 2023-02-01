@@ -12,20 +12,35 @@ import java.io.*;
 import java.util.*;
 
 public class AnonymousData {
-    private HashMap<String, String> data;
+    private final HashMap<String, String> data;
 
     public AnonymousData() {
         data = new HashMap<>();
     }
 
-    public HashMap<String, String> getHashMap() {
+    /**
+     * Getter method for the user data map
+     * @return HashMap<String, String> - user data map
+     */
+    public HashMap<String, String> getData() {
         return data;
     }
 
+    /**
+     * Insert a key value pair into the user data map
+     * @param key String - "uuid", "timestamp", or test smell name
+     * @param value String - UUID value, timestamp, or test smell values
+     */
     public void addData(String key, String value) {
         data.put(key, value);
     }
 
+    /**
+     * The primary function for gathering and sending data to the server. If unsent data
+     * exists in a JSON file in the project directory, store that data and delete the file.
+     * Attempt to send unsent data followed by current data. If any data is unable to be
+     * sent to the server, store it in a new JSON file.
+     */
     public void sendData() {
         //only attempt to send the data if the user has opted in
         //TODO - uncomment following lines after pop up has been merged
@@ -52,7 +67,7 @@ public class AnonymousData {
                     }
                 }
                 //send current data
-                JSONObject jsonWrap = new JSONObject(this.getHashMap());
+                JSONObject jsonWrap = new JSONObject(this.getData());
                 postRequest(jsonWrap.toJSONString(), 1);
             } catch (Exception e) {
                 System.out.println(e);
@@ -60,9 +75,16 @@ public class AnonymousData {
         //}
     }
 
+    /**
+     * HTTP POST request to the server. Attempt to send the data for a maximum of
+     * 5 tries. A 200 status code in the response indicates data was successfully
+     * received by the server.
+     * @param jsonString - String of JSON data to be sent. Sending old data requires
+     *                     this parameter to be a string.
+     * @param tryNum - the current attempt
+     * @throws IOException - catches IO exceptions
+     */
     public void postRequest(String jsonString, int tryNum) throws IOException {
-        //do not attempt to send the data more than 5 times
-        //save the data locally
         if (tryNum > 5) {
             localSave(jsonString);
         } else {
@@ -78,6 +100,7 @@ public class AnonymousData {
                 HttpResponse httpResponse = httpClient.execute(post);
                 if (!httpResponse.getStatusLine().toString().contains("200")) {
                     System.out.println("FAIL");
+                    //attempt to send the data again for a maximum of 5 tries
                     postRequest(jsonString, tryNum+1);
                 } else {
                     System.out.println("SUCCESS");
@@ -88,6 +111,10 @@ public class AnonymousData {
         }
     }
 
+    /**
+     * Saves data locally in a JSON file located in the base of the project directory.
+     * @param jsonString the string of JSON data to be saved
+     */
     public void localSave(String jsonString) {
         //saves data that was unable to be sent after 5 tries
         try {
