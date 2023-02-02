@@ -1,31 +1,31 @@
 package org.testsmells.server.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.testsmells.server.service.ExampleService;
-import org.testsmells.server.tables.pojos.TestSmells;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.testsmells.server.service.DashboardService;
 
-import java.util.List;
+import java.util.HashMap;
 
 @RestController
-public class ExampleController {
+public class DashboardController {
 
-//    @Autowired
-//    ExampleService exampleService;
-//
+    @Autowired
+    DashboardService dashboardService;
+
 //    @RequestMapping(path = "/test-smells", method = RequestMethod.GET)
 //    public ResponseEntity<List<TestSmells>> getTestSmells() {
 //        return ResponseEntity.ok(exampleService.getTestSmells());
 //    }
 
-    /*    @GetMapping("/test-smells")
+    @GetMapping("/test-smells")
     public ResponseEntity<HashMap<String, Long>> getTestSmells() {
 
-        HashMap<String,Long> smellsAndCounts = dashboardService.getTestSmells();
+        HashMap<String, Long> smellsAndCounts = dashboardService.getTestSmells();
 
         return new ResponseEntity(smellsAndCounts, HttpStatus.OK);
-    }*/
-    //TODO: add service
+    }
 
 }
