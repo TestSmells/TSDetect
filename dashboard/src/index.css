@@ -22,14 +22,14 @@
     opacity: 0.25;
 }
 
-.header-data-item-odd {
+.header-data-item-light {
     text-align: center;
     padding-top: 1.0em;
     padding-bottom: 1.0em;
     margin-bottom: 0.5em;
 }
 
-.header-data-item-even {
+.header-data-item-dark {
     text-align: center;
     padding-top: 1.0em;
     padding-bottom: 1.0em;

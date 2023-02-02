@@ -1,47 +1,23 @@
-import React, {Component} from "react"
-import { Table, Spinner } from "react-bootstrap";
-import getData from "../util/getData";
+import React from "react"
+import { Table } from "react-bootstrap";
 
-export default class SmellTable extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            loaded: false,
-            data: [],
-        }
-    }
-
-    render() {
-        const {loaded, data} = this.state;
-        if (!loaded) return <Spinner animation="border" variant="success" />
-
-        return (
-            <Table bordered>
-                <thead>
-                <tr>
-                    <th>Smell Type</th>
-                    <th>Number of Occurrences</th>
+export default function SmellTable({ data }) {
+    return (
+        <Table striped bordered>
+            <thead>
+            <tr>
+                <th>Smell Type</th>
+                <th>Number of Occurrences</th>
+            </tr>
+            </thead>
+            <tbody>
+            {Object.keys(data).map((key) =>
+                <tr key={key}>
+                    <td key={key}>{key}</td>
+                    <td key={data[key]}>{data[key]}</td>
                 </tr>
-                </thead>
-                <tbody>
-                {data.map((smell) =>
-                    <tr key={smell.testSmellId}>
-                        <td key={smell.name}>{smell.name}</td>
-                        <td key={smell.testSmellId}>{smell.testSmellId}</td>
-                    </tr>
-                )}
-                </tbody>
-            </Table>
-        )
-    }
-
-    componentDidMount() {
-        getData('/test-smells')
-            .then((json) => {
-                this.setState({
-                    data: json,
-                    loaded: true
-                })
-            })
-    }
+            )}
+            </tbody>
+        </Table>
+    )
 }
