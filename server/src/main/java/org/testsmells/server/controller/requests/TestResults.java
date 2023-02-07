@@ -52,8 +52,15 @@ public class TestResults {
     @PostMapping(value = "/test-results", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Object> testResults(
             @RequestBody String uid, String ts, Map<String, Integer> sc) throws Exception{
+        if(isValidUid(uid) && isValidDate(ts)){
+
+        }
 
         return ResponseEntity.ok().build();
+    }
+    public boolean isValidUid(String uid){
+        //TODO: fill this out when UID generation is implemented
+        return true;
     }
     public boolean isValidDate(String date){
         SimpleDateFormat sd = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
