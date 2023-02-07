@@ -2,7 +2,10 @@ package org.testsmells.server.controller.requests;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
@@ -11,7 +14,9 @@ import java.util.Map;
 public class TestResults {
     @NotNull
     private String userID;
+    @NotNull
     private String timestamp;
+    @NotNull
     private Map<String, Integer> smellCount;
 
     public TestResults(String userID, String timestamp, Map<String, Integer> smellCount) {
@@ -44,12 +49,21 @@ public class TestResults {
         this.smellCount = smellCount;
     }
 
-//    @PostMapping(value = "/test-results", consumes = "application/json", produces = "application/json")
-//    public ResponseEntity<Object> testResults(
-//            @RequestHeader(name = userID, required = true) String uuid,
-//            @RequestHeader(value = timestamp, required = true) String ts,
-//            @RequestHeader(value = smellCount, required = true) Map<String, Integer> s) throws Exception{
-//
-//    }
+    @PostMapping(value = "/test-results", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Object> testResults(
+            @RequestBody String uid, String ts, Map<String, Integer> sc) throws Exception{
+
+        return ResponseEntity.ok().build();
+    }
+    public boolean isValidDate(String date){
+        SimpleDateFormat sd = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+        sd.setLenient(false);
+        try {
+            sd.parse(date.trim());
+        } catch (ParseException pe) {
+            return false;
+        }
+        return true;
+    }
 
 }
