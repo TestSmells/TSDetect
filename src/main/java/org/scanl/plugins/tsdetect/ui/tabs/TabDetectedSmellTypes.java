@@ -95,8 +95,8 @@ public class TabDetectedSmellTypes implements TabContent {
                 smellTypeNode.add(classNode);
             }
             root.add(smellTypeNode);
-            //add smell data
-            anonymousData.addData(smellName, String.valueOf(numOfSmells));
+            //add smell data if smell count above 0
+            if (numOfSmells > 0) anonymousData.addData(smellName, String.valueOf(numOfSmells));
         }
         treeSmells.setCellRenderer(new CustomTreeCellRenderer());
         treeSmells.setRootVisible(false);
