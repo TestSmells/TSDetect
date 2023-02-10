@@ -15,12 +15,12 @@ public class ExampleService {
     @Autowired
     ExampleRepository exampleRepository;
 
-    public List<TestSmells> getTestSmells() {
-        try {
-            return exampleRepository.getSmellTypes();
-        } catch (SQLException e) {
-            return new ArrayList<>();
-        }
-    }
+//    public List<TestSmells> getTestSmells() {
+//        try {
+//            return exampleRepository.getSmellTypes();
+//        } catch (SQLException e) {
+//            return new ArrayList<>();
+//        }
+//    }
 
 }
