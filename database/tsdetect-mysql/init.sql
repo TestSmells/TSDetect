@@ -29,19 +29,10 @@ CREATE TABLE `tsdetect`.`test_run_smells` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
--- Create users
-CREATE USER 'plugin'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
-GRANT INSERT ON tsdetect.test_runs TO 'plugin'@'localhost';
-GRANT INSERT ON tsdetect.test_run_smells TO 'plugin'@'localhost';
-GRANT SELECT ON tsdetect.* TO 'plugin'@'localhost';
-
+-- Create user
 CREATE USER 'plugin'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
 GRANT INSERT ON tsdetect.test_runs TO 'plugin'@'%';
 GRANT INSERT ON tsdetect.test_run_smells TO 'plugin'@'%';
-GRANT SELECT ON tsdetect.* TO 'plugin'@'%';
-
-CREATE USER 'dashboard'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
-GRANT SELECT ON tsdetect.* TO 'dashboard'@'localhost';
 
 CREATE USER 'dashboard'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
 GRANT SELECT ON tsdetect.* TO 'dashboard'@'%';

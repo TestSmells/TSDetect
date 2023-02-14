@@ -11,6 +11,8 @@ services:
       MYSQL_DATABASE: tsdetect
     ports:
       - "3308:3306"
+    networks:
+      - tsdetect-network
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
   phpmyadmin:
@@ -25,6 +27,12 @@ services:
     restart: always
     ports:
       - "8081:80"
+    networks:
+      - tsdetect-network
+networks:
+  tsdetect-network:
+    name: tsdetect-network
+    driver: bridge
 volumes:
   db:
     driver: local

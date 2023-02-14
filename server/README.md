@@ -8,7 +8,6 @@
 > [Mac](https://docs.docker.com/desktop/install/mac-install/) | 
 > [Linux](https://docs.docker.com/desktop/install/linux-install/) </br> Open Docker Desktop after installation.
 
-
 ### Docker from binaries
 
 > Follow [these instructions](https://docs.docker.com/engine/install/binaries/) to install Docker using binaries. This is not recommended by Docker for production. This method should only be used for a Linux distribution not supported by Docker Desktop.
@@ -41,6 +40,23 @@ Within the `server` directory, run the following command:
 ```bash
 ./gradlew build
 ```
+
+### Docker Build
+
+#### Option 1
+From the Gradle submenu located in the top right traverse to the lifecycle folder:
+<br>
+`Tasks -> build`
+<br>
+Select the `bootBuildImage` task, right click and select `Run "server [bootBuildImage]"`
+
+#### Option 2
+
+Within the `server` directory, run the following command:
+```bash
+./gradlew bootBuildImage
+```
+
 ---
 
 ## Running Application
@@ -72,4 +88,12 @@ Right click the `ServerApplication` class and select `Run`
 Within the `server` directory, run the following command:
 ```
 ./gradlew bootRun
+```
+
+### Docker Run
+
+Assuming you have built the image correctly, you may enter the following docker command
+to run the application in a container:
+```
+docker run --name tsdetect-server --net tsdetect-network -d -p 8080:8080 -t tsdetect-server:1.0.0
 ```
