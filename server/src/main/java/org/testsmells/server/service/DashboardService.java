@@ -23,6 +23,11 @@ public class DashboardService {
         return outputRepository.outTestSmellData();
     }
 
+    public HashMap<String, Long> getTestSmells(ArrayList<String> smells) {
+        //sql exception is handled in the DBOutputTool
+        return outputRepository.outTestSmellData(smells);
+    }
+
     public HashMap<String, Long> getTestSmells(Timestamp timestamp) {
         //sql exception is handled in the DBOutputTool
         return outputRepository.outTestSmellData(timestamp);
