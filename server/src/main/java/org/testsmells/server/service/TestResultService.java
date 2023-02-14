@@ -54,8 +54,7 @@ public class TestResultService {
     }
     //makes sure hashmap in ER is populated, otherwise failure
     public static boolean isValidUuid(String uuid){
-        //TODO: fill this out when UID generation is implemented
-        return true;
+        return uuid.length() == 36;
     }
     public static boolean isValidDate(String date){
         //example correct timestamp is "2023-02-07 18:26:50.952"
