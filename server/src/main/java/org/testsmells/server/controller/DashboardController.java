@@ -100,11 +100,12 @@ public class DashboardController {
 
         int numDaysCovered = 0;
 
+        //if datetime is an integer, use that integer
         if(dateTime instanceof Integer){
             numDaysCovered = (Integer) dateTime;
-        }else if(dateTime instanceof String){
+        }else if(dateTime instanceof String){ //if datetime is a string, see if it's a string of an integer, and if so, use it
             try{
-                numDaysCovered = Integer.parseInt((String)dateTime) * -1;
+                numDaysCovered = Integer.parseInt((String)dateTime);
             }catch(NumberFormatException e){
                 System.out.println("dateTime was not an integer");
             }
@@ -112,9 +113,10 @@ public class DashboardController {
             System.out.println("DateTime must be an integer or a String, not a " + dateTime.getClass());
         }
 
+        //find the day "numDaysCovered" in the past
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(timestamp);
-        calendar.add(Calendar.DATE, (numDaysCovered * -1));
+        calendar.add(Calendar.DATE, (numDaysCovered * -1)); //invert so the number of days is subtracted
         timestamp.setTime(calendar.getTime().getTime());
 
         return timestamp;
