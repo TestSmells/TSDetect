@@ -1,6 +1,6 @@
 -- Create test_runs, test_smells, and test_run_smells
 CREATE TABLE `tsdetect`.`test_runs` (
-  `uid` CHAR(50) NOT NULL,
+  `uid` CHAR(50) NOT NULL CHECK (`uid` <> ''),
   `timestamp` DATETIME NOT NULL DEFAULT NOW(),
   `run_id` INT NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`uid`, `timestamp`),
@@ -29,10 +29,19 @@ CREATE TABLE `tsdetect`.`test_run_smells` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
--- Create user
+-- Create users
+CREATE USER 'plugin'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+GRANT INSERT ON tsdetect.test_runs TO 'plugin'@'localhost';
+GRANT INSERT ON tsdetect.test_run_smells TO 'plugin'@'localhost';
+GRANT SELECT ON tsdetect.* TO 'plugin'@'localhost';
+
 CREATE USER 'plugin'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
 GRANT INSERT ON tsdetect.test_runs TO 'plugin'@'%';
 GRANT INSERT ON tsdetect.test_run_smells TO 'plugin'@'%';
+GRANT SELECT ON tsdetect.* TO 'plugin'@'%';
+
+CREATE USER 'dashboard'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
+GRANT SELECT ON tsdetect.* TO 'dashboard'@'%';
 
 CREATE USER 'dashboard'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
 GRANT SELECT ON tsdetect.* TO 'dashboard'@'%';
