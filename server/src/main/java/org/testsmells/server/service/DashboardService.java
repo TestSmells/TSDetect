@@ -31,10 +31,10 @@ public class DashboardService {
      * @param smells a list of test smells to search for test smell data for
      * @return a hashmap of the given test smells with data found in the database keyed to their quantities over the entire database
      */
-//    public HashMap<String, Long> getTestSmells(ArrayList<String> smells) {
-//        //sql exception is handled in the DBOutputTool
-//        return outputRepository.outTestSmellData(smells);
-//    }
+    public HashMap<String, Long> getTestSmells(ArrayList<String> smells) {
+        //sql exception is handled in the DBOutputTool
+        return outputRepository.outTestSmellData(smells);
+    }
 
     /**
      * Queries the entire database for all test smell data with a timestamp equal to the given timestamp or later.

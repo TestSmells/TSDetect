@@ -46,7 +46,7 @@ public class DashboardController {
         //grab data for specified smells over all time
         else if(!dateTime.isPresent() && smellTypes.isPresent() ) {
             ArrayList<String> smells = parseSmellList(smellTypes.get());
-            //smellsAndCounts = dashboardService.getTestSmells(smells);
+            smellsAndCounts = dashboardService.getTestSmells(smells);
 
         }
         //Grab all test smell data in the previous specified number of days
