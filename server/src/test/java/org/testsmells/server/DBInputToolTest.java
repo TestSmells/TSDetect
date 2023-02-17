@@ -4,6 +4,8 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.MySQLContainer;
@@ -14,7 +16,6 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * JUnit tests of the DBInputTool
@@ -29,10 +30,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class DBInputToolTest {
     private static final HikariConfig config = new HikariConfig();
-    private static final HikariDataSource ds;
 
-    static {
-        MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0");
+    private static MySQLContainer<?> mysql;
+    private static HikariDataSource ds;
+    private static DBInputTool inputTool;
+
+    private HashMap<String, Integer> smells;
+    private HashMap<String, Integer> expected;
+    private Timestamp timestamp;
+
+    @BeforeAll
+    public static void suiteSetup() {
+        mysql = new MySQLContainer<>("mysql:8.0");
         mysql.withDatabaseName("tsdetect");
         mysql.withInitScript("./init_test.sql");
         mysql.start();
@@ -40,16 +49,17 @@ class DBInputToolTest {
         config.setUsername(mysql.getUsername());
         config.setPassword(mysql.getPassword());
         ds = new HikariDataSource(config);
+        inputTool = new DBInputTool(DSL.using(ds, SQLDialect.MYSQL), ds);
     }
 
-    private static DBInputTool inputTool;
-    private HashMap<String, Integer> smells;
-    private HashMap<String, Integer> expected;
-    private Timestamp timestamp;
+    @AfterAll
+    public static void suiteTeardown() {
+        ds.close();
+        mysql.close();
+    }
 
     @BeforeEach
     protected void setUp() {
-        inputTool = new DBInputTool(DSL.using(ds, SQLDialect.MYSQL), ds);
         expected = new HashMap<>();
         smells = new HashMap<>();
         timestamp = new Timestamp(0);

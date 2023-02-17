@@ -3,6 +3,8 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.MySQLContainer;
@@ -30,10 +32,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DBOutputToolTest {
     private static final HikariConfig config = new HikariConfig();
-    private static final HikariDataSource ds;
 
-    static {
-        MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0");
+    private static MySQLContainer<?> mysql;
+    private static HikariDataSource ds;
+    private static DBOutputTool outputTool;
+
+    private HashMap<String, Long> expected;
+    private ArrayList<String> smells;
+    private LocalDate localDate;
+    private Timestamp timestamp;
+
+    @BeforeAll
+    public static void suiteSetup() {
+        mysql = new MySQLContainer<>("mysql:8.0");
         mysql.withDatabaseName("tsdetect");
         mysql.withInitScript("./init_test.sql");
         mysql.start();
@@ -41,17 +52,17 @@ class DBOutputToolTest {
         config.setUsername(mysql.getUsername());
         config.setPassword(mysql.getPassword());
         ds = new HikariDataSource(config);
+        outputTool = new DBOutputTool(DSL.using(ds, SQLDialect.MYSQL), ds);
     }
 
-    private DBOutputTool outputTool;
-    private HashMap<String, Long> expected;
-    private ArrayList<String> smells;
-    private LocalDate localDate;
-    private Timestamp timestamp;
+    @AfterAll
+    public static void suiteTeardown() {
+        ds.close();
+        mysql.close();
+    }
 
     @BeforeEach
     protected void setUp() {
-        outputTool = new DBOutputTool(DSL.using(ds, SQLDialect.MYSQL), ds);
         expected = new HashMap<>();
         smells = new ArrayList<>();
         localDate = null;
