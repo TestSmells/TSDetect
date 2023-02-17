@@ -2,18 +2,15 @@ package org.testsmells.server.repository;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.jooq.DSLContext;
-import org.jooq.Record;
-import org.jooq.ResultQuery;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-import org.testsmells.server.tables.pojos.TestSmells;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import static org.testsmells.server.repository.Constants.*;
+
 
 @Repository
 public class DBOutputTool {
@@ -31,7 +28,7 @@ public class DBOutputTool {
      * as determined by a given list
      *
      * @param startDate a Java.sql.date Timestamp object of the format "yyyy-mm-dd hh:mm:ss"
-     * @param smells a ArrayList<String> of test smell names. All names are assumed to be of a format matich the entires
+     * @param smells a ArrayList<String> of test smell names. All names are assumed to be of a format match the entries
      *               in the database
      * @return  A HashMap<String, Long> keyed on the test names provided in "smells" and with values equal to the number
      *          of occurrences of that test smell in the database since the given date
@@ -60,7 +57,7 @@ public class DBOutputTool {
      * as determined by a given list
      *
      * @param startDate a String object representative of the Timestamp, of the format "yyyy-mm-dd hh:mm:ss" or "yyy-mm-dd"
-     * @param smells a ArrayList<String> of test smell names. All names are assumed to be of a format matich the entires
+     * @param smells a ArrayList<String> of test smell names. All names are assumed to be of a format match the entries
      *               in the database
      * @return A HashMap<String, Long> keyed on the test names provided in "smells" and with values equal to the number
      *         of occurrences of that test smell in the database since the given date
@@ -85,8 +82,24 @@ public class DBOutputTool {
     }
 
     /**
+     * Queries the TSDetect database to retrieve a list of the quantities of specific test smells logged after January first
+     * 1990. This should be the equivalent of searching for all entries in the database for the given test smells.
+     *
+     * @param smells a ArrayList<String> of test smell names. All names are assumed to be of a format match the entries
+     *               in the database
+     * @return A HashMap<String, Long> keyed on the test names provided in "smells" and with values equal to the number
+     *         of occurrences of that test smell in the database since the given date
+     */
+    public HashMap<String, Long> outTestSmellData(ArrayList<String> smells) {
+
+        ArrayList<Integer> runIDs = getAllTestRunIDsFromDate("1990-01-01");
+        return getTestSmellsAndCounts(runIDs, smells);
+    }
+
+
+    /**
      * Queries the TSDetect database to retrieve a list of the quantities of all test smells logged after January first
-     * 1990. This should be the equivalent of searching for all entires in the database.
+     * 1990. This should be the equivalent of searching for all entries in the database.
      *
      * @return A HashMap<String, Long> keyed on the test names and with values equal to the number
      *         of occurrences of that test smell in the database since the given date

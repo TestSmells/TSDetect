@@ -27,6 +27,9 @@ public class AppSettingsComponent {
             checkBoxes.put(smell.toString(), checkBox);
             formBuilder.addComponent(checkBox);
         }
+        JBCheckBox optIn = new JBCheckBox("Opt in to data collection");
+        checkBoxes.put("OPT_IN", optIn);
+        formBuilder.addComponent(optIn);
 
         panel = formBuilder
                 .addComponentFillVertically(new JPanel(), 0)

@@ -2,26 +2,25 @@ package org.testsmells.server.repository;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.jooq.DSLContext;
-import org.jooq.Record;
-import org.jooq.ResultQuery;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-import org.testsmells.server.tables.pojos.TestSmells;
 
 import java.sql.*;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import static org.testsmells.server.repository.Constants.*;
 
 @Repository
 public class DBInputTool {
-    private final DSLContext dashboardDsl;
-    private final HikariDataSource dashboardDatasource;
-    public DBInputTool(@Qualifier("dsl-dashboard") DSLContext dashboardDsl,
-                       @Qualifier("ds-dashboard") HikariDataSource dashboardDatasource) {
-        this.dashboardDsl = dashboardDsl;
-        this.dashboardDatasource = dashboardDatasource;
+    private final DSLContext pluginDsl;
+    private final HikariDataSource pluginDatasource;
+    public DBInputTool(@Qualifier("dsl-dashboard") DSLContext pluginDsl,
+                       @Qualifier("ds-dashboard") HikariDataSource pluginDatasource) {
+        this.pluginDsl = pluginDsl;
+        this.pluginDatasource = pluginDatasource;
     }
 
     /**
@@ -34,14 +33,36 @@ public class DBInputTool {
      * @param smells : A map of TestSmell names to the number of occurrences of that smell in this test run. Test smells
      *                 must already be present in the 'test_smells' table, and the number of smells must be greater than 0.
      *                 Test smell names are case-sensitive.
-     * @return      : the return of inputRunSmells. As it is dependent on the success of the other inputs, it can be
-     *                 assumed that if this succeeded, then all other steps also succeeded
+     * @return      : A hashmap of all successfully inserted values. one entry will be keyed on the UID, with a value
+     *                equaling the number of rows changed in the Test run tables (should be either 0 or 1 in all cases),
+     *                all other entries are keyed on the given Test smell names with a value of the number of the smell
+     *                entered into the table. This Map will be empty if no entries were added.
      */
-    public boolean inputData(String uid, Timestamp dateRun, HashMap<String, Integer> smells) {
+    public HashMap<String, Integer> inputData(String uid, Timestamp dateRun, HashMap<String, Integer> smells) {
+        //MySQL rounds timestamps to the nearest second, Java uses milliseconds
+        Timestamp rounded = new Timestamp(1000*(dateRun.getTime()/1000));
+        HashMap<String, Integer> results = new HashMap<String, Integer>();
 
-        inputTestRun(uid,dateRun);
+        //check for a positive smell count
+        boolean positiveSmellCount = false;
+        for (int smellCount : smells.values()) {
+            if (smellCount > 0) {
+                positiveSmellCount = true;
+                break;
+            }
+        }
 
-        return inputRunSmells(uid, dateRun, smells);
+        if (positiveSmellCount) {
+            //add the uid to the test runs table
+            results.put(uid, inputTestRun(uid, rounded));
+
+            //add the smells to the test run smells table
+            results.putAll(inputRunSmells(uid, rounded, smells));
+
+        } else {
+            results.put(uid, 0);
+        }
+        return results;
     }
 
     /**
@@ -57,7 +78,7 @@ public class DBInputTool {
 
         // Open a connection
         //System.out.println("open a connection");
-        try (Connection conn = dashboardDatasource.getConnection();
+        try (Connection conn = pluginDatasource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(ADD_TEST_RUN_QUERY)) { //add uid and date run to the test_run table
             stmt.setString(1, uid);
             stmt.setTimestamp(2, dateRun);
@@ -80,17 +101,19 @@ public class DBInputTool {
      * @param smells : A map of TestSmell names to the number of occurrences of that smell in this test run. Test smells
      *                 must already be present in the 'test_smells' table, and the number of smells must be greater than 0.
      *                 Test smell names are case-sensitive.
-     * @return true if all the smells and quantities were successfully inserted.
+     * @return A hashmap of all successfully inserted values. entries are keyed on the Test smell names with a value of
+     *         the number of the smell entered into the table. This Map will be empty if no entries were added.
      */
-    private boolean inputRunSmells(String UID, Timestamp date, HashMap<String, Integer> smells) {
+    private HashMap<String, Integer> inputRunSmells(String UID, Timestamp date, HashMap<String, Integer> smells) {
 
         ResultSet result_set = null;
         int smellId = -1;
         int runID = -1;
+        HashMap results = new HashMap<String,Integer>();
 
         // Open a connection
         //System.out.println("open a connection");
-        try(Connection conn = dashboardDatasource.getConnection();
+        try(Connection conn = pluginDatasource.getConnection();
             PreparedStatement stmt = conn.prepareStatement(GET_RUN_ID)){ //get the run id generated when this run was added to test_runs
             stmt.setString(1, UID);
             stmt.setTimestamp(2, date);
@@ -102,13 +125,14 @@ public class DBInputTool {
             System.out.println("sql exception");
             runID = -1; //defensive code, should not be needed
             e.printStackTrace();
+            return results;
         }
 
         //go through all given test smells
         for(String smell : smells.keySet()){
 
             //establish connection
-            try(Connection conn = dashboardDatasource.getConnection();
+            try(Connection conn = pluginDatasource.getConnection();
                 //get the ID number for the smell being added from the test_smells table
                 PreparedStatement stmt = conn.prepareStatement(GET_TEST_SMELL_ID_FROM_NAME)){
                 stmt.setString(1, smell);
@@ -119,27 +143,29 @@ public class DBInputTool {
                 System.out.println("sql exception");
                 smellId = -1;  //defensive code, should not be needed
                 e.printStackTrace();
+                return results;
             }
 
             if(smellId > 0 && runID > 0 && smells.get(smell) > 0) {
 
-                // Open a connection
-                //System.out.println("open a connection");
-                try (Connection conn = dashboardDatasource.getConnection();
-                     //add run ID, smell ID, and number of smells to the test_run_smells table
-                     PreparedStatement stmt = conn.prepareStatement(ADD_TEST_RUN_SMELLS_QUERY)) {
+                //Open a connection
+                try (Connection conn = pluginDatasource.getConnection();
+                    //add run ID, smell ID, and number of smells to the test_run_smells table
+                    PreparedStatement stmt = conn.prepareStatement(ADD_TEST_RUN_SMELLS_QUERY)) {
                     stmt.setInt(1, runID);
                     stmt.setInt(2, smellId);
                     stmt.setInt(3, smells.get(smell));
                     stmt.executeUpdate();
 
+                    results.put(smell, smells.get(smell));
                 } catch (SQLException e) {
                     System.out.println("sql exception");
                     e.printStackTrace();
+                    return results;
                 }
             }
         }
 
-        return true;
+        return results;
     }
 }
