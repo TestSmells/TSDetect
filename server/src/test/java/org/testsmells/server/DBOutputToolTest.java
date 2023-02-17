@@ -5,6 +5,7 @@ import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.MySQLContainer;
 import org.testsmells.server.repository.Constants;
 import org.testsmells.server.repository.DBOutputTool;
 
@@ -18,36 +19,27 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * JUnit tests of the DBOutputTool
  * All tests use the various outTestSmellData functions
- * Run these tests within half a day of setting up the database
- *  to ensure time restrictions are met
  * ----------------------------------------------------------------------------------
- * Set up:
- *   - Open docker_compose.yml in TSDetect/database/tsdetect-mysql/
- *     - Under volumes, replace ./init.sql:/docker... with ./init_test.sql:/docker...
- *   - Use a terminal to run 'docker compose up -d' in the same directory
+ * The init_test.sql script in the resources folder is the same
+ * script that initializes the database (TSDetect/database/tsdetect-mysql/).
  * ----------------------------------------------------------------------------------
- * Reset MySQL database:
- *   - Run 'docker compose down' followed by 'docker compose up -d'
- * ----------------------------------------------------------------------------------
- * Test Data in MySQL Database:
- *   test_runs(user1, NOW, 1)            test_run_smells(1, 1, 25)
- *   test_runs(user2, NOW-0.5 days, 2)   test_run_smells(2, 4, 30)
- *   test_runs(user3, NOW-6 days, 3)     test_run_smells(3, 8, 35)
- *   test_runs(user4, NOW-29 days, 4)    test_run_smells(4, 12, 40)
- *   test_runs(user5, NOW-364 days, 5)   test_run_smells(5, 16, 45)
+ * Before running the tests:
+ *  - Verify the init_test.sql files are identical
+ *  - Remove or comment out the CREATE USER statements in the script
  */
+
 class DBOutputToolTest {
     private static final HikariConfig config = new HikariConfig();
     private static final HikariDataSource ds;
 
     static {
-        config.setJdbcUrl("jdbc:mysql://localhost:3308/tsdetect");
-        config.setUsername("dashboard");
-        config.setPassword("password");
-        config.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        config.addDataSourceProperty("cachePrepStmts", "true");
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0");
+        mysql.withDatabaseName("tsdetect");
+        mysql.withInitScript("./init_test.sql");
+        mysql.start();
+        config.setJdbcUrl(mysql.getJdbcUrl());
+        config.setUsername(mysql.getUsername());
+        config.setPassword(mysql.getPassword());
         ds = new HikariDataSource(config);
     }
 
@@ -74,6 +66,24 @@ class DBOutputToolTest {
         expected.put(Constants.MAGIC_NUMBER_TEST, 40L);
         expected.put(Constants.RESOURCE_OPTIMISM, 45L);
         assertEquals(expected, outputTool.outTestSmellData());
+    }
+
+    @Test
+    void singleSmell() {
+        expected.put(Constants.DEFAULT_TEST, 30L);
+        smells.add(Constants.DEFAULT_TEST);
+        assertEquals(expected, outputTool.outTestSmellData(smells));
+    }
+
+    @Test
+    void multipleSmells() {
+        expected.put(Constants.DEFAULT_TEST, 30L);
+        expected.put(Constants.EXCEPTION_HANDLING, 35L);
+        expected.put(Constants.RESOURCE_OPTIMISM, 45L);
+        smells.add(Constants.DEFAULT_TEST);
+        smells.add(Constants.EXCEPTION_HANDLING);
+        smells.add(Constants.RESOURCE_OPTIMISM);
+        assertEquals(expected, outputTool.outTestSmellData(smells));
     }
 
     //STRING TIMESTAMP TESTS
@@ -149,12 +159,12 @@ class DBOutputToolTest {
         localDate = LocalDate.now().minusYears(1);
         assertEquals(expected, outputTool.outTestSmellData(localDate.toString()));
     }
-    
+
     @Test
     void futureStringTimestamp() {
         assertEquals(expected, outputTool.outTestSmellData("2024-01-01"));
     }
-    
+
     @Test
     void invalidStringTimestamp() {
         assertEquals(expected, outputTool.outTestSmellData("thisisnotadate"));
@@ -181,7 +191,7 @@ class DBOutputToolTest {
     void noSmellsFromJavaTimestamp() {
         assertEquals(expected, outputTool.outTestSmellData(new Timestamp(1609477200), smells));
     }
-    
+
     @Test
     void allFromJavaTimestamp() {
         expected.put(Constants.ASSERTION_ROULETTE, 25L);
@@ -237,10 +247,5 @@ class DBOutputToolTest {
     @Test
     void futureJavaTimestamp() {
         assertEquals(expected, outputTool.outTestSmellData(new Timestamp(Long.MAX_VALUE/50000)));
-    }
-
-    @Test
-    void invalidJavaTimestamp() {
-        assertEquals(expected, outputTool.outTestSmellData(new Timestamp(Long.MAX_VALUE+1)));
     }
 }

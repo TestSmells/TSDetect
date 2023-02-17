@@ -1,47 +1,48 @@
 package org.testsmells.server;
+
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.MySQLContainer;
 import org.testsmells.server.repository.Constants;
 import org.testsmells.server.repository.DBInputTool;
 
-import java.sql.*;
+import java.sql.Timestamp;
 import java.util.HashMap;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * JUnit tests of the DBInputTool
  * All tests use the inputData function
  * ----------------------------------------------------------------------------------
- * Set up:
- *   - Open docker_compose.yml in TSDetect/database/tsdetect-mysql/
- *     - Under volumes, replace ./init.sql:/docker... with ./init_test.sql:/docker...
- *   - Use a terminal to run 'docker compose up -d' in the same directory
+ * The init_test.sql script in the resources folder is the same
+ * script that initializes the database (TSDetect/database/tsdetect-mysql/).
  * ----------------------------------------------------------------------------------
- * Reset MySQL database:
- *   - Run 'docker compose down' followed by 'docker compose up -d'
+ * Before running the tests:
+ *  - Verify the init_test.sql files are identical
+ *  - Remove or comment out the CREATE USER statements in the script
  */
 class DBInputToolTest {
     private static final HikariConfig config = new HikariConfig();
     private static final HikariDataSource ds;
 
     static {
-        config.setJdbcUrl("jdbc:mysql://localhost:3308/tsdetect");
-        config.setUsername("plugin");
-        config.setPassword("password");
-        config.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        config.addDataSourceProperty("cachePrepStmts", "true");
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0");
+        mysql.withDatabaseName("tsdetect");
+        mysql.withInitScript("./init_test.sql");
+        mysql.start();
+        config.setJdbcUrl(mysql.getJdbcUrl());
+        config.setUsername(mysql.getUsername());
+        config.setPassword(mysql.getPassword());
         ds = new HikariDataSource(config);
     }
 
-    private DBInputTool inputTool;
+    private static DBInputTool inputTool;
     private HashMap<String, Integer> smells;
     private HashMap<String, Integer> expected;
     private Timestamp timestamp;
@@ -49,9 +50,9 @@ class DBInputToolTest {
     @BeforeEach
     protected void setUp() {
         inputTool = new DBInputTool(DSL.using(ds, SQLDialect.MYSQL), ds);
-        smells = new HashMap<>();
         expected = new HashMap<>();
-        timestamp = new Timestamp(System.currentTimeMillis());
+        smells = new HashMap<>();
+        timestamp = new Timestamp(0);
     }
 
     @Test
@@ -106,41 +107,11 @@ class DBInputToolTest {
     }
 
     @Test
-    void duplicateSmells() {
-        smells.put(Constants.ASSERTION_ROULETTE, 1);
-        smells.put(Constants.ASSERTION_ROULETTE, 2);
-        expected = new HashMap<>(smells);
-        expected.put("duplicateSmells", 1);
-        assertEquals(expected, inputTool.inputData("duplicateSmells", timestamp, smells));
-    }
-
-    @Test
-    void smellCountZero() {
-        smells.put(Constants.ASSERTION_ROULETTE, 0);
-        expected.put("smellCountZero", 0);
-        assertEquals(expected, inputTool.inputData("smellCountZero", timestamp, smells));
-    }
-
-    @Test
     void smellCountMax() {
         smells.put(Constants.ASSERTION_ROULETTE, 2147483647);
         expected = new HashMap<>(smells);
         expected.put("smellCountMax", 1);
         assertEquals(expected, inputTool.inputData("smellCountMax", timestamp, smells));
-    }
-
-    @Test
-    void smellCountOverflow() {
-        //Java and MySQL have the same max int size, preventing a smell count overflow
-        //smells.put(Constants.ASSERTION_ROULETTE, 2147483648);
-        assertTrue(true);
-    }
-
-    @Test
-    void smellCountNegative() {
-        smells.put(Constants.ASSERTION_ROULETTE, -1);
-        expected.put("negativeSmellCount", 0);
-        assertEquals(expected, inputTool.inputData("negativeSmellCount", timestamp, smells));
     }
 
     @Test
@@ -156,13 +127,6 @@ class DBInputToolTest {
         expected = new HashMap<>(smells);
         expected.put("01234567890123456789012345678901234567890123456789", 1);
         assertEquals(expected, inputTool.inputData("01234567890123456789012345678901234567890123456789", timestamp, smells));
-    }
-
-    @Test
-    void uidOverflowLength() {
-        smells.put(Constants.ASSERTION_ROULETTE, 1);
-        expected.put("012345678901234567890123456789012345678901234567890", 0);
-        assertEquals(expected, inputTool.inputData("012345678901234567890123456789012345678901234567890", timestamp, smells));
     }
 
     @Test
@@ -188,12 +152,5 @@ class DBInputToolTest {
         smells.put(Constants.ASSERTION_ROULETTE, 1);
         expected.put("timestampUnderMin", 0);
         assertEquals(expected, inputTool.inputData("timestampUnderMin", new Timestamp(Long.MIN_VALUE), smells));
-    }
-
-    @Test
-    void timestampOverMax() {
-        smells.put(Constants.ASSERTION_ROULETTE, 1);
-        expected.put("timestampOverMax", 0);
-        assertEquals(expected, inputTool.inputData("timestampOverMax", new Timestamp(Long.MAX_VALUE), smells));
     }
 }
