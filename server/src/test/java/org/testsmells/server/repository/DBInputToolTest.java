@@ -1,4 +1,4 @@
-package org.testsmells.server;
+package org.testsmells.server.repository;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
