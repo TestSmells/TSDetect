@@ -36,7 +36,6 @@ repositories {
 	mavenCentral()
 	mavenLocal()
 }
-
 // Server Application Dependencies
 dependencies {
 	implementation 'mysql:mysql-connector-java:8.0.31'
@@ -52,11 +51,15 @@ dependencies {
 		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
 	}
 
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+	testImplementation "org.testcontainers:mysql:1.17.6"
+
 	jooqGenerator 'mysql:mysql-connector-java:8.0.31'
 	jooqGenerator "jakarta.xml.bind:jakarta.xml.bind-api:3.0.1"
 }
 
-tasks.named('test') {
+
+test {
 	useJUnitPlatform()
 }
 

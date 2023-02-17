@@ -1,6 +1,6 @@
 -- Create test_runs, test_smells, and test_run_smells
 CREATE TABLE `tsdetect`.`test_runs` (
-  `uid` CHAR(50) NOT NULL,
+  `uid` CHAR(50) NOT NULL CHECK (`uid` <> ''),
   `timestamp` DATETIME NOT NULL DEFAULT NOW(),
   `run_id` INT NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`uid`, `timestamp`),
