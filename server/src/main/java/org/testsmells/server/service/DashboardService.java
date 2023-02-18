@@ -41,7 +41,7 @@ public class DashboardService {
      * @return an ArrayList of Strings containing all String data from the given object
      */
     private ArrayList<String> parseSmellList(Object smells){
-        ArrayList<String> smellList = new ArrayList<String>();
+        ArrayList<String> smellList = new ArrayList<>();
 
         if(smells instanceof List)
             for(Object smell : (List)smells)
@@ -63,20 +63,20 @@ public class DashboardService {
 
         int numDaysCovered = 0;
 
-        //if datetime is an integer, use that integer
-        if(dateTime instanceof Integer){
+        // if datetime is an integer, use that integer
+        if (dateTime instanceof Integer) {
             numDaysCovered = (Integer) dateTime;
-        }else if(dateTime instanceof String){ //if datetime is a string, see if it's a string of an integer, and if so, use it
-            try{
+        } else if (dateTime instanceof String) { // if datetime is a string, see if it's a string of an integer, and if so, use it
+            try {
                 numDaysCovered = Integer.parseInt((String)dateTime);
-            }catch(NumberFormatException e){
+            } catch(NumberFormatException e) {
                 System.out.println("dateTime was not an integer");
             }
-        }else{
+        } else {
             System.out.println("DateTime must be an integer or a String, not a " + dateTime.getClass());
         }
 
-        //find the day "numDaysCovered" in the past
+        // find the day "numDaysCovered" in the past
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(timestamp);
         calendar.add(Calendar.DATE, (numDaysCovered * -1)); //invert so the number of days is subtracted
