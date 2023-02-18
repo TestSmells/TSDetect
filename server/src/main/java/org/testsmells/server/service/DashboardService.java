@@ -7,9 +7,7 @@ import org.testsmells.server.tables.pojos.TestSmells;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class DashboardService {
@@ -18,46 +16,73 @@ public class DashboardService {
     DBOutputTool outputRepository;
 
     /**
-     * Queries the entire database for all test smell data.
-     * @return a hashmap of all tests smells keyed to their quantities over the entire database
+     * Retrieves test smells from the database dependent on the provided parameters
+     *
+     * @param dateTime an optional parameter that may contain a date time to restrict test smell search
+     * @param smellTypes an optional parameter that may contain a list of smell types to filter in the test smell search
+     * @return a hashmap of tests smells keyed to their quantities
      */
-    public HashMap<String, Long> getTestSmells() {
-        //sql exception is handled in the DBOutputTool
-        return outputRepository.outTestSmellData();
+    public HashMap<String, Long> getTestSmells(Optional<Integer> dateTime, Optional<List> smellTypes) {
+        // SQL exception is handled in the DBOutputTool
+        if (dateTime.isPresent() && smellTypes.isPresent()) {
+            return outputRepository.outTestSmellData(getTimeStamp(dateTime.get()), parseSmellList(smellTypes.get()));
+        } else if (dateTime.isPresent()) {
+            return outputRepository.outTestSmellData(getTimeStamp(dateTime.get()));
+        } else if (smellTypes.isPresent()) {
+            return outputRepository.outTestSmellData(parseSmellList(smellTypes.get()));
+        } else {
+            return outputRepository.outTestSmellData();
+        }
     }
 
     /**
-     * Queries the entire database for all test smell data related to the test smells in the given list.
-     * @param smells a list of test smells to search for test smell data for
-     * @return a hashmap of the given test smells with data found in the database keyed to their quantities over the entire database
+     * Private helper to determine if the given object is a list, and if so, collect all String values from that list
+     * @param smells an Object to determine its status as a list and collect String data from
+     * @return an ArrayList of Strings containing all String data from the given object
      */
-    public HashMap<String, Long> getTestSmells(ArrayList<String> smells) {
-        //sql exception is handled in the DBOutputTool
-        return outputRepository.outTestSmellData(smells);
+    private ArrayList<String> parseSmellList(Object smells){
+        ArrayList<String> smellList = new ArrayList<String>();
+
+        if(smells instanceof List)
+            for(Object smell : (List)smells)
+                if(smell instanceof String)
+                    smellList.add(smell.toString());
+
+        return smellList;
     }
 
     /**
-     * Queries the entire database for all test smell data with a timestamp equal to the given timestamp or later.
-     * @param timestamp the timestamp to begin searching for data from
-     * @return a hashmap of all test smells with data found in the database keyed to their quantities in the database
-     *         with a timestamp equal to the given timestamp or later
+     * private helper function that receives an object, determines if it is a number, and returns a timestamp that is equivalent
+     * to a date "dateTime" number of days before the current date.
+     * @param dateTime an object to determine its status as a number, and use to find the desired timestamp
+     * @return a timestamp equal to the date "dateTime" number of days before the current server datetime
      */
-    public HashMap<String, Long> getTestSmells(Timestamp timestamp) {
-        //sql exception is handled in the DBOutputTool
-        return outputRepository.outTestSmellData(timestamp);
-    }
+    private Timestamp getTimeStamp(Object dateTime){
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        System.out.println("Now: " + timestamp);
 
-    /**
-     * Queries the entire database for all test smell data related to the test smells in the given list with a timestamp
-     * equal to the given timestamp or later.
-     * @param timestamp the timestamp to begin searching for data from
-     * @param smells a list of test smells to search for test smell data for
-     * @return a hashmap of all test smells with data found in the database keyed to their quantities in the database
-     *         with a timestamp equal to the given timestamp or later
-     */
-    public HashMap<String, Long> getTestSmells(Timestamp timestamp, ArrayList<String> smells) {
-        //sql exception is handled in the DBOutputTool
-        return outputRepository.outTestSmellData(timestamp, smells);
+        int numDaysCovered = 0;
+
+        //if datetime is an integer, use that integer
+        if(dateTime instanceof Integer){
+            numDaysCovered = (Integer) dateTime;
+        }else if(dateTime instanceof String){ //if datetime is a string, see if it's a string of an integer, and if so, use it
+            try{
+                numDaysCovered = Integer.parseInt((String)dateTime);
+            }catch(NumberFormatException e){
+                System.out.println("dateTime was not an integer");
+            }
+        }else{
+            System.out.println("DateTime must be an integer or a String, not a " + dateTime.getClass());
+        }
+
+        //find the day "numDaysCovered" in the past
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timestamp);
+        calendar.add(Calendar.DATE, (numDaysCovered * -1)); //invert so the number of days is subtracted
+        timestamp.setTime(calendar.getTime().getTime());
+
+        return timestamp;
     }
 
 }
