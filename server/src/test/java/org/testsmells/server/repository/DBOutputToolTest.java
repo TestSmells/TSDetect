@@ -1,15 +1,11 @@
 package org.testsmells.server.repository;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.MySQLContainer;
-import org.testsmells.server.repository.Constants;
-import org.testsmells.server.repository.DBOutputTool;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -52,7 +48,7 @@ class DBOutputToolTest {
         config.setUsername(mysql.getUsername());
         config.setPassword(mysql.getPassword());
         ds = new HikariDataSource(config);
-        outputTool = new DBOutputTool(DSL.using(ds, SQLDialect.MYSQL), ds);
+        outputTool = new DBOutputTool(ds);
     }
 
     @AfterAll

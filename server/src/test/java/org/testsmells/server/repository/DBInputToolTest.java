@@ -2,15 +2,11 @@ package org.testsmells.server.repository;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.MySQLContainer;
-import org.testsmells.server.repository.Constants;
-import org.testsmells.server.repository.DBInputTool;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -49,7 +45,7 @@ class DBInputToolTest {
         config.setUsername(mysql.getUsername());
         config.setPassword(mysql.getPassword());
         ds = new HikariDataSource(config);
-        inputTool = new DBInputTool(DSL.using(ds, SQLDialect.MYSQL), ds);
+        inputTool = new DBInputTool(ds);
     }
 
     @AfterAll

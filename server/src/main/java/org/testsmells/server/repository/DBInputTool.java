@@ -15,11 +15,8 @@ import static org.testsmells.server.repository.Constants.*;
 
 @Repository
 public class DBInputTool {
-    private final DSLContext pluginDsl;
     private final HikariDataSource pluginDatasource;
-    public DBInputTool(@Qualifier("dsl-dashboard") DSLContext pluginDsl,
-                       @Qualifier("ds-dashboard") HikariDataSource pluginDatasource) {
-        this.pluginDsl = pluginDsl;
+    public DBInputTool(@Qualifier("ds-dashboard") HikariDataSource pluginDatasource) {
         this.pluginDatasource = pluginDatasource;
     }
 
