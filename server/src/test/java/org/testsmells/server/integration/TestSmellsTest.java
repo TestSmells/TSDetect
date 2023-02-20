@@ -43,10 +43,7 @@ import static org.junit.jupiter.api.Assertions.*;
         HikariDataSource.class,
         ServerApplication.class,
 })
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class TestSmellsTest {
-
-    private static final HikariConfig config = new HikariConfig();
     private static MySQLContainer<?> mysql;
 
     private final TestRestTemplate restTemplate = new TestRestTemplate();
@@ -55,6 +52,7 @@ public class TestSmellsTest {
     @Qualifier("ds-dashboard")
     private HikariDataSource dataSource;
 
+    // Required to establish datasource details prior to the Spring Context being defined
     @DynamicPropertySource
     static void setupDatasourceProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.dashboard.jdbcUrl", mysql::getJdbcUrl);
@@ -106,6 +104,25 @@ public class TestSmellsTest {
         UriComponentsBuilder request = UriComponentsBuilder.fromUriString("http://localhost:8080/test-smells")
                 .queryParam("datetime", 7)
                 .queryParam("smell_type", Arrays.asList("Default Test", "Exception Handling"));
+
+        // When
+        ResponseEntity<HashMap> response = restTemplate.getForEntity(request.build().encode().toUri(), HashMap.class);
+
+        // Then
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedBody, response.getBody());
+    }
+
+    @Test
+    public void getTestSmellsZeroCountForNonExistentSmells() {
+        // Given
+        HashMap<String, Integer> expectedBody = new HashMap<>();
+        expectedBody.put("DOESNT EXIST", 0);
+        expectedBody.put("YUP STILL DOESNT EXIST", 0);
+
+        UriComponentsBuilder request = UriComponentsBuilder.fromUriString("http://localhost:8080/test-smells")
+                .queryParam("smell_type", Arrays.asList("DOESNT EXIST", "YUP STILL DOESNT EXIST"));
 
         // When
         ResponseEntity<HashMap> response = restTemplate.getForEntity(request.build().encode().toUri(), HashMap.class);

@@ -1,18 +1,20 @@
 package org.testsmells.server.repository;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.jooq.impl.QOM;
+import org.junit.jupiter.api.*;
 import org.testcontainers.containers.MySQLContainer;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * JUnit tests of the DBOutputTool
@@ -47,8 +49,6 @@ class DBOutputToolTest {
         config.setJdbcUrl(mysql.getJdbcUrl());
         config.setUsername(mysql.getUsername());
         config.setPassword(mysql.getPassword());
-        ds = new HikariDataSource(config);
-        outputTool = new DBOutputTool(ds);
     }
 
     @AfterAll
@@ -58,11 +58,19 @@ class DBOutputToolTest {
     }
 
     @BeforeEach
-    protected void setUp() {
+    protected void setup() {
         expected = new HashMap<>();
         smells = new ArrayList<>();
         localDate = null;
         timestamp = null;
+        ds = new HikariDataSource(config);
+        outputTool = new DBOutputTool(ds);
+    }
+
+    @AfterEach
+    protected void teardown() {
+        ds.close();
+        outputTool = null;
     }
 
     @Test
@@ -254,5 +262,43 @@ class DBOutputToolTest {
     @Test
     void futureJavaTimestamp() {
         assertEquals(expected, outputTool.outTestSmellData(new Timestamp(Long.MAX_VALUE/50000)));
+    }
+
+    @Test
+    void getAllTestRunIDsFromDateInvalidDatasourceFails() throws SQLException {
+        // Given
+        ds = mock(HikariDataSource.class);
+        outputTool = new DBOutputTool(ds);
+        when(ds.getConnection()).thenThrow(new SQLException());
+
+        // When
+        HashMap<String, Long> response = outputTool.outTestSmellData();
+
+        // Then
+        assertEquals(0, response.size());
+    }
+
+    @Test
+    void outTestSmellDataInvalidDatasourceGivesEmptyResults() throws SQLException {
+        // Given
+        ds = mock(HikariDataSource.class);
+        outputTool = new DBOutputTool(ds);
+        when(ds.getConnection()).thenThrow(new SQLException());
+
+        // When
+        HashMap<String, Long> responseNoParams = outputTool.outTestSmellData();
+        HashMap<String, Long> responseSmells = outputTool.outTestSmellData(new ArrayList<>());
+        HashMap<String, Long> responseTimestamp = outputTool.outTestSmellData(new Timestamp(1));
+        HashMap<String, Long> responseDateString = outputTool.outTestSmellData("randomStartDate");
+        HashMap<String, Long> responseDateStringAndSmells = outputTool.outTestSmellData("randomStartDate", new ArrayList<>());
+        HashMap<String, Long> responseTimestampAndSmells = outputTool.outTestSmellData(new Timestamp(1231), new ArrayList<>());
+
+        // Then
+        assertEquals(0, responseNoParams.size());
+        assertEquals(0, responseSmells.size());
+        assertEquals(0, responseTimestamp.size());
+        assertEquals(0, responseDateString.size());
+        assertEquals(0, responseDateStringAndSmells.size());
+        assertEquals(0, responseTimestampAndSmells.size());
     }
 }

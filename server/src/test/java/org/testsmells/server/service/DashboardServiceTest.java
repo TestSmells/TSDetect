@@ -1,14 +1,9 @@
 package org.testsmells.server.service;
 
-import com.zaxxer.hikari.HikariDataSource;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.testsmells.server.ServerApplication;
 import org.testsmells.server.repository.DBOutputTool;
 
 import java.sql.Timestamp;
@@ -19,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class DashboardServiceTest {
 
     @MockBean
