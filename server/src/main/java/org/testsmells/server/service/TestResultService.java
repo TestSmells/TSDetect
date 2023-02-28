@@ -13,12 +13,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 import static java.lang.Integer.parseInt;
 
 @Service
 public class TestResultService {
+
     @Autowired
     DBInputTool dbInputTool;
 
@@ -81,13 +81,15 @@ public class TestResultService {
 
     }
     //makes sure hashmap in ER is populated, otherwise failure
-    public static boolean isValidUuid(String uuid){
+    public boolean isValidUuid(String uuid){
         return uuid != null && uuid.length() == 36;
     }
-    public static boolean isValidDate(String date){
 
-        if(date == null)
+    public boolean isValidDate(String date){
+
+        if (date == null) {
             return false;
+        }
 
         //example correct timestamp is "2023-02-07 18:26:50.952"
         System.out.println(date.trim());
@@ -102,7 +104,7 @@ public class TestResultService {
         return true;
     }
 
-    private static HashMap<String,String> parseJson(String json){
+    private HashMap<String,String> parseJson(String json){
 
         HashMap<String, String> result = new HashMap<>();
         String[] pairs = json.split(",");

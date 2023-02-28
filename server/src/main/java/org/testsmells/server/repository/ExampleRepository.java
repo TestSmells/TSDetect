@@ -22,7 +22,7 @@ public class ExampleRepository {
         this.dashboardDatasource = dashboardDatasource;
     }
 
-public List<TestSmells> getSmellTypes() throws SQLException {
+    public List<TestSmells> getSmellTypes() throws SQLException {
         final String queryString = "SELECT * FROM tsdetect.test_smells";
         try (ResultQuery<Record> query = dashboardDsl.resultQuery(queryString)) {
             return query.fetchInto(TestSmells.class);

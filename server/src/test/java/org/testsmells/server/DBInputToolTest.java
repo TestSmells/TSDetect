@@ -49,7 +49,7 @@ class DBInputToolTest {
 
     @BeforeEach
     protected void setUp() {
-        inputTool = new DBInputTool(DSL.using(ds, SQLDialect.MYSQL), ds);
+        inputTool = new DBInputTool(ds);
         expected = new HashMap<>();
         smells = new HashMap<>();
         timestamp = new Timestamp(0);

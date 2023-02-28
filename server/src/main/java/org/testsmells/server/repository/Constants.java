@@ -34,6 +34,7 @@ public class Constants {
     public static final String GET_SMELLS_AND_QUANTITIES_FROM_RUN = "SELECT test_smells.name, test_run_smells.quantity FROM test_run_smells " +
             "INNER JOIN test_smells ON test_run_smells.test_smell_id = test_smells.test_smell_id WHERE test_run_smells." +
             "run_id = ?";
+    public static final String GET_QUANTITY_FROM_TEST_RUN_SMELL_BY_RUN_ID_AND_SMELL_ID = "SELECT quantity FROM test_run_smells WHERE test_run_smells.run_id = ? AND test_run_smells.test_smell_id = ?";
 
     public static final String GET_SINGLE_SMELL_AND_QUANTITY = "SELECT test_smells.name, test_run_smells.quantity FROM test_run_smells " +
             "INNER JOIN test_smells ON test_run_smells.test_smell_id = test_smells.test_smell_id WHERE test_run_smells." +
