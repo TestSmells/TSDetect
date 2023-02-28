@@ -19,12 +19,13 @@ export default class Home extends Component {
                 {value: 30, label: "Past Month"},
                 {value: 365, label: "Past Year"}
             ],
+            smellOptions: [],
             data: [],
         }
     }
 
     render() {
-        const {data, total, timeOptions, loaded} = this.state;
+        const {data, total, timeOptions, smellOptions, loaded} = this.state;
         if (!loaded) return <h1>Loading...</h1>
 
         const timeFilter=(e)=>{
@@ -32,6 +33,7 @@ export default class Home extends Component {
                 .then((json) => {
                     this.setState({
                         data: json,
+                        smellOptions: Object.keys(json).map((key) => ( {value: key, label: key} ))
                     })
                 })
             this.setState({
@@ -47,6 +49,7 @@ export default class Home extends Component {
             //     .then((json) => {
             //         this.setState({
             //             data: json,
+            //             smellOptions: Object.keys(json).map((key) => ( {value: key, label: key} ))
             //         })
             //     })
         }
@@ -69,9 +72,8 @@ export default class Home extends Component {
                     <Col>
                         <h4>Filter by Smell</h4>
                         <Select
-                            defaultValue={Object.keys(total).map((key) => ( {value: key, label: key} ))}
                             isMulti
-                            options={Object.keys(total).map((key) => ( {value: key, label: key} ))}
+                            options={smellOptions}
                             onChange={smellFilter}
                         />
                     </Col>
@@ -109,6 +111,7 @@ export default class Home extends Component {
                 this.setState({
                     total: json,
                     data: json,
+                    smellOptions: Object.keys(json).map((key) => ( {value: key, label: key} )),
                     loaded: true
                 })
             })
