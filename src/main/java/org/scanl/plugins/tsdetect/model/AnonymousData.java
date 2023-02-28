@@ -8,22 +8,17 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.scanl.plugins.tsdetect.config.PluginSettings;
+
 import java.io.*;
+import java.sql.Timestamp;
 import java.util.*;
 
 public class AnonymousData {
-    private final HashMap<String, String> data;
+    private HashMap<String, String> data;
 
     public AnonymousData() {
         data = new HashMap<>();
-    }
-
-    /**
-     * Getter method for the user data map
-     * @return HashMap<String, String> - user data map
-     */
-    public HashMap<String, String> getData() {
-        return data;
     }
 
     /**
@@ -43,9 +38,10 @@ public class AnonymousData {
      */
     public void sendData() {
         //only attempt to send the data if the user has opted in
-        //TODO - uncomment following lines after pop up has been merged
-        //AppSettingsState settings = new AppSettingsState();
-        //if (Objects.requireNonNull(settings.getState()).settings.get("OPT-IN")) {
+        if (PluginSettings.GetSetting("OPT_IN")) {
+            System.out.println("Sending data...");
+            addData("uuid", PluginSettings.uuid());
+            addData("timestamp", new Timestamp(System.currentTimeMillis()).toString());
             try {
                 //get unsent data file
                 File dataFile = new File(ProjectManager.getInstance().getOpenProjects()[0].getBasePath() + "/unsentAnonymousData.json");
@@ -67,12 +63,12 @@ public class AnonymousData {
                     }
                 }
                 //send current data
-                JSONObject jsonWrap = new JSONObject(this.getData());
+                JSONObject jsonWrap = new JSONObject(this.data);
                 postRequest(jsonWrap.toJSONString(), 1);
             } catch (Exception e) {
                 System.out.println(e);
             }
-        //}
+        }
     }
 
     /**
@@ -90,7 +86,7 @@ public class AnonymousData {
         } else {
             try {
                 CloseableHttpClient httpClient = HttpClients.createDefault();
-                HttpPost post = new HttpPost("http://localhost:8080");
+                HttpPost post = new HttpPost("http://localhost:1080");
                 post.setHeader("Content-Type", "application/json");
                 post.setHeader("Connection", "close");
                 BasicHttpEntity httpEntity = new BasicHttpEntity();
@@ -106,7 +102,8 @@ public class AnonymousData {
                     System.out.println("SUCCESS");
                 }
             } catch (HttpException e) {
-                System.out.println(e);
+                e.printStackTrace();
+                localSave(jsonString);
             }
         }
     }

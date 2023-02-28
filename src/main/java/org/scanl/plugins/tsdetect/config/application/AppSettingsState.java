@@ -11,6 +11,7 @@ import org.scanl.plugins.tsdetect.model.SmellType;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Represents the application-level plugin settings.
@@ -24,6 +25,7 @@ import java.util.Map;
 public class AppSettingsState implements PersistentStateComponent<AppSettingsState> {
 
     public Map<String, Boolean> settings = new HashMap<>();
+    public String uuid = UUID.randomUUID().toString();
 
     public AppSettingsState() {
         for (SmellType smell : SmellType.values()) {
