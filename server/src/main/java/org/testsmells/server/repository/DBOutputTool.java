@@ -14,11 +14,8 @@ import static org.testsmells.server.repository.Constants.*;
 
 @Repository
 public class DBOutputTool {
-    private final DSLContext dashboardDsl;
     private final HikariDataSource dashboardDatasource;
-    public DBOutputTool(@Qualifier("dsl-dashboard") DSLContext dashboardDsl,
-                        @Qualifier("ds-dashboard") HikariDataSource dashboardDatasource) {
-        this.dashboardDsl = dashboardDsl;
+    public DBOutputTool(@Qualifier("ds-dashboard") HikariDataSource dashboardDatasource) {
         this.dashboardDatasource = dashboardDatasource;
     }
 
