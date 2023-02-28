@@ -1,36 +1,54 @@
 import React, {Component} from "react";
+import Select from "react-select";
 import SmellTable from "../components/SmellTable";
 import SmellGraph from "../components/SmellGraph";
-import { Row, Col, Dropdown, ButtonGroup } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import getData from "../util/getData";
 
-//TODO filtering, users, verify real server
+//TODO: update endpoints when API is implemented
 export default class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
             loaded: false,
+            total: [],
+            timeOptions: [
+                {value: 0, label: "All Time"},
+                {value: 1, label: "Past Day"},
+                {value: 7, label: "Past Week"},
+                {value: 30, label: "Past Month"},
+                {value: 365, label: "Past Year"}
+            ],
             data: [],
-            users: [],
-            timeFrame: "All Time"
         }
     }
 
     render() {
-        const {data, users, loaded, timeFrame} = this.state;
+        const {data, total, timeOptions, loaded} = this.state;
         if (!loaded) return <h1>Loading...</h1>
 
-        const filter=(e)=>{
-            getData('/data/' + e)
+        const timeFilter=(e)=>{
+            getData('/data/' + e.value)
                 .then((json) => {
                     this.setState({
                         data: json,
-                        loaded: true
                     })
                 })
             this.setState({
                 timeFrame: e
             })
+        }
+
+        const smellFilter=(e)=>{
+            console.log(e)
+            let smells = ""
+            e.map((option) => (smells += option.value + "+"))
+            // getData('/data/smells/' + smells)
+            //     .then((json) => {
+            //         this.setState({
+            //             data: json,
+            //         })
+            //     })
         }
 
         return (
@@ -40,42 +58,35 @@ export default class Home extends Component {
                 </Row>
                 <hr />
                 <Row>
-                    <Col sm={2}>
-                        <h4>Filtering Options</h4>
-                        <Dropdown
-                            className="filtering-dropdown"
-                            as={ButtonGroup}
-                            onSelect={filter}
-                        >
-                            <Dropdown.Toggle variant="secondary">
-                                {timeFrame}
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu className="filtering-dropdown-menu" variant="secondary">
-                                <Dropdown.Item eventKey="All Time">All Time</Dropdown.Item>
-                                <Dropdown.Item eventKey="Past Day" >Past Day</Dropdown.Item>
-                                <Dropdown.Item eventKey="Past Week" >Past Week</Dropdown.Item>
-                                <Dropdown.Item eventKey="Past Month" >Past Month</Dropdown.Item>
-                                <Dropdown.Item eventKey="Past Year" >Past Year</Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
+                    <Col sm={3}>
+                        <h4>Filter by Time</h4>
+                        <Select
+                            defaultValue={timeOptions[0]}
+                            options={timeOptions}
+                            onChange={timeFilter}
+                        />
                     </Col>
+                    <Col>
+                        <h4>Filter by Smell</h4>
+                        <Select
+                            defaultValue={Object.keys(total).map((key) => ( {value: key, label: key} ))}
+                            isMulti
+                            options={Object.keys(total).map((key) => ( {value: key, label: key} ))}
+                            onChange={smellFilter}
+                        />
+                    </Col>
+                </Row>
+                <br />
+                <Row>
                     <Col>
                         <Row className="padding-left-right">
                             <Col className="header-data-item-dark">
                                 <h3><strong>Total Smells</strong></h3>
-                                <h4>{Object.values(data).reduce((a, b) => a + b, 0)}</h4>
+                                <h4>{Object.values(total).reduce((a, b) => a + b, 0)}</h4>
                             </Col>
                             <Col className="header-data-item-light">
                                 <h3><strong>New Smells</strong></h3>
                                 <h4>{Object.values(data).reduce((a, b) => a + b, 0)}</h4>
-                            </Col>
-                            <Col className="header-data-item-dark">
-                                <h3><strong>Total Users</strong></h3>
-                                <h4>{Object.values(users).reduce((a, b) => a + b, 0)}</h4>
-                            </Col>
-                            <Col className="header-data-item-light">
-                                <h3><strong>New Users</strong></h3>
-                                <h4>{Object.values(users).reduce((a, b) => a + b, 0)}</h4>
                             </Col>
                         </Row>
                     </Col>
@@ -93,19 +104,13 @@ export default class Home extends Component {
     }
 
     componentDidMount() {
-        getData('/data/all_time')
+        getData('/data/0')
             .then((json) => {
                 this.setState({
+                    total: json,
                     data: json,
                     loaded: true
                 })
             })
-        // getData('/users')
-        //     .then((json) => {
-        //         this.setState({
-        //             users: json,
-        //             loaded: true
-        //         })
-        //     })
     }
 }
