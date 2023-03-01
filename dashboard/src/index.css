@@ -42,6 +42,10 @@
     max-width: 1px;
 }
 
+#fontDropdown {
+    float: right;
+}
+
 .padding-left-right {
     padding-left: 1.0em;
     padding-right: 1.0em;
