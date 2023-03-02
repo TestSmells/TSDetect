@@ -5,7 +5,6 @@ import SmellGraph from "../components/SmellGraph";
 import { Row, Col } from "react-bootstrap";
 import getData from "../util/getData";
 
-//TODO: update endpoints when API is implemented
 export default class Home extends Component {
     constructor(props) {
         super(props);
@@ -13,45 +12,41 @@ export default class Home extends Component {
             loaded: false,
             total: [],
             timeOptions: [
-                {value: 0, label: "All Time"},
+                {value: 999999, label: "All Time"},
                 {value: 1, label: "Past Day"},
                 {value: 7, label: "Past Week"},
                 {value: 30, label: "Past Month"},
                 {value: 365, label: "Past Year"}
             ],
+            timeValue: 999999,
             smellOptions: [],
             data: [],
         }
     }
 
     render() {
-        const {data, total, timeOptions, smellOptions, loaded} = this.state;
+        const {data, total, timeOptions, timeValue, smellOptions, loaded} = this.state;
         if (!loaded) return <h1>Loading...</h1>
 
         const timeFilter=(e)=>{
-            getData('/data/' + e.value)
+            getData('/test-smells?datetime=' + e.value)
                 .then((json) => {
                     this.setState({
                         data: json,
-                        smellOptions: Object.keys(json).map((key) => ( {value: key, label: key} ))
+                        timeValue: e.value,
+                        smellOptions: Object.keys(json).map((key) => ( {value: key, label: key} )),
                     })
                 })
-            this.setState({
-                timeFrame: e
-            })
         }
 
         const smellFilter=(e)=>{
-            console.log(e)
-            let smells = ""
-            e.map((option) => (smells += option.value + "+"))
-            // getData('/data/smells/' + smells)
-            //     .then((json) => {
-            //         this.setState({
-            //             data: json,
-            //             smellOptions: Object.keys(json).map((key) => ( {value: key, label: key} ))
-            //         })
-            //     })
+            let smells = e.map((option) => option.value)
+            getData('/test-smells?datetime=' + timeValue + '&smell_type=' + smells)
+                .then((json) => {
+                    this.setState({
+                        data: json,
+                    })
+                })
         }
 
         return (
@@ -73,6 +68,9 @@ export default class Home extends Component {
                         <h4>Filter by Smell</h4>
                         <Select
                             isMulti
+                            isClearable
+                            isSearchable
+                            noOptionsMessage="No Options"
                             options={smellOptions}
                             onChange={smellFilter}
                         />
@@ -106,7 +104,7 @@ export default class Home extends Component {
     }
 
     componentDidMount() {
-        getData('/data/0')
+        getData('/test-smells')
             .then((json) => {
                 this.setState({
                     total: json,
