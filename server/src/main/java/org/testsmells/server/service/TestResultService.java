@@ -23,28 +23,13 @@ public class TestResultService {
     DBInputTool dbInputTool;
 
     public boolean sendSmells(String json) {
-//        ObjectMapper mapper = new ObjectMapper();
-//        TypeReference<HashMap<String, String>> typeRef = new TypeReference<>() {};
-//        Map<String, String> map;
-//
-//        try {
-//            map = mapper.readValue(json, typeRef);
-//        } catch (JsonProcessingException e) {
-//            System.out.println("Mapper failed");
-//            System.out.println(e);
-//            return false;
-//        }
-
         HashMap<String,String> map = parseJson(json);
-//        for(String key : map.keySet()){
-//            System.out.println("Key is: " + key + " and value is: " + map.get(key));
-//        }
 
-        //HashMap<String, String> mappedJson = new HashMap<String, String>();
         HashMap<String, Integer> smells = new HashMap<String, Integer>();
 
         String uuid = null;
         String ts = null;
+
         if(map.containsKey("uuid")){
             uuid = map.get("uuid");
             map.remove("uuid");
@@ -73,8 +58,12 @@ public class TestResultService {
             Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
 
             //pass values to database input tool
-            dbInputTool.inputData(uuid, timestamp, smells);
-            return true;
+            HashMap<String, Integer> results =  dbInputTool.inputData(uuid, timestamp, smells);
+            if (!results.isEmpty() && results.containsKey(uuid) && results.get(uuid) != 0){
+                return true;
+            }else{
+                return false;
+            }
         } catch (ParseException e) {
             return false;
         }
