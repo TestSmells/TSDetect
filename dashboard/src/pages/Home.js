@@ -91,11 +91,9 @@ export default class Home extends Component {
                         </Row>
                     </Col>
                 </Row>
-                <br />
                 <Row className="padding-left-right">
                     <SmellGraph data={data} />
                 </Row>
-                <br />
                 <Row className="padding-left-right">
                     <SmellTable data={data} />
                 </Row>

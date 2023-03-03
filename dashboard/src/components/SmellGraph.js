@@ -36,11 +36,7 @@ export default class SmellGraph extends Component {
             },
             plugins: {
                 legend: {
-                    labels: {
-                        font: {
-                            size: fontSize
-                        }
-                    }
+                    display: false
                 },
                 tooltip: {
                     titleFont: {
