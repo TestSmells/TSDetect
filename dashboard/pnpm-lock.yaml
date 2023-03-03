@@ -5,7 +5,6 @@ specifiers:
   '@babel/node': ^7.20.0
   '@babel/preset-env': ^7.19.4
   '@babel/preset-react': ^7.18.6
-  '@uiw/react-color-sketch': ^1.1.2
   babel-loader: ^8.3.0
   chart.js: ^3.9.1
   css-loader: ^6.7.1
@@ -15,6 +14,7 @@ specifiers:
   react: ^18.2.0
   react-bootstrap: ^2.5.0
   react-chartjs-2: ^4.3.1
+  react-color: ^2.19.3
   react-dom: ^18.2.0
   react-router: ^6.4.3
   react-router-dom: ^6.4.3
@@ -25,11 +25,11 @@ specifiers:
   webpack-dev-server: ^4.11.1
 
 dependencies:
-  '@uiw/react-color-sketch': 1.1.2_biqbaboplfbrettd7655fr4n2y
   chart.js: 3.9.1
   react: 18.2.0
   react-bootstrap: 2.5.0_biqbaboplfbrettd7655fr4n2y
   react-chartjs-2: 4.3.1_2unjvz6v6rskedwoxtmbfw2rje
+  react-color: 2.19.3_react@18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-router: 6.4.3_react@18.2.0
   react-router-dom: 6.4.3_biqbaboplfbrettd7655fr4n2y
@@ -1249,13 +1249,6 @@ packages:
       source-map-support: 0.5.21
     dev: true
 
-  /@babel/runtime/7.19.4:
-    resolution: {integrity: sha512-EXpLCrk55f+cYqmHsSR+yD/0gAIMxxA9QK9lnQWzhMCvt+YmoBN7Zx94s++Kv0+unHk39vxNO8t+CMA2WSS3wA==}
-    engines: {node: '>=6.9.0'}
-    dependencies:
-      regenerator-runtime: 0.13.10
-    dev: false
-
   /@babel/runtime/7.20.1:
     resolution: {integrity: sha512-mrzLkl6U9YLF8qpqI7TB82PESyEGjm/0Ly91jG575eVxMMlb8fYfOXFZIJ8XfLrJZQbm7dlKry2bJmXBUEkdFg==}
     engines: {node: '>=6.9.0'}
@@ -1398,6 +1391,14 @@ packages:
     resolution: {integrity: sha512-Rt45SmRiV8eU+xXSB9t0uMYiQ/ZWGE/jumse2o3i5RGlyvcbqOF4q+1qBnzLE2kZ5JGhq0iMkcGXUKbFe7MpTA==}
     dependencies:
       '@floating-ui/core': 1.2.1
+    dev: false
+
+  /@icons/material/0.2.4_react@18.2.0:
+    resolution: {integrity: sha512-QPcGmICAPbGLGb6F/yNf/KzKqvFx8z5qx3D1yFqVAjoFmXK35EgyW+cJ57Te3CNsmzblwtzakLGFqHPqrfb4Tw==}
+    peerDependencies:
+      react: '*'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /@jridgewell/gen-mapping/0.1.1:
@@ -1702,114 +1703,6 @@ packages:
     dependencies:
       '@types/node': 18.11.9
     dev: true
-
-  /@uiw/color-convert/1.1.2:
-    resolution: {integrity: sha512-AgnyNM+09XcX90+U6K6LvdGfkNEYVv6YcnxpqgINkAxJOgC+aCck3GH8W0jsIg2u/wOjmWoMT7BctZY2q/H2Dg==}
-    dev: false
-
-  /@uiw/react-color-alpha/1.1.2_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-TA91qXQY1znXnbpIkFfVP+vMSIVi+bUNIyz3X63HcMHTHepVWFgFGCPqdsJxU9seskabYwp3v3/RD2pxPDxP/w==}
-    peerDependencies:
-      react: '>=16.9.0'
-      react-dom: '>=16.9.0'
-    dependencies:
-      '@babel/runtime': 7.19.4
-      '@uiw/color-convert': 1.1.2
-      '@uiw/react-drag-event-interactive': 1.1.2_biqbaboplfbrettd7655fr4n2y
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    dev: false
-
-  /@uiw/react-color-editable-input-rgba/1.1.2_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-Y8/iIOjDsKywZE0vb2l8ibKu8Zxy983ITsHoNkmxufgwx1e5ZxRmedJiDPpL2H8ahfP/w6J7/J9M3KEOH0bQAQ==}
-    peerDependencies:
-      react: '>=16.9.0'
-      react-dom: '>=16.9.0'
-    dependencies:
-      '@babel/runtime': 7.19.4
-      '@uiw/color-convert': 1.1.2
-      '@uiw/react-color-editable-input': 1.1.2_biqbaboplfbrettd7655fr4n2y
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    dev: false
-
-  /@uiw/react-color-editable-input/1.1.2_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-4VFhB4/k35g8dF+Fl/sOe6jyuUe+0ReA2zLHiTkug59oJgGVEYA7qOtl/b5NRIiqmbgEUfWd0PJYpNwsqRWhAA==}
-    peerDependencies:
-      react: '>=16.9.0'
-      react-dom: '>=16.9.0'
-    dependencies:
-      '@babel/runtime': 7.19.4
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    dev: false
-
-  /@uiw/react-color-hue/1.1.2_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-oX3UYWyrYQgO4cwjXwaMT9pxh7/PMcE3TRRVFMeSxBF5Y4QXUBxdi2txEn+N5xbk+7pBnPQS8mTTXopzYJwyaQ==}
-    peerDependencies:
-      react: '>=16.9.0'
-      react-dom: '>=16.9.0'
-    dependencies:
-      '@babel/runtime': 7.19.4
-      '@uiw/color-convert': 1.1.2
-      '@uiw/react-color-alpha': 1.1.2_biqbaboplfbrettd7655fr4n2y
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    dev: false
-
-  /@uiw/react-color-saturation/1.1.2_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-vw/KRedDO+XZsd5VqZgvbVMdK9Qw6fDZyNuVN3yYjMiin6NZUpu+F5FrV0f2171Imye3Qb5ETmxgP9NYAxYKow==}
-    peerDependencies:
-      react: '>=16.9.0'
-      react-dom: '>=16.9.0'
-    dependencies:
-      '@babel/runtime': 7.19.4
-      '@uiw/color-convert': 1.1.2
-      '@uiw/react-drag-event-interactive': 1.1.2_biqbaboplfbrettd7655fr4n2y
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    dev: false
-
-  /@uiw/react-color-sketch/1.1.2_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-uErB5PYxalBw6dDRE+Fs0xKtgxrFerw3vopHCXW86HrOX0B8VFrs1yK6jsLTi7oiO44sGKv4ViYp94xo7bmZpQ==}
-    peerDependencies:
-      react: '>=16.9.0'
-      react-dom: '>=16.9.0'
-    dependencies:
-      '@babel/runtime': 7.19.4
-      '@uiw/color-convert': 1.1.2
-      '@uiw/react-color-alpha': 1.1.2_biqbaboplfbrettd7655fr4n2y
-      '@uiw/react-color-editable-input': 1.1.2_biqbaboplfbrettd7655fr4n2y
-      '@uiw/react-color-editable-input-rgba': 1.1.2_biqbaboplfbrettd7655fr4n2y
-      '@uiw/react-color-hue': 1.1.2_biqbaboplfbrettd7655fr4n2y
-      '@uiw/react-color-saturation': 1.1.2_biqbaboplfbrettd7655fr4n2y
-      '@uiw/react-color-swatch': 1.1.2_biqbaboplfbrettd7655fr4n2y
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    dev: false
-
-  /@uiw/react-color-swatch/1.1.2_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-Q75Z+XfUW+6ZDGyZi0RaPbs206eJiBMcj57BhZ0CbLpy2hRHkH5Auuwe+Xx2mnGYBpgeRqTGQwnXkraFEAdRkw==}
-    peerDependencies:
-      react: '>=16.9.0'
-      react-dom: '>=16.9.0'
-    dependencies:
-      '@babel/runtime': 7.19.4
-      '@uiw/color-convert': 1.1.2
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    dev: false
-
-  /@uiw/react-drag-event-interactive/1.1.2_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-mCpPgD4IyFLEd/yWpVpeIpeQjE+jMuI2E1+Q/4pI/g/mljlzTexh2Vht/ET04h1zdc9e79p7b3DfKmIL3+QS2Q==}
-    peerDependencies:
-      react: '>=16.9.0'
-      react-dom: '>=16.9.0'
-    dependencies:
-      '@babel/runtime': 7.19.4
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    dev: false
 
   /@webassemblyjs/ast/1.11.1:
     resolution: {integrity: sha512-ukBh14qFLjxTQNTXocdyksN5QdM28S1CxHt2rdskFyL+xFV7VremuBLVbmCePj+URalXBENx/9Lm7lnhihtCSw==}
@@ -4328,13 +4221,16 @@ packages:
       p-locate: 4.1.0
     dev: true
 
+  /lodash-es/4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+    dev: false
+
   /lodash.debounce/4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
     dev: true
 
   /lodash/4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
-    dev: true
 
   /loose-envify/1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
@@ -4398,6 +4294,10 @@ packages:
     dependencies:
       semver: 6.3.0
     dev: true
+
+  /material-colors/1.2.6:
+    resolution: {integrity: sha512-6qE4B9deFBIa9YSpOc9O0Sgc43zTeVYbgDT5veRKSlB2+ZuHNoVVxA1L/ckMUayV9Ay9y7Z/SZCLcGteW9i7bg==}
+    dev: false
 
   /mdn-data/2.0.14:
     resolution: {integrity: sha512-dn6wd0uw5GsdswPFfsgMp5NSB0/aDe6fK94YJV/AJDYXL6HVLWBsxeq7js7Ad+mU2K9LAlwpk6kN2D5mwCPVow==}
@@ -5189,6 +5089,21 @@ packages:
       react: 18.2.0
     dev: false
 
+  /react-color/2.19.3_react@18.2.0:
+    resolution: {integrity: sha512-LEeGE/ZzNLIsFWa1TMe8y5VYqr7bibneWmvJwm1pCn/eNmrabWDh659JSPn9BuaMpEfU83WTOJfnCcjDZwNQTA==}
+    peerDependencies:
+      react: '*'
+    dependencies:
+      '@icons/material': 0.2.4_react@18.2.0
+      lodash: 4.17.21
+      lodash-es: 4.17.21
+      material-colors: 1.2.6
+      prop-types: 15.8.1
+      react: 18.2.0
+      reactcss: 1.2.3_react@18.2.0
+      tinycolor2: 1.6.0
+    dev: false
+
   /react-dom/18.2.0_react@18.2.0:
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
     peerDependencies:
@@ -5270,6 +5185,15 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
+    dev: false
+
+  /reactcss/1.2.3_react@18.2.0:
+    resolution: {integrity: sha512-KiwVUcFu1RErkI97ywr8nvx8dNOpT03rbnma0SSalTYjkrPYaEajR4a/MRt6DZ46K6arDRbWMNHF+xH7G7n/8A==}
+    peerDependencies:
+      react: '*'
+    dependencies:
+      lodash: 4.17.21
+      react: 18.2.0
     dev: false
 
   /readable-stream/2.3.7:
@@ -5964,6 +5888,10 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
     optional: true
+
+  /tinycolor2/1.6.0:
+    resolution: {integrity: sha512-XPaBkWQJdsf3pLKJV9p4qN/S+fm2Oj8AIPo1BTUhg5oxkvm9+SVEGFdhyOz7tTdUTfvxMiAs4sp6/eZO2Ew+pw==}
+    dev: false
 
   /to-buffer/1.1.1:
     resolution: {integrity: sha512-lx9B5iv7msuFYE3dytT+KE5tap+rNYw+K4jVkb9R/asAb+pbBSM17jtunHplhBe6RRJdZx3Pn2Jph24O32mOVg==}
