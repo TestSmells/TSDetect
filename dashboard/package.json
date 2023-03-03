@@ -29,6 +29,7 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
+    "@uiw/react-color-sketch": "^1.1.2",
     "chart.js": "^3.9.1",
     "react-select": "^5.7.0",
     "react": "^18.2.0",

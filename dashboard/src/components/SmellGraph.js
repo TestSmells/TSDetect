@@ -1,7 +1,8 @@
 import React, {Component} from "react"
-import { Bar } from "react-chartjs-2";
-import {Col, Dropdown, DropdownButton, Row} from "react-bootstrap";
-import {CirclePicker, SketchPicker} from "react-color";
+import { Bar } from "react-chartjs-2"
+import {Col, Dropdown, DropdownButton, Row} from "react-bootstrap"
+import Sketch from "@uiw/react-color-sketch"
+import {CirclePicker} from "react-color"
 
 export default class SmellGraph extends Component {
     constructor(props) {
@@ -63,8 +64,10 @@ export default class SmellGraph extends Component {
                             <Dropdown.Menu>
                                 <Dropdown.ItemText>Primary Color</Dropdown.ItemText>
                                 <Dropdown.ItemText>
-                                    <SketchPicker
+                                    <Sketch
                                         color={hex}
+                                        presetColors={['#ff0000', '#ffa500', '#ffff00', '#00ff00',
+                                                       '#009688', '#0000ff', '#9300ff', '#e01fe0']}
                                         onChange={(color) => {
                                             colors[0] = color.hex
                                             this.setState({
@@ -105,6 +108,7 @@ export default class SmellGraph extends Component {
                                                      '#996300', '#ffa500', '#ffc966', '#ffedcc',
                                                      '#999900', '#ffff00', '#ffff66', '#ffffcc',
                                                      '#009900', '#00ff00', '#66ff66', '#ccffcc',
+                                                     '#00998b', '#00ffe7', '#80FFF3', '#ccfffa',
                                                      '#000099', '#0000ff', '#6666ff', '#ccccff',
                                                      '#580099', '#9300ff', '#be66ff', '#e9ccff',
                                                      '#871287', '#e01fe0', '#ed78ed', '#f9d2f9',]}
@@ -124,7 +128,7 @@ export default class SmellGraph extends Component {
                                             this.setState({
                                                 colors: colors
                                             })
-                                            localStorage.setItem('colors', colors)
+                                            localStorage.setItem('colors', colors.toString())
                                         }}
                                     >
                                         Reset
@@ -171,9 +175,5 @@ export default class SmellGraph extends Component {
                 />
             </>
         )
-    }
-
-    componentDidMount() {
-        console.log(this.state.colors)
     }
 }

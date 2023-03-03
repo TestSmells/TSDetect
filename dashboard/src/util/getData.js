@@ -1,4 +1,4 @@
-const server = 'http://localhost:8080';
+const server = 'http://localhost:8080'
 
 /*
 Get data from the API endpoint
@@ -8,4 +8,4 @@ async function getData(endpoint) {
         .then((res) => res.json())
 }
 
-export default getData;
+export default getData

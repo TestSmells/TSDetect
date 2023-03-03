@@ -1,13 +1,13 @@
-import React, {Component} from "react";
-import Select from "react-select";
-import SmellTable from "../components/SmellTable";
-import SmellGraph from "../components/SmellGraph";
-import { Row, Col } from "react-bootstrap";
-import getData from "../util/getData";
+import React, {Component} from "react"
+import Select from "react-select"
+import SmellTable from "../components/SmellTable"
+import SmellGraph from "../components/SmellGraph"
+import { Row, Col } from "react-bootstrap"
+import getData from "../util/getData"
 
 export default class Home extends Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             loaded: false,
             total: [],
@@ -25,7 +25,7 @@ export default class Home extends Component {
     }
 
     render() {
-        const {data, total, timeOptions, timeValue, smellOptions, loaded} = this.state;
+        const {data, total, timeOptions, timeValue, smellOptions, loaded} = this.state
         if (!loaded) return <h1>Loading...</h1>
 
         const timeFilter=(e)=>{
@@ -100,7 +100,7 @@ export default class Home extends Component {
                     <SmellTable data={data} />
                 </Row>
             </>
-        );
+        )
     }
 
     componentDidMount() {
