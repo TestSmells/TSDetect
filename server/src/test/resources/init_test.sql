@@ -50,7 +50,7 @@ CREATE TABLE `tsdetect`.`test_run_smells` (
 USE tsdetect;
 INSERT INTO test_smells (name)
 VALUES ('Assertion Roulette'),
-('Conditional Test Logic'),
+('Conditional Test'),
 ('Constructor Initialization'),
 ('Default Test'),
 ('Duplicate Assert'),
@@ -60,14 +60,15 @@ VALUES ('Assertion Roulette'),
 ('General Fixture'),
 ('Ignored Test'),
 ('Lazy Test'),
-('Magic Number Test'),
+('Magic Number'),
 ('Mystery Guest'),
 ('Redundant Print'),
 ('Redundant Assertion'),
 ('Resource Optimism'),
 ('Sensitive Equality'),
 ('Sleepy Test'),
-('Unknown Test');
+('Unknown Test'),
+('Verbose Test');
 
 INSERT INTO test_runs(uid, timestamp) VALUES ('user1', NOW());
 INSERT INTO test_run_smells(run_id, test_smell_id, quantity) VALUES (1, 1, 25);
