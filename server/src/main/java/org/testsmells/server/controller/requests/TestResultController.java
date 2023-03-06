@@ -24,7 +24,6 @@ public class TestResultController {
 
     @PostMapping(value = "/test-results", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Object> testResults(@RequestBody String json){
-        System.out.println(json);
         boolean result = testResultService.sendSmells(json);
         if(!result){
             return ResponseEntity.badRequest().build();

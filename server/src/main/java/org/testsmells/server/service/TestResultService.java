@@ -24,7 +24,6 @@ public class TestResultService {
 
     public boolean sendSmells(String json) {
         HashMap<String,String> map = parseJson(json);
-
         HashMap<String, Integer> smells = new HashMap<String, Integer>();
 
         String uuid = null;
@@ -56,9 +55,9 @@ public class TestResultService {
         try {
             parsedDate = dateFormat.parse(ts);
             Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
-
             //pass values to database input tool
             HashMap<String, Integer> results =  dbInputTool.inputData(uuid, timestamp, smells);
+
             if (!results.isEmpty() && results.containsKey(uuid) && results.get(uuid) != 0){
                 return true;
             }else{
@@ -81,7 +80,6 @@ public class TestResultService {
         }
 
         //example correct timestamp is "2023-02-07 18:26:50.952"
-        System.out.println(date.trim());
         SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         sd.setLenient(false);
         try {
@@ -99,7 +97,6 @@ public class TestResultService {
         String[] pairs = json.split(",");
 
         for(String pair : pairs) {
-            System.out.println(pair);
             String[] keyValue = pair.split(":", 2);
             if(keyValue.length == 2){
                 result.put(keyValue[0].trim().replaceAll("\"", ""), keyValue[1].trim().replaceAll("\"", ""));
