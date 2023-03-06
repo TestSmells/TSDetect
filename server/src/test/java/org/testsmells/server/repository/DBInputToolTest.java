@@ -1,20 +1,17 @@
-package org.testsmells.server;
+package org.testsmells.server.repository;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.MySQLContainer;
-import org.testsmells.server.repository.Constants;
-import org.testsmells.server.repository.DBInputTool;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * JUnit tests of the DBInputTool
@@ -29,10 +26,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class DBInputToolTest {
     private static final HikariConfig config = new HikariConfig();
-    private static final HikariDataSource ds;
 
-    static {
-        MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0");
+    private static MySQLContainer<?> mysql;
+    private static HikariDataSource ds;
+    private static DBInputTool inputTool;
+
+    private HashMap<String, Integer> smells;
+    private HashMap<String, Integer> expected;
+    private Timestamp timestamp;
+
+    @BeforeAll
+    public static void suiteSetup() {
+        mysql = new MySQLContainer<>("mysql:8.0");
         mysql.withDatabaseName("tsdetect");
         mysql.withInitScript("./init_test.sql");
         mysql.start();
@@ -40,16 +45,17 @@ class DBInputToolTest {
         config.setUsername(mysql.getUsername());
         config.setPassword(mysql.getPassword());
         ds = new HikariDataSource(config);
+        inputTool = new DBInputTool(ds);
     }
 
-    private static DBInputTool inputTool;
-    private HashMap<String, Integer> smells;
-    private HashMap<String, Integer> expected;
-    private Timestamp timestamp;
+    @AfterAll
+    public static void suiteTeardown() {
+        ds.close();
+        mysql.close();
+    }
 
     @BeforeEach
     protected void setUp() {
-        inputTool = new DBInputTool(ds);
         expected = new HashMap<>();
         smells = new HashMap<>();
         timestamp = new Timestamp(0);
@@ -94,6 +100,7 @@ class DBInputToolTest {
         smells.put(Constants.SENSITIVE_EQUALITY, 17);
         smells.put(Constants.SLEEPY_TEST, 18);
         smells.put(Constants.UNKNOWN_TEST, 19);
+        smells.put(Constants.VERBOSE_TEST, 20);
         expected = new HashMap<>(smells);
         expected.put("allSmells", 1);
         assertEquals(expected, inputTool.inputData("allSmells", timestamp, smells));
@@ -130,7 +137,7 @@ class DBInputToolTest {
     }
 
     @Test
-    //MySQL min timestamp is 1000-01-01 00:00:00 or -30610206238
+        //MySQL min timestamp is 1000-01-01 00:00:00 or -30610206238
     void timestampMin() {
         smells.put(Constants.ASSERTION_ROULETTE, 1);
         expected = new HashMap<>(smells);
@@ -139,7 +146,7 @@ class DBInputToolTest {
     }
 
     @Test
-    //MySQL max timestamp is 9999-12-31 23:59:59 or 253402318799
+        //MySQL max timestamp is 9999-12-31 23:59:59 or 253402318799
     void timestampMax() {
         smells.put(Constants.ASSERTION_ROULETTE, 1);
         expected = new HashMap<>(smells);
