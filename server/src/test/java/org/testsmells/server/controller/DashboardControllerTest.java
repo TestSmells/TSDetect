@@ -55,6 +55,24 @@ public class DashboardControllerTest {
     }
 
     @Test
+    public void getTestSmellsEmptyParamsSuccess() {
+        // Given
+        HashMap<String, Long> expectedTestSmells = new HashMap<>();
+        expectedTestSmells.put("A TEST SMELL", 5L);
+        expectedTestSmells.put("test SMELL tWO", 100L);
+        when(dashboardService.getTestSmells(any(), any())).thenReturn(expectedTestSmells);
+
+        // When
+        ResponseEntity<HashMap<String, Long>> response =
+                dashboardController.getTestSmells(Optional.empty(), Optional.empty());
+
+        // Then
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedTestSmells, response.getBody());
+    }
+
+    @Test
     public void getTestSmellsWithDateParamSuccess() {
         // Given
         HashMap<String, Long> responseMap = new HashMap<>();
