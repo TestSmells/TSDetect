@@ -22,6 +22,13 @@ public class TestResultService {
     @Autowired
     DBInputTool dbInputTool;
 
+    /**
+     * Method that recevies an incoming JSON string from the plugin, verifies the input,
+     * maps that input to a HashMap, then passes it to the DBInputTool
+     * @param json: Incoming JSON string received from a successful plugin run
+     *        Example: "uuid" : " VALID_UUID ", "timestamp" : " VALID_TIMESTAMP_STRING ", "Assertion Roulette": "1"
+     * @return: boolean to indicate the connection was successful
+     */
     public boolean sendSmells(String json) {
         HashMap<String,String> map = parseJson(json);
         HashMap<String, Integer> smells = new HashMap<String, Integer>();
@@ -69,11 +76,21 @@ public class TestResultService {
 
     }
 
-    //makes sure hashmap in ER is populated, otherwise failure
+    /**
+     * Helper method to verify the incoming UUID is of the correct format, a 36 character alpphanumeric string
+     * @param uuid: String containing incoming UUID
+     * @return: boolean value indicating whether the uuid is valid
+     */
     public boolean isValidUuid(String uuid){
         return uuid != null && uuid.length() == 36;
     }
 
+    /**
+     * Helper method to verify the incoming date value is of the correct format
+     * Example of valid date format is "2023-02-07 18:26:50.952"
+     * @param date: String containing incoming data value
+     * @return: boolean value indicating whether the date is valid
+     */
     public boolean isValidDate(String date){
 
         if (date == null) {
