@@ -68,6 +68,7 @@ public class TestResultService {
         }
 
     }
+
     //makes sure hashmap in ER is populated, otherwise failure
     public boolean isValidUuid(String uuid){
         return uuid != null && uuid.length() == 36;
