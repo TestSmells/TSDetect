@@ -6,12 +6,14 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.scanl.plugins.tsdetect.config.PluginSettings;
+import org.scanl.plugins.tsdetect.model.AnonymousData;
 
 /*
     Class containing unit tests for exporting data from the local plugin to the API layers classes
  */
 public class AnonymousDataOutputTest {
-
+    AnonymousData ad;
+    PluginSettings ps;
     @BeforeAll
     public static void suiteSetup(){
 
@@ -24,10 +26,14 @@ public class AnonymousDataOutputTest {
 
     @BeforeEach
     protected void setup(){
+        ad = new AnonymousData();
+        ps = new PluginSettings();
     }
 
     @AfterEach
     protected void teardown(){
+        ad = null;
+        ps = null;
     }
 
     @Test
@@ -41,7 +47,10 @@ public class AnonymousDataOutputTest {
 
     @Test
     public void addDataSuccess(){
-
+        ad.addData("uuid", "sdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsd");
+        ad.addData("timestamp", "2023-02-07 18:26:50.952");
+        ad.addData("ASSERTION_ROULETTE", "1");
+        //assertEquals(ad.data, );
     }
 
     @Test
