@@ -29,8 +29,8 @@ public class TestResultControllerTest {
     private TestResultService testResultService;
 
     private HashMap<String, String> insert;
-    private final String usernameString = "uuid";
-    private final String timestampString = "timestamp";
+    private final String USERNAME_STRING = "uuid";
+    private final String TIMESTAMP_STRING = "timestamp";
 
     @BeforeEach
     public void init(){
@@ -39,8 +39,8 @@ public class TestResultControllerTest {
 
     @Test
     public void testInsertOneTestValid(){
-        insert.put(usernameString, "abcd-efgh-ijkl-mnop-qrst-uvwx-yzab");
-        insert.put(timestampString, "2023-02-27 19:26:16.408");
+        insert.put(USERNAME_STRING, "abcd-efgh-ijkl-mnop-qrst-uvwx-yzab");
+        insert.put(TIMESTAMP_STRING, "2023-02-27 19:26:16.408");
         insert.put(Constants.ASSERTION_ROULETTE, "1");
 
         ResponseEntity expectedResponse = new ResponseEntity<>(HttpStatus.OK);
@@ -53,8 +53,8 @@ public class TestResultControllerTest {
 
     @Test
     public void testInsertOneTestinvalid(){
-        insert.put(usernameString, "abcd-efgh-ijkl-mnop-qrst-uvwx-yzab");
-        insert.put(timestampString, "2023-02-27 19:26:16.408");
+        insert.put(USERNAME_STRING, "abcd-efgh-ijkl-mnop-qrst-uvwx-yzab");
+        insert.put(TIMESTAMP_STRING, "2023-02-27 19:26:16.408");
         insert.put("I'mInvalidNeenerneener", ":P");
 
         ResponseEntity expectedResponse = new ResponseEntity<>(HttpStatus.BAD_REQUEST);

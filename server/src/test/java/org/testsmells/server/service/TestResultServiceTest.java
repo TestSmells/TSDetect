@@ -1,5 +1,6 @@
 package org.testsmells.server.service;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.testsmells.server.repository.DBInputTool;
 import java.sql.Timestamp;
 import java.util.*;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -25,13 +28,13 @@ public class TestResultServiceTest {
     private HashMap<String, Integer> insert;
     private HashMap<String, Integer> expectedResponse;
 
-    private final String validUuid = "abcd-efgh-ijkl-mnop-qrst-uvwx-yzabcd";
-    private final String validTimestampString= "2023-02-27 19:26:16.408";
+    private final String VALID_UUID = "abcd-efgh-ijkl-mnop-qrst-uvwx-yzabcd";
+    private final String VALID_TIMESTAMP_STRING= "2023-02-27 19:26:16.408";
     //a timestamp that is the equivalent of the validTimestampString
-    Timestamp validTimestamp = new java.sql.Timestamp(1677543976408L);
+    private final Timestamp VALID_TIMESTAMP = new java.sql.Timestamp(1677543976408L);
 
     @BeforeEach
-    private void init(){
+    public void init(){
         insert = new HashMap<>();
         expectedResponse = new HashMap<>();
     }
@@ -39,20 +42,20 @@ public class TestResultServiceTest {
     @Test
     public void insertOneTestSmellSuccess() {
         //Given
-        String jsonInserted = "\"uuid\" : \"" + validUuid + "\",\n" +
+        String jsonInserted = "\"uuid\" : \"" + VALID_UUID + "\",\n" +
                 "\"Eager Test\" : \"1\",\n" +
-                "\"timestamp\" : \""+ validTimestamp +"\"";
+                "\"timestamp\" : \""+ VALID_TIMESTAMP_STRING +"\"";
 
         //When
         insert.put("Eager Test", 1);
 
-        expectedResponse.put(validUuid, 1);
+        expectedResponse.put(VALID_UUID, 1);
         expectedResponse.put("Eager Test", 1);
 
-        when(bdInputTool.inputData(validUuid, validTimestamp, insert)).thenReturn(expectedResponse);
+        when(bdInputTool.inputData(VALID_UUID, VALID_TIMESTAMP, insert)).thenReturn(expectedResponse);
 
         //Then
-        assertEquals(true, testresultService.sendSmells(jsonInserted));
+        assertTrue(testresultService.sendSmells(jsonInserted));
     }
 
     @Test
@@ -78,8 +81,8 @@ public class TestResultServiceTest {
                 "\"Sleepy Test\" : \"18\",\n"+
                 "\"Unknown Test\" : \"19\",\n"+
                 "\"Verbose Test\" : \"20\",\n"+
-                "\"uuid\" : \"" + validUuid + "\",\n" +
-                "\"timestamp\" : \"" + validTimestampString + "\"";
+                "\"uuid\" : \"" + VALID_UUID + "\",\n" +
+                "\"timestamp\" : \"" + VALID_TIMESTAMP_STRING + "\"";
 
         //When
         insert.put("Assertion Roulette", 1);
@@ -103,7 +106,7 @@ public class TestResultServiceTest {
         insert.put("Unknown Test", 19);
         insert.put("Verbose Test", 20);
 
-        expectedResponse.put(validUuid, 1);
+        expectedResponse.put(VALID_UUID, 1);
         expectedResponse.put("Assertion Roulette", 1);
         expectedResponse.put("Conditional Test", 2);
         expectedResponse.put("Constructor Initialization", 3);
@@ -125,10 +128,10 @@ public class TestResultServiceTest {
         expectedResponse.put("Unknown Test", 19);
         expectedResponse.put("Verbose Test", 20);
 
-        when(bdInputTool.inputData(validUuid, validTimestamp, insert)).thenReturn(expectedResponse);
+        when(bdInputTool.inputData(VALID_UUID, VALID_TIMESTAMP, insert)).thenReturn(expectedResponse);
 
         //then
-        assertEquals(true, testresultService.sendSmells(jsonInserted));
+        assertTrue(testresultService.sendSmells(jsonInserted));
     }
 
 //    //cannot test entering same smell twice at this level
@@ -137,16 +140,16 @@ public class TestResultServiceTest {
     @Test
     public void insertNoTestSmellsFail() {
         //Given
-        String jsonInserted = "\"uuid\" : \"" + validUuid + "\",\n" +
-                "\"timestamp\" : \"" + validTimestampString + "\"";
+        String jsonInserted = "\"uuid\" : \"" + VALID_UUID + "\",\n" +
+                "\"timestamp\" : \"" + VALID_TIMESTAMP_STRING + "\"";
 
         //When
-        expectedResponse.put(validUuid, 0);
+        expectedResponse.put(VALID_UUID, 0);
 
-        when(bdInputTool.inputData(validUuid, validTimestamp, insert)).thenReturn(expectedResponse);
+        when(bdInputTool.inputData(VALID_UUID, VALID_TIMESTAMP, insert)).thenReturn(expectedResponse);
 
         //Then
-        assertEquals(false, testresultService.sendSmells(jsonInserted));
+        assertFalse(testresultService.sendSmells(jsonInserted));
     }
 
     //TODO: Is this actually the functionality we are expecting?
@@ -154,18 +157,18 @@ public class TestResultServiceTest {
     public void insertNonExistantTestSmellFail() {
         //Given
         String jsonInserted = "\"This Is Not A Smell\" : \"1\",\n" +
-                "\"uuid\" : \"" + validUuid + "\",\n" +
-                "\"timestamp\" : \"" + validTimestampString + "\"";
+                "\"uuid\" : \"" + VALID_UUID + "\",\n" +
+                "\"timestamp\" : \"" + VALID_TIMESTAMP_STRING + "\"";
 
         //When
         insert.put("This Is Not A Smell", 1);
 
-        expectedResponse.put(validUuid, 0);
+        expectedResponse.put(VALID_UUID, 0);
 
-        when(bdInputTool.inputData(validUuid, validTimestamp, insert)).thenReturn(expectedResponse);
+        when(bdInputTool.inputData(VALID_UUID, VALID_TIMESTAMP, insert)).thenReturn(expectedResponse);
 
         //Then
-        assertEquals(false, testresultService.sendSmells(jsonInserted));
+        assertFalse(testresultService.sendSmells(jsonInserted));
     }
 
     @Test
@@ -173,20 +176,20 @@ public class TestResultServiceTest {
         //Given
         String jsonInserted = "\"This Is Not A Smell\" : \"1\",\n" +
                 "\"Assertion Roulette\" : \"2\",\n" +
-                "\"uuid\" : \"" + validUuid + "\",\n" +
-                "\"timestamp\" : \"" + validTimestampString + "\"";
+                "\"uuid\" : \"" + VALID_UUID + "\",\n" +
+                "\"timestamp\" : \"" + VALID_TIMESTAMP_STRING + "\"";
 
         //When
         insert.put("This Is Not A Smell", 1);
         insert.put("Assertion Roulette", 2);
 
-        expectedResponse.put(validUuid, 1);
+        expectedResponse.put(VALID_UUID, 1);
         expectedResponse.put("Assertion Roulette", 2);
 
-        when(bdInputTool.inputData(validUuid, validTimestamp, insert)).thenReturn(expectedResponse);
+        when(bdInputTool.inputData(VALID_UUID, VALID_TIMESTAMP, insert)).thenReturn(expectedResponse);
 
         //Then
-        assertEquals(true, testresultService.sendSmells(jsonInserted));
+        assertTrue(testresultService.sendSmells(jsonInserted));
     }
 
     @Test
@@ -194,129 +197,129 @@ public class TestResultServiceTest {
         //Given
         String jsonInserted = "\"Eager Test\" : \"1\",\n" +
                 "\"uuid\" : \"Not a Real UUID\",\n" +
-                "\"timestamp\" : \"" + validTimestampString + "\"";
+                "\"timestamp\" : \"" + VALID_TIMESTAMP_STRING + "\"";
 
         //When
         //dbInput tool should never be reached in this case
 
         //Then
-        assertEquals(false, testresultService.sendSmells(jsonInserted));
+        assertFalse(testresultService.sendSmells(jsonInserted));
     }
 
     @Test
     public void insertTestSmellNoUUIDFail() {
         //Given
         String jsonInserted = "\"Eager Test\" : \"1\",\n" +
-                "\"timestamp\" : \"" + validTimestampString + "\"";
+                "\"timestamp\" : \"" + VALID_TIMESTAMP_STRING + "\"";
 
         //When
         //dbInput tool should never be reached in this case
 
         //Then
-        assertEquals(false, testresultService.sendSmells(jsonInserted));
+        assertFalse(testresultService.sendSmells(jsonInserted));
     }
 
     @Test
     public void insertTestSmellBadTimestampFail() {
         //Given
         String jsonInserted = "\"Eager Test\" : \"1\",\n" +
-                "\"uuid\" : \"" + validUuid + "\",\n" +
+                "\"uuid\" : \"" + VALID_UUID + "\",\n" +
                 "\"timestamp\" : \"Not a Real timestamp\"";
 
         //When
         //dbInput tool should never be reached in this case
 
         //Then
-        assertEquals(false, testresultService.sendSmells(jsonInserted));
+        assertFalse(testresultService.sendSmells(jsonInserted));
     }
 
     @Test
     public void insertTestSmellNoTimestampFail() {
         //Given
         String jsonInserted = "\"Eager Test\" : \"1\",\n" +
-                "\"uuid\" : \"" + validUuid + "\"";
+                "\"uuid\" : \"" + VALID_UUID + "\"";
 
         //When
         //dbInput tool should never be reached in this case
 
         //Then
-        assertEquals(false, testresultService.sendSmells(jsonInserted));
+        assertFalse(testresultService.sendSmells(jsonInserted));
     }
 
     @Test
     public void insertTestSmellInvalidJsonFormatExtraniousTextFail() {
         //Given
         String jsonInserted = "\"Eager Test\" : \"1\",\n" +
-                "\"uuid\" : \"" + validUuid + "\",\n" +
-                "\"timestamp\" : \"" + validTimestampString + "\"" +
+                "\"uuid\" : \"" + VALID_UUID + "\",\n" +
+                "\"timestamp\" : \"" + VALID_TIMESTAMP_STRING + "\"" +
                 "Some Extra Stuff";
 
         //When
         //dbInput tool should never be reached in this case
 
         //Then
-        assertEquals(false, testresultService.sendSmells(jsonInserted));
+        assertFalse(testresultService.sendSmells(jsonInserted));
     }
 
     @Test
     public void insertTestSmellInvalidJsonFormatBadDelimitersFail() {
         //Given
         String jsonInserted = "\"Eager Test\" - \"1\",\n" +
-                "\"uuid\" - \"" + validUuid + "\",\n" +
-                "\"timestamp\" - \"" + validTimestampString + "\"";
+                "\"uuid\" - \"" + VALID_UUID + "\",\n" +
+                "\"timestamp\" - \"" + VALID_TIMESTAMP_STRING + "\"";
         //When
         //dbInput tool should never be reached in this case
 
         //Then
-        assertEquals(false, testresultService.sendSmells(jsonInserted));
+        assertFalse(testresultService.sendSmells(jsonInserted));
     }
 
     @Test
     public void insertTestSmellInvalidJsonFormatExtraLineFail() {
         //Given
         String jsonInserted = "\"Eager Test\" - \"1\",\n" +
-                "\"uuid\" - \"" + validUuid + "\",\n" +
-                "\"timestamp\" - \"" + validTimestampString + "\"\n";
+                "\"uuid\" - \"" + VALID_UUID + "\",\n" +
+                "\"timestamp\" - \"" + VALID_TIMESTAMP_STRING + "\"\n";
 
         //When
         insert.put("Eager Test", 1);
 
-        expectedResponse.put(validUuid, 1);
+        expectedResponse.put(VALID_UUID, 1);
         expectedResponse.put("Eager Test", 1);
 
-        when(bdInputTool.inputData(validUuid, validTimestamp, insert)).thenReturn(expectedResponse);
+        when(bdInputTool.inputData(VALID_UUID, VALID_TIMESTAMP, insert)).thenReturn(expectedResponse);
 
         //Then
-        assertEquals(false, testresultService.sendSmells(jsonInserted));
+        assertFalse(testresultService.sendSmells(jsonInserted));
     }
 
     @Test
     public void validUUID() {
         //Then
-        assertEquals(true, testresultService.isValidUuid(validUuid));
+        assertTrue(testresultService.isValidUuid(VALID_UUID));
     }
 
     @Test
     public void invalidUUIDLength35() {
         //Then
-        assertEquals(false, testresultService.isValidUuid("12345678901234567890123456789012345"));
+        assertFalse(testresultService.isValidUuid("12345678901234567890123456789012345"));
     }
 
     @Test
     public void invalidUUIDLength37() {
         //Then
-        assertEquals(false, testresultService.isValidUuid("1234567890123456789012345678901234567"));
+        assertFalse(testresultService.isValidUuid("1234567890123456789012345678901234567"));
     }
 
     @Test
     public void invalidUUIDLength0() {
         //Then
-        assertEquals(false, testresultService.isValidUuid(""));
+        assertFalse(testresultService.isValidUuid(""));
     }
 
     @Test
     public void invalidUUIDLengthNull() {
         //Then
-        assertEquals(false, testresultService.isValidUuid(null));
+        assertFalse(testresultService.isValidUuid(null));
     }
 }
