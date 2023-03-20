@@ -1,12 +1,16 @@
 package org.scanl.plugins.tsdetect.output;
 
-import org.apache.groovy.json.internal.Type;
 import org.junit.Test;
 import org.junit.jupiter.api.*;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.scanl.plugins.tsdetect.config.PluginSettings;
 import org.scanl.plugins.tsdetect.model.AnonymousData;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 
 /*
     Class containing unit tests for exporting data from the local plugin to the API layers classes
@@ -14,6 +18,8 @@ import org.scanl.plugins.tsdetect.model.AnonymousData;
 public class AnonymousDataOutputTest {
     AnonymousData ad;
     PluginSettings ps;
+    private final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    private final PrintStream originalOut = System.out;
     @BeforeAll
     public static void suiteSetup(){
 
@@ -26,14 +32,16 @@ public class AnonymousDataOutputTest {
 
     @BeforeEach
     protected void setup(){
-        ad = new AnonymousData();
+        ad = Mockito.mock(AnonymousData.class);
         ps = new PluginSettings();
+        System.setOut(new PrintStream(out));
     }
 
     @AfterEach
     protected void teardown(){
         ad = null;
         ps = null;
+        System.setOut(originalOut);
     }
 
     @Test
@@ -59,8 +67,9 @@ public class AnonymousDataOutputTest {
     }
 
     @Test
-    public void sendDataSuccess(){
-
+    public void sendDataSuccess() throws IOException {
+        ad.sendData();
+        Mockito.verify(ad).postRequest("test", 1);
     }
 
     @Test
@@ -70,12 +79,14 @@ public class AnonymousDataOutputTest {
 
     @Test
     public void postRequestSuccess(){
-
+        //call postrequest w/ appropriate mocks
+        assertEquals("SUCCESS", out.toString());
     }
 
     @Test
-    public void postRequestFail(){
-
+    public void postRequestFail() throws IOException {
+        ad.postRequest("bad test", 1);
+        Mockito.verify(ad, Mockito.times(5)).localSave("bad test");
     }
 
 
