@@ -18,11 +18,6 @@ public class DashboardController {
     @Autowired
     DashboardService dashboardService;
 
-//    @RequestMapping(path = "/test-smells", method = RequestMethod.GET)
-//    public ResponseEntity<List<TestSmells>> getTestSmells() {
-//        return ResponseEntity.ok(exampleService.getTestSmells());
-//    }
-
     /**
      * The main endpoint for accessing data from the TSDetect database.
      * @param dateTime The number of days into the past from the current date to gather data from. If excluded, will gather
