@@ -109,6 +109,13 @@ public class TestResultService {
         return true;
     }
 
+    /**
+     * Helper method to parse the incoming JSON into a format digestable by the database
+     * @param json: Incoming JSON string to be unwrapped
+     * @return: Hashmap containing <String, String> key value pairs including the key: uuid value: (example valid UUID),
+     * key: timestamp value: (2023-02-07 18:26:50.952), and applicable smell types with key: name value: count
+     * types
+     */
     private HashMap<String,String> parseJson(String json){
 
         HashMap<String, String> result = new HashMap<>();
