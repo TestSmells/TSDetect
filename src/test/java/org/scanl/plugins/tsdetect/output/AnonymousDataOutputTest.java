@@ -5,7 +5,10 @@ import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
 import org.scanl.plugins.tsdetect.config.PluginSettings;
+import org.scanl.plugins.tsdetect.config.application.AppSettingsState;
 import org.scanl.plugins.tsdetect.model.AnonymousData;
 
 import java.io.ByteArrayOutputStream;
@@ -17,7 +20,9 @@ import java.io.PrintStream;
  */
 public class AnonymousDataOutputTest {
     AnonymousData ad;
-    PluginSettings ps;
+    PluginSettings ps = Mockito.mock(PluginSettings.class);
+    AppSettingsState appss;
+    AppSettingsState appsettstatedummy;
     private final ByteArrayOutputStream out = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
     @BeforeAll
@@ -30,27 +35,30 @@ public class AnonymousDataOutputTest {
 
     }
 
-    @BeforeEach
-    protected void setup(){
-        ad = Mockito.mock(AnonymousData.class);
-        ps = new PluginSettings();
-        System.setOut(new PrintStream(out));
-    }
-
-    @AfterEach
-    protected void teardown(){
-        ad = null;
-        ps = null;
-        System.setOut(originalOut);
-    }
+//    @BeforeEach
+//    protected void setup(){
+//        appss = Mockito.mock(AppSettingsState.class);
+//        appsettstatedummy = new AppSettingsState();
+//        ad = Mockito.mock(AnonymousData.class);
+//        ps = Mockito.mock(PluginSettings.class);
+//        System.setOut(new PrintStream(out));
+//    }
+//
+//    @AfterEach
+//    protected void teardown(){
+//        appss = null;
+//        ad = null;
+//        ps = null;
+//        System.setOut(originalOut);
+//    }
 
     @Test
     public void uuidGenSuccess(){
         //Verifies the uuid method returns a 36 character alphanumeric string
         String regex = "^[a-zA-Z0-9]{36}$";
+        when(ps.uuid()).thenReturn("sdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsd");
         String result = PluginSettings.uuid();
         assertTrue(result.matches(regex));
-
     }
 
     @Test

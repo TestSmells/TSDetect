@@ -42,7 +42,7 @@ public class PluginSettings {
 
 
     public static String uuid() {
-        return AppSettingsState.getInstance().uuid;
+        return AppSettingsState.getInstance().getUuid();
     }
 
 }

@@ -25,7 +25,7 @@ import java.util.UUID;
 public class AppSettingsState implements PersistentStateComponent<AppSettingsState> {
 
     public Map<String, Boolean> settings = new HashMap<>();
-    public String uuid = UUID.randomUUID().toString();
+    private String uuid = UUID.randomUUID().toString();
 
     public AppSettingsState() {
         for (SmellType smell : SmellType.values()) {
@@ -48,4 +48,7 @@ public class AppSettingsState implements PersistentStateComponent<AppSettingsSta
         XmlSerializerUtil.copyBean(state, this);
     }
 
+    public String getUuid() {
+        return uuid;
+    }
 }
