@@ -2,6 +2,7 @@ package org.testsmells.server.repository;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.jooq.DSLContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +16,9 @@ import static org.testsmells.server.repository.Constants.*;
 @Repository
 public class DBOutputTool {
     private final HikariDataSource dashboardDatasource;
+
+@Autowired
+
     public DBOutputTool(@Qualifier("ds-dashboard") HikariDataSource dashboardDatasource) {
         this.dashboardDatasource = dashboardDatasource;
     }
@@ -31,7 +35,6 @@ public class DBOutputTool {
      *          of occurrences of that test smell in the database since the given date
      */
     public HashMap<String, Long> outTestSmellData(Timestamp startDate, ArrayList<String> smells) {
-
         ArrayList<Integer> runIDs = getAllTestRunIDsFromDate(startDate.toString());
         return getTestSmellsAndCounts(runIDs, smells);
     }
@@ -44,7 +47,6 @@ public class DBOutputTool {
      *         of occurrences of that test smell in the database since the given date
      */
     public HashMap<String, Long> outTestSmellData(Timestamp startDate) {
-
         ArrayList<Integer> runIDs = getAllTestRunIDsFromDate(startDate.toString());
         return getTestSmellsAndCounts(runIDs);
     }
@@ -60,7 +62,6 @@ public class DBOutputTool {
      *         of occurrences of that test smell in the database since the given date
      */
     public HashMap<String, Long> outTestSmellData(String startDate, ArrayList<String> smells) {
-
         ArrayList<Integer> runIDs = getAllTestRunIDsFromDate(startDate);
         return getTestSmellsAndCounts(runIDs, smells);
     }
@@ -73,7 +74,6 @@ public class DBOutputTool {
      *         of occurrences of that test smell in the database since the given date
      */
     public HashMap<String, Long> outTestSmellData(String startDate) {
-
         ArrayList<Integer> runIDs = getAllTestRunIDsFromDate(startDate);
         return getTestSmellsAndCounts(runIDs);
     }
@@ -88,7 +88,6 @@ public class DBOutputTool {
      *         of occurrences of that test smell in the database since the given date
      */
     public HashMap<String, Long> outTestSmellData(ArrayList<String> smells) {
-
         ArrayList<Integer> runIDs = getAllTestRunIDsFromDate("1990-01-01");
         return getTestSmellsAndCounts(runIDs, smells);
     }
@@ -102,7 +101,6 @@ public class DBOutputTool {
      *         of occurrences of that test smell in the database since the given date
      */
     public HashMap<String, Long> outTestSmellData() {
-
         ArrayList<Integer> runIDs = getAllTestRunIDsFromDate("1990-01-01");
         return getTestSmellsAndCounts(runIDs);
     }
@@ -115,7 +113,6 @@ public class DBOutputTool {
      *         given dateRun.
      */
     private ArrayList<Integer> getAllTestRunIDsFromDate(String dateRun) {
-
         ResultSet result_set = null;
         ArrayList<Integer> UIDs = new ArrayList<>();
 
@@ -145,7 +142,6 @@ public class DBOutputTool {
      *         smell has occurred
      */
     private HashMap<String, Long> getTestSmellsAndCounts(ArrayList<Integer> runID) {
-
         ResultSet result_set = null;
         HashMap<String, Long> smellCounts = new HashMap<String, Long>();
 
@@ -186,7 +182,6 @@ public class DBOutputTool {
      *         smell has occurred
      */
     private HashMap<String, Long> getTestSmellsAndCounts(ArrayList<Integer> runID, ArrayList<String> smells) {
-
         ResultSet result_set = null;
         HashMap<String, Long> smellCounts = new HashMap<String, Long>();
 

@@ -1,14 +1,20 @@
 package org.testsmells.server.repository;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+
+import org.jooq.impl.QOM;
 import org.junit.jupiter.api.*;
+import org.testcontainers.containers.MySQLContainer;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.testcontainers.containers.MySQLContainer;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

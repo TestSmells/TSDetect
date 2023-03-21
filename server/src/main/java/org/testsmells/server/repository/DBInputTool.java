@@ -12,6 +12,7 @@ import static org.testsmells.server.repository.Constants.*;
 @Repository
 public class DBInputTool {
     private final HikariDataSource pluginDatasource;
+
     public DBInputTool(@Qualifier("ds-plugin") HikariDataSource pluginDatasource) {
         this.pluginDatasource = pluginDatasource;
     }

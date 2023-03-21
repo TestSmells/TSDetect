@@ -101,6 +101,7 @@ class DBInputToolTest {
         smells.put(Constants.SLEEPY_TEST, 18);
         smells.put(Constants.UNKNOWN_TEST, 19);
         smells.put(Constants.VERBOSE_TEST, 20);
+
         expected = new HashMap<>(smells);
         expected.put("allSmells", 1);
         assertEquals(expected, inputTool.inputData("allSmells", timestamp, smells));
@@ -137,7 +138,7 @@ class DBInputToolTest {
     }
 
     @Test
-        //MySQL min timestamp is 1000-01-01 00:00:00 or -30610206238
+    //MySQL min timestamp is 1000-01-01 00:00:00 or -30610206238
     void timestampMin() {
         smells.put(Constants.ASSERTION_ROULETTE, 1);
         expected = new HashMap<>(smells);
@@ -146,7 +147,7 @@ class DBInputToolTest {
     }
 
     @Test
-        //MySQL max timestamp is 9999-12-31 23:59:59 or 253402318799
+    //MySQL max timestamp is 9999-12-31 23:59:59 or 253402318799
     void timestampMax() {
         smells.put(Constants.ASSERTION_ROULETTE, 1);
         expected = new HashMap<>(smells);
