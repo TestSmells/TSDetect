@@ -36,6 +36,8 @@ public class LazyTestInspection  extends SmellInspection{
 			for(PsiMethod proMethod:psiMethods) {
 				List<PsiStatement> possibleIssues = new ArrayList<>();
 				for (PsiMethod method : psiClass.getMethods()) {
+					if (!shouldTestElement(method))
+						continue;
 					for (PsiStatement statement : Objects.requireNonNull(method.getBody()).getStatements()) {
 						if (determineMatchingStatement(statement, proMethod)) {
 							possibleIssues.add(statement);

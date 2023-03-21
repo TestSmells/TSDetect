@@ -100,6 +100,8 @@ class DBInputToolTest {
         smells.put(Constants.SENSITIVE_EQUALITY, 17);
         smells.put(Constants.SLEEPY_TEST, 18);
         smells.put(Constants.UNKNOWN_TEST, 19);
+        smells.put(Constants.VERBOSE_TEST, 20);
+
         expected = new HashMap<>(smells);
         expected.put("allSmells", 1);
         assertEquals(expected, inputTool.inputData("allSmells", timestamp, smells));

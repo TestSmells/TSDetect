@@ -17,7 +17,8 @@ import static org.testsmells.server.repository.Constants.*;
 public class DBOutputTool {
     private final HikariDataSource dashboardDatasource;
 
-    @Autowired
+@Autowired
+
     public DBOutputTool(@Qualifier("ds-dashboard") HikariDataSource dashboardDatasource) {
         this.dashboardDatasource = dashboardDatasource;
     }
