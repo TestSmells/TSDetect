@@ -81,7 +81,7 @@ public class TestSmellsTest {
         expectedBody.put("Default Test", 30);
         expectedBody.put("Resource Optimism", 45);
         expectedBody.put("Exception Handling", 35);
-        expectedBody.put("Magic Number Test", 40);
+        expectedBody.put("Magic Number", 40);
 
         UriComponentsBuilder request = UriComponentsBuilder.fromUriString("http://localhost:8080/test-smells");
 
