@@ -1,4 +1,5 @@
-const server = 'http://localhost:8080'
+import config from "../../config.json"
+const server = config.SERVER_URL
 
 /*
 Get data from the API endpoint

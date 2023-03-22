@@ -1,0 +1,13 @@
+{
+  "SERVER_URL": "http://localhost:8080",
+  "PRIMARY_COLORS": ["#ff0000", "#ffa500", "#ffff00", "#00ff00",
+    "#009688", "#0000ff", "#9300ff", "#e01fe0"],
+  "SECONDARY_COLORS": ["#990000", "#ff0000", "#ff6666", "#ffcccc",
+    "#996300", "#ffa500", "#ffc966", "#ffedcc",
+    "#999900", "#ffff00", "#ffff66", "#ffffcc",
+    "#009900", "#00ff00", "#66ff66", "#ccffcc",
+    "#00998b", "#00ffe7", "#80FFF3", "#ccfffa",
+    "#000099", "#0000ff", "#6666ff", "#ccccff",
+    "#580099", "#9300ff", "#be66ff", "#e9ccff",
+    "#871287", "#e01fe0", "#ed78ed", "#f9d2f9"]
+}
