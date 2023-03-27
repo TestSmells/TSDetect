@@ -8,6 +8,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.config.PluginSettings;
 
 import java.io.*;
@@ -86,7 +87,7 @@ public class AnonymousData {
         } else {
             try {
                 CloseableHttpClient httpClient = HttpClients.createDefault();
-                HttpPost post = new HttpPost("http://localhost:1080");
+                HttpPost post = new HttpPost(PluginResourceBundle.message(PluginResourceBundle.Type.UI, "PLUGIN.DATA.HOSTNAME"));
                 post.setHeader("Content-Type", "application/json");
                 post.setHeader("Connection", "close");
                 BasicHttpEntity httpEntity = new BasicHttpEntity();
@@ -95,10 +96,12 @@ public class AnonymousData {
 
                 HttpResponse httpResponse = httpClient.execute(post);
                 if (!httpResponse.getStatusLine().toString().contains("200")) {
-                    System.out.println("FAIL");
+                    //TODO remove before merge
+                    System.out.println("FAIL " + httpResponse.getStatusLine().toString());
                     //attempt to send the data again for a maximum of 5 tries
                     postRequest(jsonString, tryNum+1);
                 } else {
+                    //TODO remove before merge
                     System.out.println("SUCCESS");
                 }
             } catch (HttpException e) {
