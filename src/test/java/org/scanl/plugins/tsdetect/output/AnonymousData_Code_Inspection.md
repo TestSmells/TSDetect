@@ -16,7 +16,8 @@ following each inspection step.
   - Timestamp
   - A list of test smells, and associated number of occurrences
 ### Satisfied by
-- 
+- Test smells are scanned for in the *LoadSmellyData()* method in the **src/main/java/org/scanl/plugins/tsdetect/ui/tabs/TabDetectedSmellTypes.java**
+class file
 
 ### Criteria
 - The sendable information, along with the users uuid, shall be compiled into a hashmap with the following format:
