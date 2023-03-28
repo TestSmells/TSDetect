@@ -2,6 +2,7 @@ package org.scanl.plugins.tsdetect.config;
 
 import org.scanl.plugins.tsdetect.config.application.AppSettingsState;
 import org.scanl.plugins.tsdetect.config.project.ProjectSettingsState;
+import org.scanl.plugins.tsdetect.ui.popup.Popup;
 
 public class PluginSettings {
 
@@ -22,6 +23,21 @@ public class PluginSettings {
         if (appSettings.containsKey(key)) return appSettings.get(key);
 
         return DefaultSettings.getInstance().settings.get(key);
+    }
+    /**
+     * Helper method to check if the user has agreed or not to sharing their data
+     *
+     * Current implementation has only the application settings being checked,
+     * This is due to the TSDetectPlugin.xml only loading the Application level settings
+     * at the time of this comment being written.
+    * */
+    public static void popupCheck(){
+        var appSettings = AppSettingsState.getInstance().settings;
+        if(!appSettings.containsKey("OPT_IN") && appSettings.size() != 0){
+            Boolean result = Popup.getPopup();
+            if(result != null)
+                appSettings.put("OPT_IN", result);
+        }
     }
 
 }

@@ -5,7 +5,7 @@ on:
     branches:
       - main  # Set a branch name to trigger deploy
     paths:
-    - 'dashboard'
+      - 'dashboard' 
 
 jobs:
   deploy:
