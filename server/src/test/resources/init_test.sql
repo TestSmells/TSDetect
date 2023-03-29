@@ -50,7 +50,7 @@ CREATE TABLE `tsdetect`.`test_run_smells` (
 USE tsdetect;
 INSERT INTO test_smells (name)
 VALUES ('Assertion Roulette'),
-('Conditional Test Logic'),
+('Conditional Test'),
 ('Constructor Initialization'),
 ('Default Test'),
 ('Duplicate Assert'),
@@ -60,14 +60,15 @@ VALUES ('Assertion Roulette'),
 ('General Fixture'),
 ('Ignored Test'),
 ('Lazy Test'),
-('Magic Number Test'),
+('Magic Number'),
 ('Mystery Guest'),
 ('Redundant Print'),
 ('Redundant Assertion'),
 ('Resource Optimism'),
 ('Sensitive Equality'),
 ('Sleepy Test'),
-('Unknown Test');
+('Unknown Test'),
+('Verbose Test');
 
 INSERT INTO test_runs(uid, timestamp) VALUES ('user1', NOW());
 INSERT INTO test_run_smells(run_id, test_smell_id, quantity) VALUES (1, 1, 25);
@@ -78,7 +79,7 @@ INSERT INTO test_run_smells(run_id, test_smell_id, quantity) VALUES (2, 4, 30);
 INSERT INTO test_runs(uid, timestamp) VALUES ('user3', NOW() - INTERVAL 6 DAY);
 INSERT INTO test_run_smells(run_id, test_smell_id, quantity) VALUES (3, 8, 35);
 
-INSERT INTO test_runs(uid, timestamp) VALUES ('user4', NOW() - INTERVAL 29 DAY);
+INSERT INTO test_runs(uid, timestamp) VALUES ('user4', NOW() - INTERVAL 28 DAY);
 INSERT INTO test_run_smells(run_id, test_smell_id, quantity) VALUES (4, 12, 40);
 
 INSERT INTO test_runs(uid, timestamp) VALUES ('user5', NOW() - INTERVAL 364 DAY);

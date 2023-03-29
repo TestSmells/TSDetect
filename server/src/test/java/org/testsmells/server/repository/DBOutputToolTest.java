@@ -1,20 +1,22 @@
-package org.testsmells.server;
+package org.testsmells.server.repository;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.MySQLContainer;
-import org.testsmells.server.repository.Constants;
-import org.testsmells.server.repository.DBOutputTool;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
+import org.jooq.impl.QOM;
+import org.junit.jupiter.api.*;
+import org.testcontainers.containers.MySQLContainer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.testcontainers.containers.MySQLContainer;
+
+import java.sql.*;
+import java.time.LocalDate;
+import java.util.*;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * JUnit tests of the DBOutputTool
@@ -30,32 +32,47 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DBOutputToolTest {
     private static final HikariConfig config = new HikariConfig();
-    private static final HikariDataSource ds;
 
-    static {
-        MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0");
+    private static MySQLContainer<?> mysql;
+    private static HikariDataSource ds;
+    private static DBOutputTool outputTool;
+
+    private HashMap<String, Long> expected;
+    private ArrayList<String> smells;
+    private LocalDate localDate;
+    private Timestamp timestamp;
+
+    @BeforeAll
+    public static void suiteSetup() {
+        mysql = new MySQLContainer<>("mysql:8.0");
         mysql.withDatabaseName("tsdetect");
         mysql.withInitScript("./init_test.sql");
         mysql.start();
         config.setJdbcUrl(mysql.getJdbcUrl());
         config.setUsername(mysql.getUsername());
         config.setPassword(mysql.getPassword());
-        ds = new HikariDataSource(config);
     }
 
-    private DBOutputTool outputTool;
-    private HashMap<String, Long> expected;
-    private ArrayList<String> smells;
-    private LocalDate localDate;
-    private Timestamp timestamp;
+    @AfterAll
+    public static void suiteTeardown() {
+        ds.close();
+        mysql.close();
+    }
 
     @BeforeEach
-    protected void setUp() {
-        outputTool = new DBOutputTool(DSL.using(ds, SQLDialect.MYSQL), ds);
+    protected void setup() {
         expected = new HashMap<>();
         smells = new ArrayList<>();
         localDate = null;
         timestamp = null;
+        ds = new HikariDataSource(config);
+        outputTool = new DBOutputTool(ds);
+    }
+
+    @AfterEach
+    protected void teardown() {
+        ds.close();
+        outputTool = null;
     }
 
     @Test
@@ -247,5 +264,43 @@ class DBOutputToolTest {
     @Test
     void futureJavaTimestamp() {
         assertEquals(expected, outputTool.outTestSmellData(new Timestamp(Long.MAX_VALUE/50000)));
+    }
+
+    @Test
+    void getAllTestRunIDsFromDateInvalidDatasourceFails() throws SQLException {
+        // Given
+        ds = mock(HikariDataSource.class);
+        outputTool = new DBOutputTool(ds);
+        when(ds.getConnection()).thenThrow(new SQLException());
+
+        // When
+        HashMap<String, Long> response = outputTool.outTestSmellData();
+
+        // Then
+        assertEquals(0, response.size());
+    }
+
+    @Test
+    void outTestSmellDataInvalidDatasourceGivesEmptyResults() throws SQLException {
+        // Given
+        ds = mock(HikariDataSource.class);
+        outputTool = new DBOutputTool(ds);
+        when(ds.getConnection()).thenThrow(new SQLException());
+
+        // When
+        HashMap<String, Long> responseNoParams = outputTool.outTestSmellData();
+        HashMap<String, Long> responseSmells = outputTool.outTestSmellData(new ArrayList<>());
+        HashMap<String, Long> responseTimestamp = outputTool.outTestSmellData(new Timestamp(1));
+        HashMap<String, Long> responseDateString = outputTool.outTestSmellData("randomStartDate");
+        HashMap<String, Long> responseDateStringAndSmells = outputTool.outTestSmellData("randomStartDate", new ArrayList<>());
+        HashMap<String, Long> responseTimestampAndSmells = outputTool.outTestSmellData(new Timestamp(1231), new ArrayList<>());
+
+        // Then
+        assertEquals(0, responseNoParams.size());
+        assertEquals(0, responseSmells.size());
+        assertEquals(0, responseTimestamp.size());
+        assertEquals(0, responseDateString.size());
+        assertEquals(0, responseDateStringAndSmells.size());
+        assertEquals(0, responseTimestampAndSmells.size());
     }
 }
