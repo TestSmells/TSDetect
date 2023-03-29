@@ -16,7 +16,7 @@ following each inspection step.
   - Timestamp
   - A list of test smells, and associated number of occurrences
 ### Satisfied by
-- Test smells are scanned for in the *LoadSmellyData()* method in the **src/main/java/org/scanl/plugins/tsdetect/ui/tabs/TabDetectedSmellTypes.java**
+- Verify that test smells are scanned for in the *LoadSmellyData()* method in the **src/main/java/org/scanl/plugins/tsdetect/ui/tabs/TabDetectedSmellTypes.java**
 class file
 
 ### Criteria
@@ -24,33 +24,33 @@ class file
   - "userID" : (A 36 character string)
   - "timestamp" : Timestamp in “yyyy-mm-dd hh:mm:ss.sss”
 ### Satisfied by
-- Information is compiled into a hashmap using the *addData()* method in **src/main/java/org/scanl/plugins/tsdetect/model/AnonymousData.java**,
+- Verify that information is compiled into a hashmap using the *addData()* method in **src/main/java/org/scanl/plugins/tsdetect/model/AnonymousData.java**,
 which is invoked in the *sendData()* method. Smells are added to this hashmap in the *LoadSmellyData()* method in the class
 **src/main/java/org/scanl/plugins/tsdetect/ui/tabs/TabDetectedSmellTypes.java**
-- UUID is generated in **src/main/java/org/scanl/plugins/tsdetect/config/PluginSettings.java** in the *uuid()* method,
+- Verify the UUID is generated in **src/main/java/org/scanl/plugins/tsdetect/config/PluginSettings.java** in the *uuid()* method,
 calling the *getUuid()* getter method in **src/main/java/org/scanl/plugins/tsdetect/config/application/AppSettingsState.java.**
-- Timestamp is generated in **src/main/java/org/scanl/plugins/tsdetect/model/AnonymousData.java**, in the *sendData()* 
+- Verify the timestamp is generated in **src/main/java/org/scanl/plugins/tsdetect/model/AnonymousData.java**, in the *sendData()* 
 method.
 
 ### Criteria
 - Testsmell Name : Number of that test smell found
   - ^ Above is repeated the required number of times to incorporate all test smells
 ### Satisfied by
-- Number of a given test smell is populated in the *LoadSmellyData()* method in the **src/main/java/org/scanl/plugins/tsdetect/ui/tabs/TabDetectedSmellTypes.java**
+- Verify that the number of a given test smell is populated in the *LoadSmellyData()* method in the **src/main/java/org/scanl/plugins/tsdetect/ui/tabs/TabDetectedSmellTypes.java**
 class.
 
 ### Criteria
 - The hashmap of sendable data shall be wrapped in a JSON format
   - Data is sent over HTTP as a JSON object
 ### Satisfied by
-- Hashmap becomes JSON wrapped in the *sendData()* method in **src/main/java/org/scanl/plugins/tsdetect/model/AnonymousData.java,**
+- Verify that the hashmap becomes JSON wrapped in the *sendData()* method in **src/main/java/org/scanl/plugins/tsdetect/model/AnonymousData.java,**
 then the HTTP request is made in the *postRequest()* method in the same class, iterating per each time each smell occurs.
 
 ### Criteria
 - The TSDetect tool shall attempt to connect to the “POST /test-results” endpoint of the TSDetect input API and send 
 this json
 ### Satisfied by
-- The POST request to send the JSON is attempted in the *postRequest()* method in the **src/main/java/org/scanl/plugins/tsdetect/model/AnonymousData.java**
+- Verify the POST request to send the JSON is attempted in the *postRequest()* method in the **src/main/java/org/scanl/plugins/tsdetect/model/AnonymousData.java**
 class
 
 ### Criteria
@@ -60,19 +60,19 @@ attempts
   locally
   - If the POST request returns a response of 200, TSDetect shall dispose of the data collected
 ### Satisfied by
-- Reconnection attempts are made in the beginning of the *postRequest()* method in the **src/main/java/org/scanl/plugins/tsdetect/model/AnonymousData.java**
+- Verify that reconnection attempts are made in the beginning of the *postRequest()* method in the **src/main/java/org/scanl/plugins/tsdetect/model/AnonymousData.java**
 class.
-  - The local file is made in the *localSave()* method in the **src/main/java/org/scanl/plugins/tsdetect/model/AnonymousData.java**
+  - Verify a local file is made in the *localSave()* method in the **src/main/java/org/scanl/plugins/tsdetect/model/AnonymousData.java**
   class, after 5 attempts are made in the *postRequest()* method
-  - Upon a successful 200 response, the data is not saved from the *postRequest()* method
+  - Upon a successful 200 response, verify the data is not saved from the *postRequest()* method
 
 ### Criteria
 - If there are any json files located in TSDetect’s designated local storage area, it shall verify that they are of the 
 correct format.
   - If they are, TSDetect shall repeat the POST /test-results with this json file
 ### Satisfied by
-- In the *sendData()* method in the **src/main/java/org/scanl/plugins/tsdetect/model/AnonymousData.java** class, a check
+- Verify that in the *sendData()* method in the **src/main/java/org/scanl/plugins/tsdetect/model/AnonymousData.java** class, a check
 is performed to detect any files named "unsentAnonymousData.json" are present in the file system
-  - In the same method, the *postRequest()* method is invoked to send unsent data in the "unsentAnonymousData.json" file
+  - In the same method, verify the *postRequest()* method is invoked to send unsent data in the "unsentAnonymousData.json" file
   before the current data to be sent
 
