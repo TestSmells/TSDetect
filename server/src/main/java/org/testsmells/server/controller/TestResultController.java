@@ -1,4 +1,4 @@
-package org.testsmells.server.controller.requests;
+package org.testsmells.server.controller;
 
 
 import org.jooq.JSON;
