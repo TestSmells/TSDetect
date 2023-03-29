@@ -77,5 +77,5 @@ components:
           additionalProperties:
             type: integer
           example:
-            "Flaky Tests": 5
+            "Sleepy Test": 5
             "Assertion Roulette": 2
