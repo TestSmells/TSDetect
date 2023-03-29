@@ -24,8 +24,9 @@ class file
   - "userID" : (A 36 character string)
   - "timestamp" : Timestamp in “yyyy-mm-dd hh:mm:ss.sss”
 ### 2: Satisfied by
-- Information is compiled into a hashmap using the *addData()* method in **src/main/java/org/scanl/plugins/tsdetect/model/AnonymousData.java**,
-which is invoked in the *sendData()* method. Smells are added to this hashmap in the *LoadSmellyData()* method in the class
+- Sendable information is compiled into a hashmap using the *addData()* method in **src/main/java/org/scanl/plugins/tsdetect/model/AnonymousData.java**,
+which is invoked in the *sendData()* method. 
+- Smells are added to this hashmap in the *LoadSmellyData()* method in the class
 **src/main/java/org/scanl/plugins/tsdetect/ui/tabs/TabDetectedSmellTypes.java**
 - UUID is generated in **src/main/java/org/scanl/plugins/tsdetect/config/PluginSettings.java** in the *uuid()* method,
 calling the *getUuid()* getter method in **src/main/java/org/scanl/plugins/tsdetect/config/application/AppSettingsState.java.**
