@@ -1,6 +1,8 @@
 package org.scanl.plugins.tsdetect.inspections;
 
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.execution.PsiLocation;
+import com.intellij.execution.junit.JUnitUtil;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.scanl.plugins.tsdetect.config.PluginSettings;
@@ -35,6 +37,8 @@ public class AssertionRouletteInspection extends SmellInspection {
 		return new JavaElementVisitor() {
 			@Override
 			public void visitMethod(PsiMethod method) {
+				if (!JUnitUtil.isTestMethod(new PsiLocation<>(method)))
+					return;
 				if (method.getBody() == null)
 					return;
 				hasSmell(method);
