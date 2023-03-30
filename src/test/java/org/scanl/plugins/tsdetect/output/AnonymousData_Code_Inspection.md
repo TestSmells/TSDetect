@@ -44,7 +44,7 @@ following each inspection step.
   - Data is sent over HTTP as a JSON object
 ### 4: Satisfied by
 - Verify the hashmap becomes JSON wrapped in the *sendData()* method in **src/main/java/org/scanl/plugins/tsdetect/model/AnonymousData.java,**
-  then the HTTP request is made in the *postRequest()* method in the same class, iterating per each time each smell occurs.
+  then verify the HTTP request is sent as part of an HTTP request in the  *postRequest()* method in the same class.
 
 ### 5: Criteria
 - The TSDetect tool shall attempt to connect to the “POST /test-results” endpoint of the TSDetect input API and send
