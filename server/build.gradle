@@ -58,6 +58,9 @@ dependencies {
 
 	jooqGenerator 'mysql:mysql-connector-java:8.0.31'
 	jooqGenerator "jakarta.xml.bind:jakarta.xml.bind-api:3.0.1"
+
+	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
 }
 
 test {
@@ -79,43 +82,3 @@ sourceCompatibility = '11'
 bootJar {
 	archiveFileName = 'tsdetect-server.jar'
 }
-
-import org.jooq.meta.jaxb.*
-
-// Jooq Plugin Configuration
-jooq {
-	configurations {
-		main {
-			generationTool {
-				logging = Logging.WARN
-				jdbc {
-					driver = 'com.mysql.cj.jdbc.Driver'
-					url = 'jdbc:mysql://localhost:3308/tsdetect'
-					user = 'root'
-					password = 'password'
-				}
-				generator {
-					name = 'org.jooq.codegen.DefaultGenerator'
-					database {
-						name = 'org.jooq.meta.mysql.MySQLDatabase'
-						inputSchema = 'tsdetect'
-						includes = '.*'
-						excludes = ''
-					}
-					generate {
-						daos = true
-						pojos = true
-					}
-					target {
-						packageName = 'org.testsmells.server'
-						directory = 'src/main/generated'
-					}
-				}
-			}
-		}
-	}
-}
-
-
-
-
