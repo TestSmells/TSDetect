@@ -77,7 +77,7 @@ public class AnonymousDataOutputTest {
     @Test
     public void sendDataSuccess() throws IOException {
         ad.sendData();
-        Mockito.verify(ad).postRequest("test", 1);
+        Mockito.verify(ad).postRequest("test");
     }
 
     @Test
@@ -93,7 +93,7 @@ public class AnonymousDataOutputTest {
 
     @Test
     public void postRequestFail() throws IOException {
-        ad.postRequest("bad test", 1);
+        ad.postRequest("bad test");
         Mockito.verify(ad, Mockito.times(5)).localSave("bad test");
     }
 
