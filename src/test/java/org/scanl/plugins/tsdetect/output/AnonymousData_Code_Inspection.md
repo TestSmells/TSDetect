@@ -76,3 +76,13 @@ following each inspection step.
   - In the same method, verify the *postRequest()* method is invoked to send unsent data in the "unsentAnonymousData.json" file
     before the current data to be sent
 
+### 8. Criteria
+- If the entries on the local file are either older than 1 month or surpass 10,000 lines of entries, then the data is 
+not saved
+### 8: Satisfied by
+- Verify that when invoked in the *sendOldData()* method in **src/main/java/org/scanl/plugins/tsdetect/model/AnonymousData.java** 
+class, the *dataOlderThanOneMonth()* method correctly verifies that older dates result in the entry being deleted
+- Verify that in the *localSave()* method in the **src/main/java/org/scanl/plugins/tsdetect/model/AnonymousData.java**
+class that the if *dateOlderThanOneMonth()* evaluates to true and the file length is longer than 10000 lines, the file is 
+not saved
+
