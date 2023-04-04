@@ -3,7 +3,6 @@ package org.scanl.plugins.tsdetect.model;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.intellij.openapi.project.ProjectManager;
-import net.minidev.json.JSONObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.BasicHttpEntity;
@@ -47,8 +46,9 @@ public class AnonymousData {
             addData("uuid", PluginSettings.uuid());
             addData("timestamp", new Timestamp(System.currentTimeMillis()).toString());
             try { //send current run data
-                JSONObject jsonWrap = new JSONObject(this.data);
-                postRequest(jsonWrap.toJSONString());
+                Gson gson = new Gson();
+                String json = gson.toJson(this.data);
+                postRequest(json);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -72,6 +72,7 @@ public class AnonymousData {
                 while(scanner.hasNextLine()) {
                     oldData.add(scanner.nextLine());
                 }
+                scanner.close();
 
                 //delete old data file
                 dataFile.delete();
