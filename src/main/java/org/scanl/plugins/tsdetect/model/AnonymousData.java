@@ -78,7 +78,6 @@ public class AnonymousData {
                 dataFile.delete();
 
                 for (String jsonString : oldData) {
-                    if (dataOlderThanOneMonth(jsonString)) continue;
                     postRequest(jsonString);
                 }
             }

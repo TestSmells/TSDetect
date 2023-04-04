@@ -81,8 +81,7 @@ following each inspection step.
 not saved
 ### 8: Satisfied by
 - Verify that when invoked in the *sendOldData()* method in **src/main/java/org/scanl/plugins/tsdetect/model/AnonymousData.java** 
-class, the *dataOlderThanOneMonth()* method correctly verifies that older dates result in the entry being deleted
+class, the *dataOlderThanOneMonth()* method correctly verifies if dates are older than one month, resulting in *sendOldData* not saving that entry
 - Verify that in the *localSave()* method in the **src/main/java/org/scanl/plugins/tsdetect/model/AnonymousData.java**
-class that the if *dateOlderThanOneMonth()* evaluates to true and the file length is longer than 10000 lines, the file is 
-not saved
+class that if *dateOlderThanOneMonth()* evaluates to true or the file length is longer than 10000 lines, entries are no longer appended to the file
 
