@@ -1,5 +1,5 @@
 {
-  "SERVER_URL": "http://localhost:8080",
+  "SERVER_URL": "https://spring-boot-web-server-mk2-tsdetect-server.azuremicroservices.io",
   "PRIMARY_COLORS": ["#ff0000", "#ffa500", "#ffff00", "#00ff00",
     "#009688", "#0000ff", "#9300ff", "#e01fe0"],
   "SECONDARY_COLORS": ["#990000", "#ff0000", "#ff6666", "#ffcccc",
