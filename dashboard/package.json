@@ -7,7 +7,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack serve --mode development",
+    "dev": "webpack serve --mode development --port 8082",
     "build": "webpack --mode production"
   },
   "keywords": [],
@@ -29,10 +29,13 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
+    "@uiw/react-color-sketch": "^1.1.2",
     "chart.js": "^3.9.1",
+    "react-select": "^5.7.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",
     "react-chartjs-2": "^4.3.1",
+    "react-color": "^2.19.3",
     "react-dom": "^18.2.0",
     "react-router": "^6.4.3",
     "react-router-dom": "^6.4.3"

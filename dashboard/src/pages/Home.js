@@ -1,77 +1,115 @@
-import React, { useState } from "react";
-import SmellTable from "../components/SmellTable";
-import SmellGraph from "../components/SmellGraph";
-import { Row, Col, Dropdown, ButtonGroup } from "react-bootstrap";
+import React, {Component} from "react"
+import Select from "react-select"
+import SmellTable from "../components/SmellTable"
+import SmellGraph from "../components/SmellGraph"
+import { Row, Col } from "react-bootstrap"
+import getData from "../util/getData"
 
-function updateStats() {
-    // Stubbed function
-}
-
-function Home() {
-    const [timeframe, setTimeframe] = useState("Past Day");
-    const [headerData, setHeaderData] = useState([
-        {
-            text: "Total Smells",
-            value: 100
-        },
-        {
-            text: "New Smells",
-            value: 100
-        },
-        {
-            text: "Total Users",
-            value: 100
-        },
-        {
-            text: "New Users",
-            value: 100
+export default class Home extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            loaded: false,
+            total: [],
+            timeOptions: [
+                {value: 999999, label: "All Time"},
+                {value: 1, label: "Past Day"},
+                {value: 7, label: "Past Week"},
+                {value: 30, label: "Past Month"},
+                {value: 365, label: "Past Year"}
+            ],
+            timeValue: 999999,
+            smellOptions: [],
+            data: [],
         }
-    ])
+    }
 
-    return(
-        <>
-            <Row>
-                <h1 className="page-title" >TSDetect Dashboard</h1>
-            </Row>
-            <hr></hr>
-            <Row>
-                <Col sm={2}>
-                <h4>Filtering Options</h4>
-                <Dropdown 
-                    className="filtering-dropdown"
-                    as={ButtonGroup}
-                    onSelect={setTimeframe}
-                >
-                    <Dropdown.Toggle variant="secondary">
-                        {timeframe}
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu className="filtering-dropdown-menu" variant="secondary">
-                        <Dropdown.Item eventKey="Past Day" active>Past Day</Dropdown.Item>
-                        <Dropdown.Item eventKey="Past Week" >Past Week</Dropdown.Item>
-                        <Dropdown.Item eventKey="Past Month" >Past Month</Dropdown.Item>
-                        <Dropdown.Item eventKey="Past Year" >Past Year</Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
-                </Col>
-                <Col>
-                    <Row className="padding-left-right">
-                        {headerData.map((headerDataItem, idx) =>
-                            <Col {...idx % 2 == 0 ? {className: "header-data-item-even"} : {className: "header-data-item-odd"}}>
-                                <h3><strong>{headerDataItem.text}</strong></h3>
-                                <h4>{headerDataItem.value}</h4>
+    render() {
+        const {data, total, timeOptions, timeValue, smellOptions, loaded} = this.state
+        if (!loaded) return <h1>Loading...</h1>
+
+        const timeFilter=(e)=>{
+            getData('/test-smells?datetime=' + e.value)
+                .then((json) => {
+                    this.setState({
+                        data: json,
+                        timeValue: e.value,
+                        smellOptions: Object.keys(json).map((key) => ( {value: key, label: key} )),
+                    })
+                })
+        }
+
+        const smellFilter=(e)=>{
+            let smells = e.map((option) => option.value)
+            getData('/test-smells?datetime=' + timeValue + '&smell_type=' + smells)
+                .then((json) => {
+                    this.setState({
+                        data: json,
+                    })
+                })
+        }
+
+        return (
+            <>
+                <Row>
+                    <h1 className="page-title" >TSDetect Dashboard</h1>
+                </Row>
+                <hr />
+                <Row>
+                    <Col sm={3}>
+                        <h4>Filter by Time</h4>
+                        <Select
+                            defaultValue={timeOptions[0]}
+                            options={timeOptions}
+                            onChange={timeFilter}
+                        />
+                    </Col>
+                    <Col>
+                        <h4>Filter by Smell</h4>
+                        <Select
+                            isMulti
+                            isClearable
+                            isSearchable
+                            noOptionsMessage="No Options"
+                            options={smellOptions}
+                            onChange={smellFilter}
+                        />
+                    </Col>
+                </Row>
+                <br />
+                <Row>
+                    <Col>
+                        <Row className="padding-left-right">
+                            <Col className="header-data-item-dark">
+                                <h3><strong>Total Smells</strong></h3>
+                                <h4>{Object.values(total).reduce((a, b) => a + b, 0)}</h4>
                             </Col>
-                        )}
-                    </Row>
-                    <Row className="padding-left-right">
-                        <SmellGraph />
-                    </Row>
-                    <Row className="padding-left-right">
-                        <SmellTable />
-                    </Row>
-                </Col>
-            </Row>
-        </>
-    )
-}
+                            <Col className="header-data-item-light">
+                                <h3><strong>New Smells</strong></h3>
+                                <h4>{Object.values(data).reduce((a, b) => a + b, 0)}</h4>
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>
+                <Row className="padding-left-right">
+                    <SmellGraph data={data} />
+                </Row>
+                <Row className="padding-left-right">
+                    <SmellTable data={data} />
+                </Row>
+            </>
+        )
+    }
 
-export default Home;
+    componentDidMount() {
+        getData('/test-smells')
+            .then((json) => {
+                this.setState({
+                    total: json,
+                    data: json,
+                    smellOptions: Object.keys(json).map((key) => ( {value: key, label: key} )),
+                    loaded: true
+                })
+            })
+    }
+}

@@ -1,8 +1,8 @@
 
-import React from "react";
-import { Routes, Route } from 'react-router-dom';
-import { Navbar, Nav, Container } from "react-bootstrap";
-import Home from './pages/Home';
+import React from "react"
+import { Routes, Route } from 'react-router-dom'
+import { Navbar, Nav, Container } from "react-bootstrap"
+import Home from './pages/Home'
 
 function Dashboard() {
     return(
@@ -23,4 +23,4 @@ function Dashboard() {
     )
 }
 
-export default Dashboard;
+export default Dashboard
