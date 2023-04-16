@@ -114,8 +114,10 @@ public class TestResultService {
      */
     private HashMap<String,String> parseJson(String json){
 
+        String cleanString = json.replaceAll("}", "").replaceAll("[{]","");
+
         HashMap<String, String> result = new HashMap<>();
-        String[] pairs = json.split(",");
+        String[] pairs = cleanString.split(",");
 
         for(String pair : pairs) {
             String[] keyValue = pair.split(":", 2);
