@@ -2,10 +2,7 @@ name: deploy-dashboard
 
 on:
   push:
-    branches:
-      - main  # Set a branch name to trigger deploy
-    paths:
-      - 'dashboard' 
+    branches: [main]  # Set a branch name to trigger deploy
 
 jobs:
   deploy:
