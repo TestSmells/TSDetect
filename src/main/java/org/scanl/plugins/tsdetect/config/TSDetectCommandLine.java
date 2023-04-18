@@ -34,6 +34,7 @@ public class TSDetectCommandLine implements ApplicationStarter {
 
     private void RunAnalysis(String arg) {
         //Regex is super fun
+        System.out.println("Arggggg! " + arg);
         String projectName = arg.split("[/\\\\]")[arg.split("[/\\\\]").length-1];
 
         System.out.println("Running TSDetect on " + projectName + "...");
@@ -46,11 +47,10 @@ public class TSDetectCommandLine implements ApplicationStarter {
     @Override
     public void main(@NotNull List<String> args) {
         //send project(s) to analyzer
-        if (args.size() == 2) {
-            RunAnalysis(args.get(1));
-        } else {
-            for (int i = 1; i < args.size(); i++) {
-                RunAnalysis(args.get(i));
+        if (args.size() > 1) {
+            String[] temp = args.get(1).split(" ");
+            for (int i = 0; i < temp.length; i++) {
+                RunAnalysis(temp[i]);
             }
         }
         System.exit(0);

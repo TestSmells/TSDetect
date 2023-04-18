@@ -129,7 +129,7 @@ public class SmellTabbedPaneWindow {
                                         String message = MessageFormat.format(pattern, executionResult.getExecutionTimestampString(), executionResult.getExecutionDurationInSeconds());
                                         labelExecution.setText(message);
                                         labelExecution.setVisible(true);
-//                                        buttonExport.setVisible(true);
+                                        buttonExport.setVisible(true);
                                         panelInspection.updateUI();
                                         panelInspection.updateUI();
                                     }
