@@ -1,0 +1,81 @@
+openapi: 3.0.3
+info:
+  title: TSDetect Server API
+  description: |-
+    The TSDetect Server API that enables users of the TSDetect plugin to submit their run data and
+    enable our dashboard to display this information.
+  version: 1.0.0
+paths:
+  /test-smells:
+    get:
+      summary: Get test smells by date and type from test runs in the database
+      description: Retrieves the quantity of test smells by name for a given range of dates and test smell types.
+      parameters:
+        - name: datetime
+          in: query
+          required: false
+          description: The number of days into the past from the current date to gather data from.
+          schema:
+            type: integer
+          example: 7
+        - name: smell_type
+          in: query
+          required: false
+          description: A list of test smell types to search the database for information for.
+          schema:
+            type: array
+            items:
+              type: string
+          example: ["Sleepy Test", "Assertion Roulette"]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: integer
+                example:
+                  "Sleepy Test": 10
+                  "Assertion Roulette": 5
+  /test-results:
+    post:
+      summary: Store test results in the database
+      description: Accepts a JSON payload containing test results, verifies the timestamp and UUID, and stores the data in the TSDetect database.
+      requestBody:
+        description: The JSON payload containing the test results to be stored.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestResult'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+components:
+  schemas:
+    TestResult:
+      type: object
+      required:
+        - timestamp
+        - uuid
+        - results
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: '2023-03-29T16:44:22.385Z'
+        uuid:
+          type: string
+          format: uuid
+          example: 'd5f65c2e-3a83-4a27-984f-b26c9ac4d4f8'
+        results:
+          type: object
+          additionalProperties:
+            type: integer
+          example:
+            "Sleepy Test": 5
+            "Assertion Roulette": 2
