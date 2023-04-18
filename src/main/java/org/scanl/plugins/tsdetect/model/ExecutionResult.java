@@ -78,7 +78,7 @@ public class ExecutionResult {
         int infectedMethods;
         //print the results
         try {
-            FileWriter csv = new FileWriter(new File(project.getBasePath(), project.getName() + "-" + new Date() + ".csv"));
+            FileWriter csv = new FileWriter(new File(project.getBasePath(), project.getName() + "-" + new Date().toString().replaceAll(":", "-") + ".csv"));
             csv.write(project.getName() + "\n");
             csv.write("Smell Type,Infected Classes,Infected Methods\n");
 
