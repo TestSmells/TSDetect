@@ -5,7 +5,6 @@
 # OR
 #    sh tsdetect /relative_path_to_project/
 
-#EXAMPLE    sh tsdetect ../TSDetect
+#EXAMPLE    sh tsdetect /absolute/path/to/project
 
-./gradlew --stop
-./gradlew -Dorg.gradle.jvmargs="-Djava.awt.headless=true" runIde --console=plain -Ppaths="$(readlink -f "$1")"
+./gradlew -Dorg.gradle.jvmargs="-Djava.awt.headless=true" runIde --console=plain -Ppaths="$*"
