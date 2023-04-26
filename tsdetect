@@ -7,4 +7,4 @@
 
 #EXAMPLE    sh tsdetect /absolute/path/to/project
 
-./gradlew -Dorg.gradle.jvmargs="-Djava.awt.headless=true" runIde --console=plain -Ppaths="$*"
+./gradlew -q -Dorg.gradle.jvmargs="-Djava.awt.headless=true" runIde --console=plain --warning-mode=none -Ppaths="$*"

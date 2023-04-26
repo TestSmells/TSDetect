@@ -5,4 +5,4 @@
 
 ::EXAMPLE    tsdetect.bat /absolute/path/to/project
 
-call ./gradlew -Dorg.gradle.jvmargs="-Djava.awt.headless=true" runIde --console=plain -Ppaths="%*"
+call ./gradlew -q -Dorg.gradle.jvmargs="-Djava.awt.headless=true" runIde --console=plain -Ppaths="%*"

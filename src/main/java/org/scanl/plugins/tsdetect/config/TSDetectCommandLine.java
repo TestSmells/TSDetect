@@ -8,9 +8,7 @@ import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.model.*;
 import org.scanl.plugins.tsdetect.service.Analyzer;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
@@ -36,11 +34,17 @@ public class TSDetectCommandLine implements ApplicationStarter {
         //Regex is super fun
         String projectName = arg.split("[/\\\\]")[arg.split("[/\\\\]").length-1];
 
-        System.out.println("Running TSDetect on " + projectName + "...");
-        Project project = ProjectUtil.openOrImport(Path.of(arg), null , false);
-        ExecutionResult executionResult = Analyzer.getInstance().DetectTestSmells(project);
-        ProjectManager.getInstance().closeAndDispose(project);
-        executionResult.writeCSV(project, project.getBasePath());
+        //prints startup info in blue
+        System.out.println("\u001B[34m" + "Running TSDetect on " + projectName + "..." + "\u001B[0m");
+        try {
+            Project project = ProjectManager.getInstance().loadAndOpenProject(arg);
+            assert project != null;
+            ExecutionResult executionResult = Analyzer.getInstance().DetectTestSmells(project);
+            ProjectManager.getInstance().closeAndDispose(project);
+            executionResult.writeCSV(project);
+        } catch (Exception e) {
+            //
+        }
     }
 
     @Override

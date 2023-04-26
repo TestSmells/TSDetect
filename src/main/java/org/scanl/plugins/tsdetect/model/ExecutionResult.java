@@ -69,16 +69,16 @@ public class ExecutionResult {
 
     private void ReportCSV(){
         Project project = ProjectManager.getInstance().getOpenProjects()[0];
-        writeCSV(project, project.getBasePath());
+        writeCSV(project);
     }
     private void ReportPieChart(){}
 
-    public void writeCSV(Project project, String path) {
+    public void writeCSV(Project project) {
         int infectedClasses;
         int infectedMethods;
         //print the results
         try {
-            FileWriter csv = new FileWriter(new File(path, project.getName() + "-" + new Date().toString().replaceAll(":", "-") + ".csv"));
+            FileWriter csv = new FileWriter(new File(project.getBasePath(), project.getName() + "-" + new Date().toString().replaceAll(":", "-") + ".csv"));
             csv.write(project.getName() + "\n");
             csv.write("Smell Type,Infected Classes,Infected Methods\n");
 
@@ -101,7 +101,8 @@ public class ExecutionResult {
             }
             csv.close();
             //notify headless via print
-            System.out.println("\nCSV of results generated at " + path);
+            //print csv result in green
+            System.out.println("\u001B[32m" + "CSV of results generated at " + project.getBasePath() + "\u001B[0m" + "\n");
             //notify "Run Plugin" by intellij notification
             NotificationGroupManager.getInstance()
                     .getNotificationGroup("TSDetect")
