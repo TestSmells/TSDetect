@@ -35,7 +35,7 @@ public class TSDetectCommandLine implements ApplicationStarter {
         String projectName = arg.split("[/\\\\]")[arg.split("[/\\\\]").length-1];
 
         //prints startup info in blue
-        System.out.println("\u001B[34m" + "Running TSDetect on " + projectName + "..." + "\u001B[0m");
+        System.out.println("\u001B[34m [INFO] \u001B[0m" + "Running TSDetect on " + projectName + "...");
         try {
             Project project = ProjectManager.getInstance().loadAndOpenProject(arg);
             assert project != null;
@@ -50,13 +50,6 @@ public class TSDetectCommandLine implements ApplicationStarter {
     @Override
     public void main(@NotNull List<String> args) {
         //send project(s) to analyzer
-//        if (args.size() == 2) {
-//            RunAnalysis(args.get(1));
-//        } else {
-//            for (int i = 1; i < args.size(); i++) {
-//                RunAnalysis(args.get(i));
-//            }
-//        }
         for (String arg : args.get(1).split(" ")) {
             RunAnalysis(arg);
         }
