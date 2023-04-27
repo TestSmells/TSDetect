@@ -8,9 +8,7 @@ import org.scanl.plugins.tsdetect.common.PluginResourceBundle;
 import org.scanl.plugins.tsdetect.model.*;
 import org.scanl.plugins.tsdetect.service.Analyzer;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
@@ -34,24 +32,26 @@ public class TSDetectCommandLine implements ApplicationStarter {
 
     private void RunAnalysis(String arg) {
         //Regex is super fun
-        System.out.println("Arggggg! " + arg);
         String projectName = arg.split("[/\\\\]")[arg.split("[/\\\\]").length-1];
 
-        System.out.println("Running TSDetect on " + projectName + "...");
-        Project project = ProjectUtil.openOrImport(Path.of(arg), null , false);
-        ExecutionResult executionResult = Analyzer.getInstance().DetectTestSmells(project);
-        ProjectManager.getInstance().closeAndDispose(project);
-        executionResult.writeCSV(project);
+        //prints startup info in blue
+        System.out.println("\u001B[34m [INFO] \u001B[0m" + "Running TSDetect on " + projectName + "...");
+        try {
+            Project project = ProjectManager.getInstance().loadAndOpenProject(arg);
+            assert project != null;
+            ExecutionResult executionResult = Analyzer.getInstance().DetectTestSmells(project);
+            ProjectManager.getInstance().closeAndDispose(project);
+            executionResult.writeCSV(project);
+        } catch (Exception e) {
+            //
+        }
     }
 
     @Override
     public void main(@NotNull List<String> args) {
         //send project(s) to analyzer
-        if (args.size() > 1) {
-            String[] temp = args.get(1).split(" ");
-            for (int i = 0; i < temp.length; i++) {
-                RunAnalysis(temp[i]);
-            }
+        for (String arg : args.get(1).split(" ")) {
+            RunAnalysis(arg);
         }
         System.exit(0);
     }

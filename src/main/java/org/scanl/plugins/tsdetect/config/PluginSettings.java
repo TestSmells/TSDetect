@@ -28,7 +28,6 @@ public class PluginSettings {
             //todo: this is a stop-gap to allow headless mode to be run, this should be refactored to allow for more natural collection of settings
             //System.out.println("Project settings not initialised, project is likely being run in Headless mode \n" +
             //        "If that is not the case please ensure project settings are being initialized properly");
-            System.out.println(key);
             return true;
         }
     }
@@ -38,7 +37,7 @@ public class PluginSettings {
      * Current implementation has only the application settings being checked,
      * This is due to the TSDetectPlugin.xml only loading the Application level settings
      * at the time of this comment being written.
-    * */
+     * */
     public static void popupCheck(){
         var appSettings = AppSettingsState.getInstance().settings;
         if(!appSettings.containsKey("OPT_IN") && appSettings.size() != 0){

@@ -76,6 +76,7 @@ public class ExecutionResult {
     public void writeCSV(Project project) {
         int infectedClasses;
         int infectedMethods;
+        boolean smellsExist = false;
         //print the results
         try {
             FileWriter csv = new FileWriter(new File(project.getBasePath(), project.getName() + "-" + new Date().toString().replaceAll(":", "-") + ".csv"));
@@ -90,6 +91,7 @@ public class ExecutionResult {
                 //get infected classes
                 for (InspectionClassModel smellyClass : getClassesBySmell(smellType, allClasses)) {
                     infectedClasses++;
+                    smellsExist = true;
                     //get infected methods
                     for (InspectionMethodModel method : getMethodBySmell(smellType, allMethods)) {
                         if (method.getClassName().getName().equals(smellyClass.getName())) {
@@ -101,7 +103,14 @@ public class ExecutionResult {
             }
             csv.close();
             //notify headless via print
-            System.out.println("\nCSV of results generated at " + project.getBasePath());
+            //if no smells present, notify headless
+            if (!smellsExist) {
+                System.out.println("\u001B[33m [WARN] \u001B[0m" + project.getName() + " contained zero test smells.");
+                System.out.println("\u001B[33m [WARN] \u001B[0m" + "If this is unexpected, index the project through non-headless run first.");
+            }
+            //print csv result in green
+            System.out.println("\u001B[32m [SUCCESS] \u001B[0m" + "CSV of results generated at " + project.getBasePath() +"\n");
+
             //notify "Run Plugin" by intellij notification
             NotificationGroupManager.getInstance()
                     .getNotificationGroup("TSDetect")

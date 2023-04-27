@@ -73,8 +73,8 @@ public abstract class SmellInspection extends AbstractBaseJavaLocalInspectionToo
 			return JUnitUtil.isTestMethod(new PsiLocation<>(psiMethod));
 
 		if(element instanceof PsiMethod) {
-			 psiMethod = (PsiMethod) element;
-			 return JUnitUtil.isTestMethod(new PsiLocation<>(psiMethod));
+			psiMethod = (PsiMethod) element;
+			return JUnitUtil.isTestMethod(new PsiLocation<>(psiMethod));
 		}
 
 		PsiClass psiClass = element instanceof PsiClass ? (PsiClass) element : PsiTreeUtil.getParentOfType(element, PsiClass.class);
