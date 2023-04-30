@@ -31,7 +31,7 @@ public class TSDetectCommandLine implements ApplicationStarter {
     }
 
     private void RunAnalysis(String arg) {
-        //Regex is super fun
+       
         String projectName = arg.split("[/\\\\]")[arg.split("[/\\\\]").length-1];
 
         //prints startup info in blue
