@@ -32,7 +32,6 @@ dependencies {
     implementation ("org.swinglabs.swingx:swingx-all:1.6.5-1")
     implementation ("org.bidib.org.oxbow:swingbits:1.2.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
-
 }
 
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
@@ -101,6 +100,14 @@ tasks {
         })
     }
 
+    runIde {
+        //project property paths is set in the command line script
+        if(project.hasProperty("paths")) {
+            args("tsdetect", project.properties.get("paths"))
+            jvmArgs("-Djava.awt.headless=true")
+        }
+    }
+
     // Configure UI tests plugin
     // Read more: https://github.com/JetBrains/intellij-ui-test-robot
     runIdeForUiTests {
@@ -124,4 +131,5 @@ tasks {
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
         channels.set(listOf(properties("pluginVersion").split('-').getOrElse(1) { "default" }.split('.').first()))
     }
+
 }

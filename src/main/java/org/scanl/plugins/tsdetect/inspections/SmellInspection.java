@@ -60,15 +60,21 @@ public abstract class SmellInspection extends AbstractBaseJavaLocalInspectionToo
 	 * @return A boolean indicating whether the inspection should be ran.
 	 */
 	protected boolean shouldTestElement(PsiElement element) {
-		if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
+		//TODO current workaround to get headless to run, will investigate the issue and fix before merge
+		try{
+			if (!PluginSettings.GetSetting(getSmellType().toString())) return false;
+		} catch (ExceptionInInitializerError e) {
+			//System.out.println("Project settings not initialised, project is likely being run in Headless mode \n" +
+			//		"If that is not the case please ensure project settings are being initialized properly");
+		}
 
 		PsiMethod psiMethod = element instanceof PsiMethod ? (PsiMethod) element : PsiTreeUtil.getParentOfType(element, PsiMethod.class);
 		if (psiMethod != null)
 			return JUnitUtil.isTestMethod(new PsiLocation<>(psiMethod));
 
 		if(element instanceof PsiMethod) {
-			 psiMethod = (PsiMethod) element;
-			 return JUnitUtil.isTestMethod(new PsiLocation<>(psiMethod));
+			psiMethod = (PsiMethod) element;
+			return JUnitUtil.isTestMethod(new PsiLocation<>(psiMethod));
 		}
 
 		PsiClass psiClass = element instanceof PsiClass ? (PsiClass) element : PsiTreeUtil.getParentOfType(element, PsiClass.class);

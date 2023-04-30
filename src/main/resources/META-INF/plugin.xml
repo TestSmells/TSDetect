@@ -20,6 +20,9 @@
                                  id="org.scanl.plugins.tsdetect.config.project.ProjectSettingsConfigurable"
                                  nonDefaultProject="true"/>
         <applicationService serviceImplementation="org.scanl.plugins.tsdetect.config.DefaultSettings"/>
+        <appStarter implementation="org.scanl.plugins.tsdetect.config.TSDetectCommandLine"/>
+        <notificationGroup id="TSDetect"
+                           displayType="BALLOON" />
     </extensions>
     <applicationListeners>
         <listener class="org.scanl.plugins.tsdetect.listeners.ProjectListener"

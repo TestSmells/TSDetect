@@ -16,13 +16,20 @@ public class PluginSettings {
      * @return The strongest-scoped config value.
      */
     public static boolean GetSetting(String key) {
-        var projectSettings = ProjectSettingsState.getInstance().settings;
-        if (projectSettings.containsKey(key)) return projectSettings.get(key);
+        try {
+            var projectSettings = ProjectSettingsState.getInstance().settings;
+            if (projectSettings.containsKey(key)) return projectSettings.get(key);
 
-        var appSettings = AppSettingsState.getInstance().settings;
-        if (appSettings.containsKey(key)) return appSettings.get(key);
+            var appSettings = AppSettingsState.getInstance().settings;
+            if (appSettings.containsKey(key)) return appSettings.get(key);
 
-        return DefaultSettings.getInstance().settings.get(key);
+            return DefaultSettings.getInstance().settings.get(key);
+        }catch (NoClassDefFoundError e) {
+            //todo: this is a stop-gap to allow headless mode to be run, this should be refactored to allow for more natural collection of settings
+            //System.out.println("Project settings not initialised, project is likely being run in Headless mode \n" +
+            //        "If that is not the case please ensure project settings are being initialized properly");
+            return true;
+        }
     }
     /**
      * Helper method to check if the user has agreed or not to sharing their data
@@ -30,7 +37,7 @@ public class PluginSettings {
      * Current implementation has only the application settings being checked,
      * This is due to the TSDetectPlugin.xml only loading the Application level settings
      * at the time of this comment being written.
-    * */
+     * */
     public static void popupCheck(){
         var appSettings = AppSettingsState.getInstance().settings;
         if(!appSettings.containsKey("OPT_IN") && appSettings.size() != 0){
