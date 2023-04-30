@@ -3,6 +3,7 @@ package org.testsmells.server.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +28,7 @@ public class DashboardController {
      * @return A response entity containing a hashmap of test smell names keyed to the quantity of that smell to appear
      *          within the queried dates.
      */
+    @CrossOrigin
     @GetMapping("/test-smells")
     public ResponseEntity<HashMap<String, Long>> getTestSmells(@RequestParam("datetime") Optional<Integer> dateTime,
                                                                @RequestParam("smell_type") Optional<List> smellTypes) {
