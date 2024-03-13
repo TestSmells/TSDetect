@@ -1,0 +1,21 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: TSDetect -  IntelliJ Plugin
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Anthony
+    family-names: Peruma
+    email: peruma@hawaii.edu
+    affiliation: University of Hawaii at Manoa
+    orcid: 'https://orcid.org/0000-0003-2585-657X'
+repository-code: 'https://github.com/TestSmells/TSDetect'
+keywords:
+  - test smells
+  - unit testing
+  - junit
+license: gnuplot
